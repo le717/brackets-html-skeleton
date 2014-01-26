@@ -15,3 +15,7 @@ Simply press Ctrl-Shift-N! Also includes tags for one external stylesheet and sc
 # License #
 
 [The MIT License](LICENSE.md)
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/le717/brackets-html-skeleton/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
