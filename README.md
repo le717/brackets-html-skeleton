@@ -12,6 +12,10 @@ Simply press Ctrl-Shift-N! Also includes tags for one external stylesheet and sc
 
 * 1/25/2014 - Initial release
 
+# TODO #
+
+* Create a _new_ file with skeleton when command is activated
+
 # License #
 
 [The MIT License](LICENSE.md)
