@@ -18,7 +18,7 @@ define(function () {
         var fourSpaceIndent = "\u0020\u0020\u0020\u0020";
 
         // The HTML skeleton
-        var htmlSkelly = '<!DOCTYPE html>\n<html lang="en">\n<head>\n' + fourSpaceIndent +
+        var htmlSkelly = '<!DOCTYPE html>\n<html lang="">\n<head>\n' + fourSpaceIndent +
             '<meta charset="utf-8">\n' + fourSpaceIndent +'<title></title>\n' + fourSpaceIndent +
             '<link rel="stylesheet" href="" />' + '\n</head>\n\n<body>\n' +
             fourSpaceIndent + '<script src=""></script>\n</body>\n</html>\n';

@@ -3,7 +3,7 @@
     "title": "HTML Skeleton",
     "description": "Automatically add the required HTML5 document tags to your document. Simply press Ctrl-Shift-N! Also includes tags for one external stylesheet and script.",
     "homepage": "https://github.com/le717/brackets-html-skeleton",
-    "version": "0.7.3",
+    "version": "0.7.4",
     "author": "Triangle717 (http://Triangle717.WordPress.com)",
     "license": "MIT",
     "engines": {
