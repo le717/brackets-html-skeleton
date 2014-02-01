@@ -14,7 +14,10 @@
 }
 
 /* Position the logo on the right */
-#html-skeleton-figure { float: right; }
+#html-skeleton-figure {
+    float: right;
+    -webkit-transform: translateY(-20px);
+}
 
 /* Space the check boxes apart a bit */
 .html-skeleton > input {
