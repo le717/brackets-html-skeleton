@@ -1,4 +1,4 @@
-# Brackets HTML Skeleton #
+# HTML Skeleton #
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/le717/brackets-html-skeleton/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
@@ -21,4 +21,9 @@ Simply press Ctrl-Shift-N! Also includes tags for one external stylesheet and sc
 
 # License #
 
-Heavily based on the [Brackets Simple "Hello World" extension](https://github.com/adobe/brackets/wiki/Simple-%22Hello-World%22-extension).
+[The MIT License](LICENSE.md)
+
+Extension loading and toolbar icon taken from the [Edge Web Fonts extension for Brackets]
+(https://github.com/adobe/brackets-edge-web-fonts)
+
+Icons created by [**@rioforce**](http://rioforce.WordPress.com)

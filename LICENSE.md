@@ -1,8 +1,8 @@
-
 The MIT License (MIT)
 
 Created 2014 Triangle717
-<http://Triangle717.WordPress.com/>
+
+[http://Triangle717.WordPress.com](http://Triangle717.WordPress.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in

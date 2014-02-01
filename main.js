@@ -31,18 +31,21 @@ define(function (require, exports, module) {
         EXTENSION_ID = "le717.html-skeleton";
 
 
-    function inserthtmlSkelly() {
-        /* Insert the skeleton */
+    /* ------- Begin Available HTML Elements ------- */
 
-        // Assign a variable for 4 space indentation for easier construction
-        var fourSpaceIndent = "\u0020\u0020\u0020\u0020";
+    // Assign a variable for 4 space indentation for easier construction
+    var fourSpaceIndent = "\u0020\u0020\u0020\u0020",
 
         // The HTML skeleton
-        var htmlSkelly = '<!DOCTYPE html>\n<html lang="">\n<head>\n' + fourSpaceIndent +
+        htmlSkelly = '<!DOCTYPE html>\n<html lang="">\n<head>\n' + fourSpaceIndent +
             '<meta charset="utf-8">\n' + fourSpaceIndent +'<title></title>\n' + fourSpaceIndent +
             '<link rel="stylesheet" href="" />' + '\n</head>\n\n<body>\n' +
             fourSpaceIndent + '<script src=""></script>\n</body>\n</html>\n';
 
+    /* ------- End Available HTML Elements ------- */
+
+
+    function inserthtmlSkelly() {
         var editor = EditorManager.getFocusedEditor();
         if (editor) {
             // Insert the skeleton at the current cursor position
@@ -55,11 +58,24 @@ define(function (require, exports, module) {
     function _showSkellyDialog() {
         /* Display the HTML Skeleton box */
 
-        var skellyDialog = Dialogs.showModalDialogUsingTemplate(skellyDialogHtml);
-        skellyDialog.getElement().find(".close").on("click", skellyDialog.close.bind(skellyDialog));
+        var skellyDialog = Dialogs.showModalDialogUsingTemplate(skellyDialogHtml),
+            $openButton = skellyDialog.getElement().find(".close"),
+            $doneButton = skellyDialog.getElement().find("#done-button");
+
+        // Close the dialog box
+        $openButton.on("click", skellyDialog.close.bind(skellyDialog));
+
+        // Upon closing the dialog, run function to gather and apply choices
+        $doneButton.on("click", _performActions);
 
         // Display the logo
         $("#html-skeleton-figure").attr("src", skellyLogo);
+    }
+
+    function _performActions() {
+        /* Get element choices and insert them */
+
+        console.log(typeof $("#full-skelly:checked").val());
     }
 
     AppInit.appReady(function () {
@@ -68,7 +84,7 @@ define(function (require, exports, module) {
         // Load any required CSS
         ExtensionUtils.loadStyleSheet(module, "css/style.css");
 
-        // Add the shortcut (and only method of access) to the toolbar
+        // Add a shortcut to the toolbar
         var $toolbarButton = $(toolbarButtonCode);
         $toolbarButton.appendTo("#main-toolbar > .buttons");
 
@@ -79,6 +95,6 @@ define(function (require, exports, module) {
 
         // Set the button's title attribute, open dialog when clicked
         $toolbarButton.attr("title", "Insert HTML elements");
-        $toolbarButton.click(_showSkellyDialog);
+        $toolbarButton.on("click", _showSkellyDialog);
     });
 });
