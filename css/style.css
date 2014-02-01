@@ -1,0 +1,31 @@
+/*
+    HTML Skeleton
+    Created 2014 Triangle717
+    <http://Triangle717.WordPress.com/>
+
+    Licensed under The MIT Licenses
+*/
+
+#html-skelly-toolbar {
+    background: no-repeat url("../img/toolbar.svg");
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+}
+
+/* Position the logo on the right */
+#html-skeleton-figure { float: right; }
+
+/* Space the check boxes apart a bit */
+input {
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+/* Reduce the amount of blank space underneith the number fields */
+input[type="number"] {
+    margin-bottom: 3px;
+}
+
+/* Do not place the labels on a new line */
+label { display: inline; }

@@ -1,6 +1,7 @@
 *.tmp
 *.bak
 Releases/
+img/toolbar.svg
 
 #############
 ## Windows
