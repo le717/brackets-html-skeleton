@@ -33,26 +33,52 @@ define(function (require, exports, module) {
 
     /* ------- Begin Available HTML Elements ------- */
 
-    // Assign a variable for 4 space indentation for easier construction
-    var fourSpaceIndent = "\u0020\u0020\u0020\u0020",
 
-        // The HTML skeleton
-        htmlSkelly = '<!DOCTYPE html>\n<html lang="">\n<head>\n' + fourSpaceIndent +
-            '<meta charset="utf-8">\n' + fourSpaceIndent +'<title></title>\n' + fourSpaceIndent +
-            '<link rel="stylesheet" href="" />' + '\n</head>\n\n<body>\n' +
-            fourSpaceIndent + '<script src=""></script>\n</body>\n</html>\n';
+    // Placeholder variables for image size
+    var imgWidth = 0,
+        imgHeight = 0,
+
+        // Only the head and body tags + title and meta
+        headBody = '<!DOCTYPE html>\n<html lang="">\n<head>\n' + fourSpaceIndent +
+        '<meta charset="utf-8">\n' + fourSpaceIndent +'<title></title>\n' +
+        '\n</head>\n\n<body>\n' + fourSpaceIndent + '\n</body>\n</html>\n',
+
+        // External stylesheet
+        externStyle = '<link rel="stylesheet" href="" />',
+
+        // Inline stylesheet
+        inlineStyle = '<style>\n</style>',
+
+        // External script
+        externScript = '<script src=""></script>',
+
+        // Inline script
+        inlineScript = externScript.replace('src=""', ""),
+
+        // Picture/Image
+        image = '<img width="' + imgWidth + '" height="'+ imgHeight +'" src="" />',
+
+        // Assign a variable for 4 space indentation for easier construction
+        fourSpaceIndent = "\u0020\u0020\u0020\u0020",
+
+        // Full HTML skeleton
+        fullHtmlSkelly = '<!DOCTYPE html>\n<html lang="">\n<head>\n' + fourSpaceIndent +
+        '<meta charset="utf-8">\n' + fourSpaceIndent +'<title></title>\n' + fourSpaceIndent +
+        '<link rel="stylesheet" href="" />' + '\n</head>\n\n<body>\n' +
+        fourSpaceIndent + '<script src=""></script>\n</body>\n</html>\n';
+
 
     /* ------- End Available HTML Elements ------- */
 
 
-    function inserthtmlSkelly() {
+    /*function inserthtmlSkelly() {
         var editor = EditorManager.getFocusedEditor();
         if (editor) {
             // Insert the skeleton at the current cursor position
             var cursor = editor.getCursorPos();
             editor.document.replaceRange(htmlSkelly, cursor);
         }
-    }
+    }*/
 
 
     function _showSkellyDialog() {
@@ -70,13 +96,54 @@ define(function (require, exports, module) {
 
         // Display the logo
         $("#html-skeleton-figure").attr("src", skellyLogo);
+
+        // If the width and height boxes are not the default size (1), reuse the previous value.
+        // Technically, the value is already reused, but this makes it more obvious.
+        if (imgWidth !== 0) {
+            $("#img-width").val(imgWidth);
+        }
+        if (imgHeight !== 0) {
+            $("#img-height").val(imgHeight);
+        }
     }
+
 
     function _performActions() {
         /* Get element choices and insert them */
 
-        console.log(typeof $("#full-skelly:checked").val());
+        // Store all the option IDs for quicker access (and easier coding :P)
+        var optionIDs = ["#head-body", "#extern-style-tag", "#inline-style-tag",
+                         "#extern-script-tag", "#inline-script-tag", "#full-skelly"
+                        ],
+            $imgWidthID = $("#img-width"),
+            $imgHeightID = $("#img-height");
+
+        // The picture/image box is checked
+        if ($("#img-tag:checked").val()) {
+
+            // The width box was filled out, use that value
+            if ($imgWidthID.val()) {
+                imgWidth = $imgWidthID.val();
+            }
+
+            // The height box was filled out, use that value
+            if ($imgHeightID.val()) {
+                imgHeight = $imgHeightID.val();
+            }
+
+        } else {
+            // The box was not checked, reset sizes
+            imgWidth = 0;
+            imgHeight = 0;
+        }
+
+        optionIDs.forEach(function (value, index) {
+            if ($(value + ":checked").val() === "on") {
+                console.log(value);
+            }
+        });
     }
+
 
     AppInit.appReady(function () {
         /* Load the extension after Brackets itself has finished loading */
