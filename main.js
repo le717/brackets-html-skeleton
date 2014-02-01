@@ -16,7 +16,7 @@ define(function (require, module) {
     var AppInit = brackets.getModule("utils/AppInit"),
         //CommandManager  = brackets.getModule("command/CommandManager"),
         Dialogs = brackets.getModule("widgets/Dialogs"),
-        //EditorManager  = brackets.getModule("editor/EditorManager"),
+        EditorManager  = brackets.getModule("editor/EditorManager"),
         ExtensionUtils = brackets.getModule("utils/ExtensionUtils"),
         //Menus = brackets.getModule("command/Menus"),
 
@@ -30,6 +30,27 @@ define(function (require, module) {
         // The extension ID
         // FUTURE Uncomment if keyboard shortcuts/menu is is activated
         //EXTENSION_ID = "le717.html-skeleton";
+
+
+    function inserthtmlSkelly() {
+        /* Insert the skeleton */
+
+        // Assign a variable for 4 space indentation for easier construction
+        var fourSpaceIndent = "\u0020\u0020\u0020\u0020";
+
+        // The HTML skeleton
+        var htmlSkelly = '<!DOCTYPE html>\n<html lang="">\n<head>\n' + fourSpaceIndent +
+            '<meta charset="utf-8">\n' + fourSpaceIndent +'<title></title>\n' + fourSpaceIndent +
+            '<link rel="stylesheet" href="" />' + '\n</head>\n\n<body>\n' +
+            fourSpaceIndent + '<script src=""></script>\n</body>\n</html>\n';
+
+        var editor = EditorManager.getFocusedEditor();
+        if (editor) {
+            // Insert the skeleton at the current cursor position
+            var cursor = editor.getCursorPos();
+            editor.document.replaceRange(htmlSkelly, cursor);
+        }
+    }
 
 
     function _showSkellyDialog() {
