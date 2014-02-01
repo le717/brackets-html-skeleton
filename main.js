@@ -9,7 +9,7 @@
     Licensed under The MIT Licenses
 */
 
-define(function (require, module) {
+define(function (require, exports, module) {
     "use strict";
 
     // Import the required Brackets modules
@@ -22,7 +22,7 @@ define(function (require, module) {
 
         // Pull in the entire dialog and define the toolbar button link
         skellyDialogHtml = require("text!mainDialog.html"),
-        toolbarButtonCode = '<a href="#" id="html-skelly-toolbar">',
+        toolbarButtonCode = '<a href="#" id="html-skelly-icon">',
 
         // Grab our logo to display in the dialog
         skellyLogo = require.toUrl("img/HTML-Skeleton.svg");

@@ -6,7 +6,7 @@
     Licensed under The MIT Licenses
 */
 
-#html-skelly-toolbar {
+#html-skelly-icon {
     background: no-repeat url("../img/toolbar.svg");
     display: inline-block;
     width: 24px;
@@ -22,7 +22,7 @@ input {
     margin-bottom: 3px;
 }
 
-/* Reduce the amount of blank space underneith the number fields */
+/* Reduce the amount of blank space underneath the number fields */
 input[type="number"] {
     margin-bottom: 3px;
 }
