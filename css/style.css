@@ -7,7 +7,7 @@
 */
 
 #html-skelly-icon {
-    background: no-repeat url("../img/toolbar.svg");
+    /*background: no-repeat url("../img/toolbar.svg");*/
     display: inline-block;
     width: 24px;
     height: 24px;
@@ -17,15 +17,19 @@
 #html-skeleton-figure { float: right; }
 
 /* Space the check boxes apart a bit */
-input {
-    margin-top: 3px;
+.html-skeleton > input {
     margin-bottom: 3px;
 }
 
 /* Reduce the amount of blank space underneath the number fields */
-input[type="number"] {
+.html-skeleton > input[type="number"] {
     margin-bottom: 3px;
 }
 
 /* Do not place the labels on a new line */
-label { display: inline; }
+.html-skeleton > label { display: inline; }
+
+.html-skeleton #img-size-x {
+    font-weight: bold;
+    font-size: 17px;
+}

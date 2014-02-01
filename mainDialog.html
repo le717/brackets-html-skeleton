@@ -1,4 +1,4 @@
-<div class="html-skeleton-code-dialog template modal hide">
+<div class="html-skeleton-dialog template modal hide">
     <!-- Dialog title -->
     <div class="modal-header">
         <h1 class="dialog-title">HTML Skeleton</h1>
@@ -11,22 +11,21 @@
             saving your from typing it yourself.
         </p>
 
-        <!-- HTML Skeleton logo by @rioforce. The `src` attribute is added through JavaScript -->
-        <div id="html-skeleton-figure">
-            <img width="125" height="1205" alt="HTML Skeleton logo" />
-        </div>
+        <!-- HTML Skeleton logo by http://rioforce.WordPress.com
+            The `src` attribute is added through JavaScript -->
+            <img class="html-skeleton" id="html-skeleton-figure" width="140" height="140" alt="HTML Skeleton logo" />
 
         <!--- Usage directions -->
         <h3>Usage</h3>
         <ol>
             <li>Place your cursor in your document where you want the elements to be<br>inserted</li>
             <li>Select the elements you want to add</li>
-            <li>Click Finish and your elements will be added!</li>
+            <li>Click Done and your elements will be added!</li>
         </ol>
 
         <!-- Element options -->
         <h3>Elements</h3>
-            <form>
+            <form class="html-skeleton">
                 <input type="checkbox" id="head-body" value="skelly" />
                 <label for="head-body">Head and Body w/ &lt;title&gt; &amp; &lt;meta&gt;<br></label>
 
@@ -46,7 +45,7 @@
                 <input type="checkbox" id="img-tag" value="img" />
                 <label for="img-tag">Picture/Image<br></label>
 
-                <input type="number" id="img-width" min="0" placeholder="Width" /> <strong>x</strong>
+                <input type="number" id="img-width" min="0" placeholder="Width" /> <span class="html-skeleton" id="img-size-x">x</span>
                 <input type="number" id="img-height" min="0" placeholder="Height" />
 
                 <!-- Add the entire HTML skeleton -->
@@ -57,8 +56,8 @@
         </form>
     </div>
 
-    <!-- Finish button -->
+    <!-- Done button -->
     <div class="modal-footer">
-        <a href="#" class="dialog-button btn primary" data-button-id="ok">Finish</a>
+        <a href="#" class="dialog-button btn primary" data-button-id="ok">Done</a>
     </div>
 </div>

@@ -14,22 +14,21 @@ define(function (require, exports, module) {
 
     // Import the required Brackets modules
     var AppInit = brackets.getModule("utils/AppInit"),
-        //CommandManager  = brackets.getModule("command/CommandManager"),
+        CommandManager = brackets.getModule("command/CommandManager"),
         Dialogs = brackets.getModule("widgets/Dialogs"),
-        EditorManager  = brackets.getModule("editor/EditorManager"),
+        EditorManager = brackets.getModule("editor/EditorManager"),
         ExtensionUtils = brackets.getModule("utils/ExtensionUtils"),
-        //Menus = brackets.getModule("command/Menus"),
+        Menus = brackets.getModule("command/Menus"),
 
         // Pull in the entire dialog and define the toolbar button link
         skellyDialogHtml = require("text!mainDialog.html"),
         toolbarButtonCode = '<a href="#" id="html-skelly-icon">',
 
         // Grab our logo to display in the dialog
-        skellyLogo = require.toUrl("img/HTML-Skeleton.svg");
+        skellyLogo = require.toUrl("img/HTML-Skeleton.svg"),
 
         // The extension ID
-        // FUTURE Uncomment if keyboard shortcuts/menu is is activated
-        //EXTENSION_ID = "le717.html-skeleton";
+        EXTENSION_ID = "le717.html-skeleton";
 
 
     function inserthtmlSkelly() {
@@ -60,7 +59,7 @@ define(function (require, exports, module) {
         skellyDialog.getElement().find(".close").on("click", skellyDialog.close.bind(skellyDialog));
 
         // Display the logo
-        $("#html-skeleton-figure img").attr("src", skellyLogo);
+        $("#html-skeleton-figure").attr("src", skellyLogo);
     }
 
     AppInit.appReady(function () {
@@ -73,11 +72,10 @@ define(function (require, exports, module) {
         var $toolbarButton = $(toolbarButtonCode);
         $toolbarButton.appendTo("#main-toolbar > .buttons");
 
-        // Assign a keyboard shortcut and option in File meby
-        // FUTURE Not sure if I should do this or not
-        //CommandManager.register("Insert HTML elements", EXTENSION_ID, _showSkellyDialog);
-        //var theMenu = Menus.getMenu(Menus.AppMenuBar.FILE_MENU);
-        //theMenu.addMenuItem(EXTENSION_ID, "Ctrl-Shift-N");
+        // Assign a keyboard shortcut and option in File menu
+        CommandManager.register("Insert HTML elements", EXTENSION_ID, _showSkellyDialog);
+        var theMenu = Menus.getMenu(Menus.AppMenuBar.FILE_MENU);
+        theMenu.addMenuItem(EXTENSION_ID, "Ctrl-Shift-N");
 
         // Set the button's title attribute, open dialog when clicked
         $toolbarButton.attr("title", "Insert HTML elements");
