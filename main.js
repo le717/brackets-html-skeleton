@@ -26,7 +26,7 @@ define(function (require, exports, module) {
         Menus = brackets.getModule("command/Menus"),
 
         // Pull in the entire dialog and define the toolbar button link
-        skellyDialogHtml = require("text!mainDialog.html"),
+        skellyDialogHtml = require("text!htmlContent/mainDialog.html"),
         toolbarButtonCode = '<a href="#" id="html-skelly-icon">',
 
         // Grab our logo to display in the dialog
