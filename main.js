@@ -1,4 +1,4 @@
-/*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50 */
+/*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50, maxlen: 100 */
 /*global define, brackets, $ */
 
 /*
@@ -10,7 +10,7 @@
 */
 
 
-/* ------- Begin Module Importing ------- */
+    /* ------- Begin Module Importing ------- */
 
 
 define(function (require, exports, module) {
@@ -39,80 +39,42 @@ define(function (require, exports, module) {
     /* ------- End Module Importing ------- */
 
 
-    /* ------- Begin HTML Skeleton Dialog Box ------- */
-
-
-    function _showSkellyDialog() {
-        /* Display the HTML Skeleton box */
-
-        var skellyDialog = Dialogs.showModalDialogUsingTemplate(skellyDialogHtml),
-            $openButton = skellyDialog.getElement().find(".close"),
-            $doneButton = skellyDialog.getElement().find("#done-button");
-
-        // Bind the close button
-        $openButton.on("click", skellyDialog.close.bind(skellyDialog));
-        // TODO Restore focus to editor upon closing the dialog
-
-        // Upon closing the dialog, run function to gather and apply choices
-        $doneButton.on("click", _getOptions);
-
-        // Display the logo
-        $("#html-skeleton-figure").attr("src", skellyLogo);
-
-        /* FUTURE: Disabled until either
-         * 1. I can get the scope working or
-         * 2. persistent values are a good thing to have
-         */
-        // If the width and height boxes are not the default size (0), reuse the previous value.
-        // Technically, the values are already reused, but this makes it more obvious.
-//        if ($imgWidth !== 0) {
-//            $("#img-width").val($imgWidth);
-//        }
-//        if ($imgHeight !== 0) {
-//           $("#img-height").val($imgHeight);
-//        }
-    }
-
-
-    /* ------- End HTML Skeleton Dialog Box ------- */
-
-
     /* ------- Begin Available HTML Elements ------- */
 
     // Assign a variable for 4 space indentation for easier coding
     var fourSpaceIndent = "\u0020\u0020\u0020\u0020";
 
     // Placeholder variables for image size
-    var $imgWidth = 0;
-    var $imgHeight = 0;
+    var $imgWidth = 0,
+        $imgHeight = 0;
 
     var skellyBones = [
-        // Only the head and body tags + title and meta
-        '<!DOCTYPE html>\n<html lang="">\n<head>\n' + fourSpaceIndent +
-        '<meta charset="utf-8">\n' + fourSpaceIndent +'<title></title>\n' +
-        '\n</head>\n\n<body>\n' + fourSpaceIndent + '\n</body>\n</html>\n',
+            // Only the head and body tags + title and meta
+            '<!DOCTYPE html>\n<html lang="">\n<head>\n' + fourSpaceIndent +
+                '<meta charset="utf-8">\n' + fourSpaceIndent + '<title></title>\n' +
+                '\n</head>\n\n<body>\n' + fourSpaceIndent + '\n</body>\n</html>\n',
 
-        // External stylesheet
-        '<link rel="stylesheet" href="" />',
+            // External stylesheet
+            '<link rel="stylesheet" href="" />',
 
-        // Inline stylesheet
-        '<style></style>',
+            // Inline stylesheet
+            '<style></style>',
 
-        // External script
-        '<script src=""></script>',
+            // External script
+            '<script src=""></script>',
 
-        // Inline script
-        '<script></script>',
+            // Inline script
+            '<script></script>',
 
-        // Full HTML skeleton
-        '<!DOCTYPE html>\n<html lang="">\n<head>\n' + fourSpaceIndent +
-        '<meta charset="utf-8">\n' + fourSpaceIndent +'<title></title>\n' + fourSpaceIndent +
-        '<link rel="stylesheet" href="" />' + '\n</head>\n\n<body>\n' +
-        fourSpaceIndent + '<script src=""></script>\n</body>\n</html>\n'
-    ];
+            // Full HTML skeleton
+            '<!DOCTYPE html>\n<html lang="">\n<head>\n' + fourSpaceIndent +
+                '<meta charset="utf-8">\n' + fourSpaceIndent + '<title></title>\n' +
+                fourSpaceIndent + '<link rel="stylesheet" href="" />' + '\n</head>\n\n<body>\n' +
+                fourSpaceIndent + '<script src=""></script>\n</body>\n</html>\n'
+        ];
 
     // Picture/Image
-    var imageCode = '<img width="' + $imgWidth + '" height="'+ $imgHeight +'" src="" />';
+    var imageCode = '<img width="0" height="0" src="" />';
 
 
     /* ------- End Available HTML Elements ------- */
@@ -147,6 +109,9 @@ define(function (require, exports, module) {
     /* ------- End HTML Element Adding ------- */
 
 
+    /* ------- Begin HTML Element Choices ------- */
+
+
     function _getOptions() {
         /* Get element choices */
 
@@ -168,9 +133,6 @@ define(function (require, exports, module) {
 
         // The picture/image box is checked
         if ($("#img-tag:checked").val() === "on") {
-            // FIXME I'm having scope errors with this, causing the code
-            // to always have 0 as the width and height.
-
             // The width box was filled out, use that value
             if ($imgWidthID.val()) {
                 $imgWidth = $imgWidthID.val();
@@ -187,8 +149,14 @@ define(function (require, exports, module) {
                 $imgHeight = 0;
             }
 
-            // Add the image tag to `finalElements` for addition in document
-            finalElements.push(imageCode);
+            // Add the image tag to `finalElements` for addition in document,
+            // replacing the default size with the the new values
+            // FUTURE Could this be done better using regex?
+            finalElements.push(
+                imageCode.replace('<img width="0" height="0"',
+                                      '<img width="' + $imgWidth +
+                                      '" height="' + $imgHeight + '"')
+            );
 
         } else {
             // The box was not checked, reset sizes
@@ -209,7 +177,45 @@ define(function (require, exports, module) {
     }
 
 
-    /* ------- Begin Extension Initilzation ------- */
+    /* ------- End HTML Element Choices ------- */
+
+
+    /* ------- Begin HTML Skeleton Dialog Box ------- */
+
+
+    function _showSkellyDialog() {
+        /* Display the HTML Skeleton box */
+
+        var skellyDialog = Dialogs.showModalDialogUsingTemplate(skellyDialogHtml),
+            $openButton = skellyDialog.getElement().find(".close"),
+            $doneButton = skellyDialog.getElement().find("#done-button");
+
+        // Bind the close button
+        $openButton.on("click", skellyDialog.close.bind(skellyDialog));
+        // TODO Restore focus to editor upon closing the dialog
+
+        // Upon closing the dialog, run function to gather and apply choices
+        $doneButton.on("click", _getOptions);
+
+        // Display the logo
+        $("#html-skeleton-figure").attr("src", skellyLogo);
+
+        /* FUTURE Disabled unless persistent values are a good thing to have */
+        // If the width and height boxes are not the default size (0), reuse the previous value.
+        // Technically, the values are already reused, but this makes it more obvious.
+        //        if ($imgWidth !== 0) {
+        //            $("#img-width").val($imgWidth);
+        //        }
+        //        if ($imgHeight !== 0) {
+        //           $("#img-height").val($imgHeight);
+        //        }
+    }
+
+
+    /* ------- End HTML Skeleton Dialog Box ------- */
+
+
+    /* ------- Begin Extension Initialization ------- */
 
 
     AppInit.appReady(function () {
@@ -217,15 +223,6 @@ define(function (require, exports, module) {
 
         // Load any required CSS
         ExtensionUtils.loadStyleSheet(module, "css/style.css");
-
-        // Add a shortcut to the toolbar
-        // FUTURE Disabled until if/when I get an icon for it
-//        var $toolbarButton = $(toolbarButtonCode);
-//        $toolbarButton.appendTo("#main-toolbar > .buttons");
-
-        // Set the button's title attribute, open dialog when clicked
-//        $toolbarButton.attr("title", "Insert HTML elements");
-//        $toolbarButton.on("click", _showSkellyDialog);
 
         // Assign a keyboard shortcut and option in File menu
         CommandManager.register("Insert HTML elements", EXTENSION_ID, _showSkellyDialog);
@@ -235,4 +232,4 @@ define(function (require, exports, module) {
 });
 
 
-/* ------- End Extension Initilzation ------- */
+/* ------- End Extension Initialization ------- */
