@@ -24,12 +24,12 @@
 
 /* Space the check boxes apart a bit */
 .html-skeleton > input {
-    margin-bottom: 3px;
+    margin-bottom: 4px;
 }
 
 /* Reduce the amount of blank space underneath the number fields */
 .html-skeleton > input[type="number"] {
-    margin-bottom: 3px;
+    margin-bottom: 4px;
 }
 
 /* Do not place the labels on a new line */

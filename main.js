@@ -9,6 +9,10 @@
     Licensed under The MIT Licenses
 */
 
+
+/* ------- Begin Module Importing ------- */
+
+
 define(function (require, exports, module) {
     "use strict";
 
@@ -16,6 +20,7 @@ define(function (require, exports, module) {
     var AppInit = brackets.getModule("utils/AppInit"),
         CommandManager = brackets.getModule("command/CommandManager"),
         Dialogs = brackets.getModule("widgets/Dialogs"),
+        Document = brackets.getModule("document/Document"),
         EditorManager = brackets.getModule("editor/EditorManager"),
         ExtensionUtils = brackets.getModule("utils/ExtensionUtils"),
         Menus = brackets.getModule("command/Menus"),
@@ -31,54 +36,10 @@ define(function (require, exports, module) {
         EXTENSION_ID = "le717.html-skeleton";
 
 
-    /* ------- Begin Available HTML Elements ------- */
+    /* ------- End Module Importing ------- */
 
 
-    // Placeholder variables for image size
-    var imgWidth = 0,
-        imgHeight = 0,
-
-        // Only the head and body tags + title and meta
-        headBody = '<!DOCTYPE html>\n<html lang="">\n<head>\n' + fourSpaceIndent +
-        '<meta charset="utf-8">\n' + fourSpaceIndent +'<title></title>\n' +
-        '\n</head>\n\n<body>\n' + fourSpaceIndent + '\n</body>\n</html>\n',
-
-        // External stylesheet
-        externStyle = '<link rel="stylesheet" href="" />',
-
-        // Inline stylesheet
-        inlineStyle = '<style>\n</style>',
-
-        // External script
-        externScript = '<script src=""></script>',
-
-        // Inline script
-        inlineScript = externScript.replace('src=""', ""),
-
-        // Picture/Image
-        image = '<img width="' + imgWidth + '" height="'+ imgHeight +'" src="" />',
-
-        // Assign a variable for 4 space indentation for easier construction
-        fourSpaceIndent = "\u0020\u0020\u0020\u0020",
-
-        // Full HTML skeleton
-        fullHtmlSkelly = '<!DOCTYPE html>\n<html lang="">\n<head>\n' + fourSpaceIndent +
-        '<meta charset="utf-8">\n' + fourSpaceIndent +'<title></title>\n' + fourSpaceIndent +
-        '<link rel="stylesheet" href="" />' + '\n</head>\n\n<body>\n' +
-        fourSpaceIndent + '<script src=""></script>\n</body>\n</html>\n';
-
-
-    /* ------- End Available HTML Elements ------- */
-
-
-    /*function inserthtmlSkelly() {
-        var editor = EditorManager.getFocusedEditor();
-        if (editor) {
-            // Insert the skeleton at the current cursor position
-            var cursor = editor.getCursorPos();
-            editor.document.replaceRange(htmlSkelly, cursor);
-        }
-    }*/
+    /* ------- Begin HTML Skeleton Dialog Box ------- */
 
 
     function _showSkellyDialog() {
@@ -88,61 +49,167 @@ define(function (require, exports, module) {
             $openButton = skellyDialog.getElement().find(".close"),
             $doneButton = skellyDialog.getElement().find("#done-button");
 
-        // Close the dialog box
+        // Bind the close button
         $openButton.on("click", skellyDialog.close.bind(skellyDialog));
+        // TODO Restore focus to editor upon closing the dialog
 
         // Upon closing the dialog, run function to gather and apply choices
-        $doneButton.on("click", _performActions);
+        $doneButton.on("click", _getOptions);
 
         // Display the logo
         $("#html-skeleton-figure").attr("src", skellyLogo);
 
-        // If the width and height boxes are not the default size (1), reuse the previous value.
-        // Technically, the value is already reused, but this makes it more obvious.
-        if (imgWidth !== 0) {
-            $("#img-width").val(imgWidth);
-        }
-        if (imgHeight !== 0) {
-            $("#img-height").val(imgHeight);
+        /* FUTURE: Disabled until either
+         * 1. I can get the scope working or
+         * 2. persistent values are a good thing to have
+         */
+        // If the width and height boxes are not the default size (0), reuse the previous value.
+        // Technically, the values are already reused, but this makes it more obvious.
+//        if ($imgWidth !== 0) {
+//            $("#img-width").val($imgWidth);
+//        }
+//        if ($imgHeight !== 0) {
+//           $("#img-height").val($imgHeight);
+//        }
+    }
+
+
+    /* ------- End HTML Skeleton Dialog Box ------- */
+
+
+    /* ------- Begin Available HTML Elements ------- */
+
+    // Assign a variable for 4 space indentation for easier coding
+    var fourSpaceIndent = "\u0020\u0020\u0020\u0020";
+
+    // Placeholder variables for image size
+    var $imgWidth = 0;
+    var $imgHeight = 0;
+
+    var skellyBones = [
+        // Only the head and body tags + title and meta
+        '<!DOCTYPE html>\n<html lang="">\n<head>\n' + fourSpaceIndent +
+        '<meta charset="utf-8">\n' + fourSpaceIndent +'<title></title>\n' +
+        '\n</head>\n\n<body>\n' + fourSpaceIndent + '\n</body>\n</html>\n',
+
+        // External stylesheet
+        '<link rel="stylesheet" href="" />',
+
+        // Inline stylesheet
+        '<style></style>',
+
+        // External script
+        '<script src=""></script>',
+
+        // Inline script
+        '<script></script>',
+
+        // Full HTML skeleton
+        '<!DOCTYPE html>\n<html lang="">\n<head>\n' + fourSpaceIndent +
+        '<meta charset="utf-8">\n' + fourSpaceIndent +'<title></title>\n' + fourSpaceIndent +
+        '<link rel="stylesheet" href="" />' + '\n</head>\n\n<body>\n' +
+        fourSpaceIndent + '<script src=""></script>\n</body>\n</html>\n'
+    ];
+
+    // Picture/Image
+    var imageCode = '<img width="' + $imgWidth + '" height="'+ $imgHeight +'" src="" />';
+
+
+    /* ------- End Available HTML Elements ------- */
+
+
+    /* ------- Begin HTML Element Adding ------- */
+
+    // Stores the elements to be added
+    var finalElements = [];
+
+
+    function _insertAllTheCodes() {
+        /* Inter the selected elements into the document */
+
+        // Get the last active editor because the dialog steals focus
+        var editor = EditorManager.getActiveEditor();
+        if (editor) {
+            // Get the cursor position
+            var cursor = editor.getCursorPos();
+
+            finalElements.forEach(function (value) {
+                // FIXME Wrap the actions in batchOperation, per guidelines
+                //Document.batchOperation(
+                // Insert the selected elements at the current cursor position
+                editor.document.replaceRange(value, cursor);
+                //);
+            });
         }
     }
 
 
-    function _performActions() {
-        /* Get element choices and insert them */
+    /* ------- End HTML Element Adding ------- */
+
+
+    function _getOptions() {
+        /* Get element choices */
+
+        // Delete any elements from previous run
+        if (finalElements[0]) {
+            finalElements.forEach(function (value) {
+                finalElements.splice(value, finalElements.length);
+            });
+        }
 
         // Store all the option IDs for quicker access (and easier coding :P)
         var optionIDs = ["#head-body", "#extern-style-tag", "#inline-style-tag",
                          "#extern-script-tag", "#inline-script-tag", "#full-skelly"
                         ],
+
+            // Shortcuts to the image size input boxes
             $imgWidthID = $("#img-width"),
             $imgHeightID = $("#img-height");
 
         // The picture/image box is checked
-        if ($("#img-tag:checked").val()) {
+        if ($("#img-tag:checked").val() === "on") {
+            // FIXME I'm having scope errors with this, causing the code
+            // to always have 0 as the width and height.
 
             // The width box was filled out, use that value
             if ($imgWidthID.val()) {
-                imgWidth = $imgWidthID.val();
+                $imgWidth = $imgWidthID.val();
+            } else {
+                // The width box was empty, reset to 0
+                $imgWidth = 0;
             }
 
             // The height box was filled out, use that value
             if ($imgHeightID.val()) {
-                imgHeight = $imgHeightID.val();
+                $imgHeight = $imgHeightID.val();
+            } else {
+                // The height box was empty, reset to 0
+                $imgHeight = 0;
             }
+
+            // Add the image tag to `finalElements` for addition in document
+            finalElements.push(imageCode);
 
         } else {
             // The box was not checked, reset sizes
-            imgWidth = 0;
-            imgHeight = 0;
+            $imgWidth = 0;
+            $imgHeight = 0;
         }
 
+        // For each option that is checked, add the corrisponding element
+        // to `finalElements` for addition in document
         optionIDs.forEach(function (value, index) {
             if ($(value + ":checked").val() === "on") {
-                console.log(value);
+                finalElements.push(skellyBones[index]);
             }
         });
+
+        // Finally, run process to add the selected elements
+        _insertAllTheCodes();
     }
+
+
+    /* ------- Begin Extension Initilzation ------- */
 
 
     AppInit.appReady(function () {
@@ -152,16 +219,20 @@ define(function (require, exports, module) {
         ExtensionUtils.loadStyleSheet(module, "css/style.css");
 
         // Add a shortcut to the toolbar
-        var $toolbarButton = $(toolbarButtonCode);
-        $toolbarButton.appendTo("#main-toolbar > .buttons");
+        // FUTURE Disabled until if/when I get an icon for it
+//        var $toolbarButton = $(toolbarButtonCode);
+//        $toolbarButton.appendTo("#main-toolbar > .buttons");
+
+        // Set the button's title attribute, open dialog when clicked
+//        $toolbarButton.attr("title", "Insert HTML elements");
+//        $toolbarButton.on("click", _showSkellyDialog);
 
         // Assign a keyboard shortcut and option in File menu
         CommandManager.register("Insert HTML elements", EXTENSION_ID, _showSkellyDialog);
         var theMenu = Menus.getMenu(Menus.AppMenuBar.FILE_MENU);
         theMenu.addMenuItem(EXTENSION_ID, "Ctrl-Shift-N");
-
-        // Set the button's title attribute, open dialog when clicked
-        $toolbarButton.attr("title", "Insert HTML elements");
-        $toolbarButton.on("click", _showSkellyDialog);
     });
 });
+
+
+/* ------- End Extension Initilzation ------- */
