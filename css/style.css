@@ -9,13 +9,6 @@
 /* Prevent the dialog from having a vertical scrollbar */
 .html-skeleton-modal-body { overflow-y: hidden; }
 
-#html-skelly-icon {
-    /*background: no-repeat url("../img/toolbar.svg");*/
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-}
-
 /* Position the logo on the right */
 #html-skeleton-figure {
     float: right;
