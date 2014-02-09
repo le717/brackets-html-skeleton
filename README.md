@@ -1,8 +1,8 @@
 # HTML Skeleton #
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/le717/brackets-html-skeleton/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+[![Bitdeli](https://d2weczhvl823v0.cloudfront.net/le717/brackets-html-skeleton/trend.png)](https://bitdeli.com/free)
 
-An [Adobe Brackets](http://brackets.io) extension to automatically add the required HTML5 document tags to your document.
+A [Brackets](http://brackets.io) extension to automatically add the required HTML5 document tags to your document.
 Simply press Ctrl-Shift-N! Also includes tags for one external stylesheet and script.
 
 # Installation #
@@ -12,6 +12,7 @@ Simply press Ctrl-Shift-N! Also includes tags for one external stylesheet and sc
 
 # Updates #
 
+* 1.1.0, 2/??/14 - _TODO_
 * 0.7.4, 1/30/2014 - Fixed pre-filled `<html lang="">` value.
 * 0.7.3, 1/25/2014 - Initial release
 

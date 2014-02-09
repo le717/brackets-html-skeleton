@@ -18,6 +18,7 @@ define(function (require, exports, module) {
 
     // Import the required Brackets modules
     var AppInit = brackets.getModule("utils/AppInit"),
+        Commands = brackets.getModule("command/Commands"),
         CommandManager = brackets.getModule("command/CommandManager"),
         Dialogs = brackets.getModule("widgets/Dialogs"),
         Document = brackets.getModule("document/Document"),
@@ -96,11 +97,11 @@ define(function (require, exports, module) {
             var cursor = editor.getCursorPos();
 
             finalElements.forEach(function (value) {
-                // FIXME Wrap the actions in batchOperation, per guidelines
-                //Document.batchOperation(
-                // Insert the selected elements at the current cursor position
-                editor.document.replaceRange(value, cursor);
-                //);
+                //  Wrap the actions in a `batchOperation`, per guidelines
+                Document.batchOperation(function() {
+                    // Insert the selected elements at the current cursor position
+                    editor.document.replaceRange(value, cursor);
+                });
             });
         }
     }
@@ -151,7 +152,6 @@ define(function (require, exports, module) {
 
             // Add the image tag to `finalElements` for addition in document,
             // replacing the default size with the the new values
-            // FUTURE Could this be done better using regex?
             finalElements.push(
                 imageCode.replace('<img width="0" height="0"',
                                       '<img width="' + $imgWidth +
@@ -192,7 +192,6 @@ define(function (require, exports, module) {
 
         // Bind the close button
         $openButton.on("click", skellyDialog.close.bind(skellyDialog));
-        // TODO Restore focus to editor upon closing the dialog
 
         // Upon closing the dialog, run function to gather and apply choices
         $doneButton.on("click", _getOptions);
@@ -226,8 +225,8 @@ define(function (require, exports, module) {
 
         // Assign a keyboard shortcut and option in File menu
         CommandManager.register("Insert HTML elements", EXTENSION_ID, _showSkellyDialog);
-        var theMenu = Menus.getMenu(Menus.AppMenuBar.FILE_MENU);
-        theMenu.addMenuItem(EXTENSION_ID, "Ctrl-Shift-N");
+        var menu = Menus.getMenu(Menus.AppMenuBar.FILE_MENU);
+        menu.addMenuItem(EXTENSION_ID, "Ctrl-Shift-N", Menus.AFTER, Commands.FILE_NEW_UNTITLED);
     });
 });
 
