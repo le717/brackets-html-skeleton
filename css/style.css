@@ -1,0 +1,34 @@
+/*
+    HTML Skeleton
+    Created 2014 Triangle717
+    <http://Triangle717.WordPress.com/>
+
+    Licensed under The MIT Licenses
+*/
+
+/* Prevent the dialog from having a vertical scrollbar */
+.html-skeleton-modal-body { overflow-y: hidden; }
+
+/* Position the logo on the right */
+#html-skeleton-figure {
+    float: right;
+    -webkit-transform: translateY(-20px);
+}
+
+/* Space the check boxes apart a bit */
+.html-skeleton > input {
+    margin-bottom: 4px;
+}
+
+/* Reduce the amount of blank space underneath the number fields */
+.html-skeleton > input[type="number"] {
+    margin-bottom: 4px;
+}
+
+/* Do not place the labels on a new line */
+.html-skeleton > label { display: inline; }
+
+.html-skeleton #img-size-x {
+    font-weight: bold;
+    font-size: 17px;
+}

@@ -1,0 +1,63 @@
+<div class="html-skeleton-dialog template modal hide">
+    <!-- Dialog title -->
+    <div class="modal-header">
+        <h1 class="dialog-title">HTML Skeleton</h1>
+    </div>
+
+    <div class="modal-body html-skeleton-modal-body">
+        <!-- What does this extension do? -->
+        <p class="dialog-message">
+            HTML Skeleton allows you to add various HTML elements straight into your document,
+            freeing you from typing it yourself.
+        </p>
+
+        <!-- HTML Skeleton logo by http://rioforce.WordPress.com
+        The `src` attribute is added through JavaScript -->
+        <img class="html-skeleton" id="html-skeleton-figure" width="150" alt="HTML Skeleton logo" />
+
+        <!--- Usage directions -->
+        <h3>Usage</h3>
+        <ol>
+            <li>Place your cursor where you want the elements to be added</li>
+            <li>Select the elements you desire</li>
+            <li>Click Done and the HTML elements will be added to your document!</li>
+        </ol>
+
+        <!-- Element options -->
+        <h3>Elements</h3>
+            <form class="html-skeleton">
+                <input type="checkbox" id="head-body" />
+                <label for="head-body">Head and Body w/ &lt;title&gt; &amp; &lt;meta&gt;<br></label>
+
+                <input type="checkbox" id="extern-style-tag" />
+                <label for="extern-style-tag">External Stylesheet<br></label>
+
+                <input type="checkbox" id="inline-style-tag" />
+                <label for="inline-style-tag">Inline Stylesheet<br></label>
+
+                <input type="checkbox" id="extern-script-tag" />
+                <label for="extern-script-tag">External Script<br></label>
+
+                <input type="checkbox" id="inline-script-tag" />
+                <label for="inline-script-tag">Inline Script<br></label>
+
+                <!-- Image and image size input boxes -->
+                <input type="checkbox" id="img-tag" />
+                <label for="img-tag">Picture/Image<br></label>
+
+                <input type="number" id="img-width" min="0" placeholder="Width" /> <span class="html-skeleton" id="img-size-x">x</span>
+                <input type="number" id="img-height" min="0" placeholder="Height" />
+
+                <!-- Add the entire HTML skeleton -->
+                <br>
+                <input type="checkbox" id="full-skelly" />
+                <label for="full-skelly">Full HTML skeleton<br>
+                Includes all elements above except inline stylesheet, inline script, and image</label>
+        </form>
+    </div>
+
+    <!-- Done button -->
+    <div class="modal-footer">
+        <a href="#" class="dialog-button btn primary" data-button-id="ok" id="done-button">Done</a>
+    </div>
+</div>
