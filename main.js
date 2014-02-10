@@ -18,7 +18,6 @@ define(function (require, exports, module) {
 
     // Import the required Brackets modules
     var AppInit = brackets.getModule("utils/AppInit"),
-        Commands = brackets.getModule("command/Commands"),
         CommandManager = brackets.getModule("command/CommandManager"),
         Dialogs = brackets.getModule("widgets/Dialogs"),
         Document = brackets.getModule("document/Document"),
@@ -26,9 +25,8 @@ define(function (require, exports, module) {
         ExtensionUtils = brackets.getModule("utils/ExtensionUtils"),
         Menus = brackets.getModule("command/Menus"),
 
-        // Pull in the entire dialog and define the toolbar button link
+        // Pull in the entire dialog
         skellyDialogHtml = require("text!htmlContent/mainDialog.html"),
-        toolbarButtonCode = '<a href="#" id="html-skelly-icon">',
 
         // Grab our logo to display in the dialog
         skellyLogo = require.toUrl("img/HTML-Skeleton.svg"),
@@ -98,7 +96,7 @@ define(function (require, exports, module) {
 
             finalElements.forEach(function (value) {
                 //  Wrap the actions in a `batchOperation`, per guidelines
-                Document.batchOperation(function() {
+                editor.document.batchOperation(function() {
                     // Insert the selected elements at the current cursor position
                     editor.document.replaceRange(value, cursor);
                 });
@@ -223,10 +221,10 @@ define(function (require, exports, module) {
         // Load any required CSS
         ExtensionUtils.loadStyleSheet(module, "css/style.css");
 
-        // Assign a keyboard shortcut and option in File menu
-        CommandManager.register("Insert HTML elements", EXTENSION_ID, _showSkellyDialog);
-        var menu = Menus.getMenu(Menus.AppMenuBar.FILE_MENU);
-        menu.addMenuItem(EXTENSION_ID, "Ctrl-Shift-N", Menus.AFTER, Commands.FILE_NEW_UNTITLED);
+        // Assign a keyboard shortcut and item in Edit menu
+        CommandManager.register("Insert HTML elements \u2026", EXTENSION_ID, _showSkellyDialog);
+        var menu = Menus.getMenu(Menus.AppMenuBar.EDIT_MENU);
+        menu.addMenuItem(EXTENSION_ID, "Ctrl-Shift-N");
     });
 });
 
