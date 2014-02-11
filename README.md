@@ -7,8 +7,9 @@ freeing you from typing it yourself.
 
 # Installation #
 
-* Open the Brackets Extension Manager and search for "skeleton"
-* Alternate method: Download straight from GitHub using [https://github.com/le717/brackets-html-skeleton/archive/master.zip](https://github.com/le717/brackets-html-skeleton/archive/master.zip)
+Method 1: Open the Brackets Extension Manager and search for "skeleton"
+Method 2: Download from the [Brackets Extension Registry](https://brackets-registry.aboutweb.com/) and install to your `extensions/user` folder
+Method 3: Download directly from GitHub using [https://github.com/le717/brackets-html-skeleton/archive/master.zip](https://github.com/le717/brackets-html-skeleton/archive/master.zip)
 
 # Usage #
 

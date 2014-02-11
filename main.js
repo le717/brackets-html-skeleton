@@ -1,5 +1,5 @@
-/*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50, maxlen: 100 */
-/*global define, brackets, $ */
+/* jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50 */
+/* global define, brackets, $ */
 
 /*
     HTML Skeleton
@@ -184,9 +184,10 @@ define(function (require, exports, module) {
     function _showSkellyDialog() {
         /* Display the HTML Skeleton box */
 
-        var skellyDialog = Dialogs.showModalDialogUsingTemplate(skellyDialogHtml),
-            $openButton = skellyDialog.getElement().find(".close"),
-            $doneButton = skellyDialog.getElement().find("#done-button");
+        var skellyDialog = Dialogs.showModalDialogUsingTemplate(skellyDialogHtml);
+        var $dlg = skellyDialog.getElement();
+        var $openButton = $dlg.find(".close"),
+            $doneButton = $dlg.find(".dialog-button[data-button-id='ok']");
 
         // Bind the close button
         $openButton.on("click", skellyDialog.close.bind(skellyDialog));
