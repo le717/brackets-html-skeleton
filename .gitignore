@@ -1,5 +1,7 @@
 *.tmp
 *.bak
+*.js
+*.html
 Releases/
 img/*
 !img/*.png

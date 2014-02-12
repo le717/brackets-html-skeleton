@@ -184,12 +184,12 @@ define(function (require, exports, module) {
     function _showSkellyDialog() {
         /* Display the HTML Skeleton box */
 
-        var skellyDialog = Dialogs.showModalDialogUsingTemplate(skellyDialogHtml);
-        var $dlg = skellyDialog.getElement();
-        var $doneButton = $dlg.find(".dialog-button[data-button-id='ok']");
+        var skellyDialog = Dialogs.showModalDialogUsingTemplate(skellyDialogHtml),
+            $doneButton = skellyDialog.getElement().find('.dialog-button[data-button-id="ok"]');
 
         // Bind the close button
-        $doneButton.on("click", skellyDialog.close.bind(skellyDialog));
+        // FIXME Why does enabling this stop the extension from working?
+        //$doneButton.on("click", skellyDialog.close.bind(skellyDialog));
 
         // Upon closing the dialog, run function to gather and apply choices
         $doneButton.on("click", _getOptions);
