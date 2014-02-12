@@ -186,11 +186,10 @@ define(function (require, exports, module) {
 
         var skellyDialog = Dialogs.showModalDialogUsingTemplate(skellyDialogHtml);
         var $dlg = skellyDialog.getElement();
-        var $openButton = $dlg.find(".close"),
-            $doneButton = $dlg.find(".dialog-button[data-button-id='ok']");
+        var $doneButton = $dlg.find(".dialog-button[data-button-id='ok']");
 
         // Bind the close button
-        $openButton.on("click", skellyDialog.close.bind(skellyDialog));
+        $doneButton.on("click", skellyDialog.close.bind(skellyDialog));
 
         // Upon closing the dialog, run function to gather and apply choices
         $doneButton.on("click", _getOptions);
