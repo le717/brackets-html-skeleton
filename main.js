@@ -54,7 +54,7 @@ define(function (require, exports, module) {
                 '\n</head>\n\n<body>\n' + fourSpaceIndent + '\n</body>\n</html>\n',
 
             // External stylesheet
-            '<link rel="stylesheet" href="" />',
+            '<link rel="stylesheet" type="text/css" href="">',
 
             // Inline stylesheet
             '<style></style>',
@@ -68,7 +68,7 @@ define(function (require, exports, module) {
             // Full HTML skeleton
             '<!DOCTYPE html>\n<html lang="">\n<head>\n' + fourSpaceIndent +
                 '<meta charset="utf-8">\n' + fourSpaceIndent + '<title></title>\n' +
-                fourSpaceIndent + '<link rel="stylesheet" href="" />' + '\n</head>\n\n<body>\n' +
+                fourSpaceIndent + '<link rel="stylesheet" href="">' + '\n</head>\n\n<body>\n' +
                 fourSpaceIndent + '<script src=""></script>\n</body>\n</html>\n'
         ];
 
@@ -89,10 +89,12 @@ define(function (require, exports, module) {
         if (editor) {
             // Get the cursor position
             var cursor = editor.getCursorPos();
-
-            finalElements.forEach(function (value) {
-                //  Wrap the actions in a `batchOperation`, per guidelines
+            
+            // Get the elements from the list in reverse so everything is added in the proper order
+            finalElements.reverse().forEach(function (value) {
+                //  Wrap the actions in a `batchOperation` call, per guidelines
                 editor.document.batchOperation(function() {
+
                     // Insert the selected elements at the current cursor position
                     editor.document.replaceRange(value, cursor);
                 });
@@ -113,7 +115,7 @@ define(function (require, exports, module) {
         // Stores the elements to be added
         var finalElements = [],
 
-            // Store all the option IDs for quicker access (and easier coding :P)
+            // Store all the option IDs for easier access
             optionIDs = ["#head-body", "#extern-style-tag", "#inline-style-tag",
                          "#extern-script-tag", "#inline-script-tag", "#full-skelly"
                         ],
@@ -121,6 +123,14 @@ define(function (require, exports, module) {
             // Shortcuts to the image size input boxes
             $imgWidthID = $("#img-width"),
             $imgHeightID = $("#img-height");
+
+        // For each option that is checked, add the corresponding element
+        // to `finalElements` for addition in document
+        optionIDs.forEach(function (value, index) {
+            if ($(value + ":checked").val() === "on") {
+                finalElements.push(skellyBones[index]);
+            }
+        });
 
         // The picture/image box is checked
         if ($("#img-tag:checked").val() === "on") {
@@ -153,14 +163,6 @@ define(function (require, exports, module) {
             $imgWidth = 0;
             $imgHeight = 0;
         }
-
-        // For each option that is checked, add the corrisponding element
-        // to `finalElements` for addition in document
-        optionIDs.forEach(function (value, index) {
-            if ($(value + ":checked").val() === "on") {
-                finalElements.push(skellyBones[index]);
-            }
-        });
 
         // Finally, run process to add the selected elements
         _insertAllTheCodes(finalElements);
