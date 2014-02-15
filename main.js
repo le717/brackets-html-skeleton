@@ -57,7 +57,7 @@ define(function (require, exports, module) {
             '<link rel="stylesheet" type="text/css" href="">',
 
             // Inline stylesheet
-            '<style></style>',
+            '<style type="text/css"></style>',
 
             // External script
             '<script src=""></script>',
@@ -68,7 +68,7 @@ define(function (require, exports, module) {
             // Full HTML skeleton
             '<!DOCTYPE html>\n<html lang="">\n<head>\n' + fourSpaceIndent +
                 '<meta charset="utf-8">\n' + fourSpaceIndent + '<title></title>\n' +
-                fourSpaceIndent + '<link rel="stylesheet" href="">' + '\n</head>\n\n<body>\n' +
+                fourSpaceIndent + '<link rel="stylesheet" type="text/css" href="">' + '\n</head>\n\n<body>\n' +
                 fourSpaceIndent + '<script src=""></script>\n</body>\n</html>\n'
         ];
 
@@ -89,7 +89,7 @@ define(function (require, exports, module) {
         if (editor) {
             // Get the cursor position
             var cursor = editor.getCursorPos();
-            
+
             // Get the elements from the list in reverse so everything is added in the proper order
             finalElements.reverse().forEach(function (value) {
                 //  Wrap the actions in a `batchOperation` call, per guidelines
