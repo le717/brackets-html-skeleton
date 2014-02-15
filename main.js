@@ -81,11 +81,7 @@ define(function (require, exports, module) {
 
     /* ------- Begin HTML Element Adding ------- */
 
-    // Stores the elements to be added
-    var finalElements = [];
-
-
-    function _insertAllTheCodes() {
+    function _insertAllTheCodes(finalElements) {
         /* Inter the selected elements into the document */
 
         // Get the last active editor because the dialog steals focus
@@ -114,15 +110,11 @@ define(function (require, exports, module) {
     function _getOptions() {
         /* Get element choices */
 
-        // Delete any elements from previous run
-        if (finalElements[0]) {
-            finalElements.forEach(function (value) {
-                finalElements.splice(value, finalElements.length);
-            });
-        }
+        // Stores the elements to be added
+        var finalElements = [],
 
-        // Store all the option IDs for quicker access (and easier coding :P)
-        var optionIDs = ["#head-body", "#extern-style-tag", "#inline-style-tag",
+            // Store all the option IDs for quicker access (and easier coding :P)
+            optionIDs = ["#head-body", "#extern-style-tag", "#inline-style-tag",
                          "#extern-script-tag", "#inline-script-tag", "#full-skelly"
                         ],
 
@@ -171,7 +163,7 @@ define(function (require, exports, module) {
         });
 
         // Finally, run process to add the selected elements
-        _insertAllTheCodes();
+        _insertAllTheCodes(finalElements);
     }
 
 
@@ -186,10 +178,6 @@ define(function (require, exports, module) {
 
         var skellyDialog = Dialogs.showModalDialogUsingTemplate(skellyDialogHtml),
             $doneButton = skellyDialog.getElement().find('.dialog-button[data-button-id="ok"]');
-
-        // Bind the close button
-        // FIXME Why does enabling this stop the extension from working?
-        //$doneButton.on("click", skellyDialog.close.bind(skellyDialog));
 
         // Upon closing the dialog, run function to gather and apply choices
         $doneButton.on("click", _getOptions);
