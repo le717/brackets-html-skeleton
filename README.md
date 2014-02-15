@@ -24,6 +24,7 @@ Method 3: Download directly from GitHub using [https://github.com/le717/brackets
 
 # News #
 
+* 1.1.2, 2/15/14 - Fixed improper placement of external stylesheet when combined with "Head and body w/title & meta" option ([#4](https://github.com/le717/brackets-html-skeleton/issues/4)), added Cancel button to dialog, fixed incorrect HTML tags and attributes
 * 1.1.1, 2/10/14 - Fixed extension not even working ([#3](https://github.com/le717/brackets-html-skeleton/issues/3)), fix Brackets UI guideline violations
 * 1.1.0, 2/8/14 - Inspired by [adobe/brackets#6707](https://github.com/adobe/brackets/issues/6707), HTML Skeleton has been completely rewritten
 to support new HTML elements using a dialog box rather than a straight keyboard shortcut
