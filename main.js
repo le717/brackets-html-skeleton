@@ -212,7 +212,7 @@ define(function (require, exports, module) {
         ExtensionUtils.loadStyleSheet(module, "css/style.css");
 
         // Assign a keyboard shortcut and item in Edit menu
-        CommandManager.register("Insert HTML elements \u2026", EXTENSION_ID, _showSkellyDialog);
+        CommandManager.register("Insert HTML elements\u2026", EXTENSION_ID, _showSkellyDialog);
         var menu = Menus.getMenu(Menus.AppMenuBar.EDIT_MENU);
         menu.addMenuItem(EXTENSION_ID, "Ctrl-Shift-N");
     });
