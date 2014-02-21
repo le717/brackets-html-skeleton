@@ -26,11 +26,11 @@
 
 define({
     // menu
-    "INSERT_HTML_ELEMENTS" : "Insert HTML elements…",
+    "INSERT_HTML_ELEMENTS" : "Insert HTML elements\u2026",
 
     // mainDialog
     "DIALOG_TITLE" : "HTML Skeleton",
-    "DIALOG_EXTENSION_DESCRIPTION" : "",
+    "DIALOG_EXTENSION_DESCRIPTION" : "HTML Skeleton allows you to add various HTML elements straight into your document, freeing you from typing it yourself.",
     "USAGE" : "Usage",
     "PLACE_CURSOR" : "Place your cursor where you want the elements to be added.",
     "SELECT_ELEMENTS" : "Select the elements you desire",
