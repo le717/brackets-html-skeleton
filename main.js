@@ -1,5 +1,5 @@
 /* jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50 */
-/* global define, brackets, $ */
+/* global define, brackets, $, require, Mustache */
 
 /*
     HTML Skeleton
@@ -17,22 +17,24 @@ define(function (require, exports, module) {
     "use strict";
 
     // Import the required Brackets modules
-    var AppInit = brackets.getModule("utils/AppInit"),
-        CommandManager = brackets.getModule("command/CommandManager"),
-        Dialogs = brackets.getModule("widgets/Dialogs"),
-        Document = brackets.getModule("document/Document"),
-        EditorManager = brackets.getModule("editor/EditorManager"),
-        ExtensionUtils = brackets.getModule("utils/ExtensionUtils"),
-        Menus = brackets.getModule("command/Menus"),
+    var AppInit         = brackets.getModule("utils/AppInit"),
+        CommandManager  = brackets.getModule("command/CommandManager"),
+        Dialogs         = brackets.getModule("widgets/Dialogs"),
+        Document        = brackets.getModule("document/Document"),
+        EditorManager   = brackets.getModule("editor/EditorManager"),
+        ExtensionUtils  = brackets.getModule("utils/ExtensionUtils"),
+        Menus           = brackets.getModule("command/Menus"),
+
+        Strings         = require("strings"),
 
         // Pull in the entire dialog
-        skellyDialogHtml = require("text!htmlContent/mainDialog.html"),
+        skellyDialogHtml    = require("text!htmlContent/mainDialog.html"),
 
         // Grab our logo to display in the dialog
-        skellyLogo = require.toUrl("img/HTML-Skeleton.svg"),
+        skellyLogo      = require.toUrl("img/HTML-Skeleton.svg"),
 
         // The extension ID
-        EXTENSION_ID = "le717.html-skeleton";
+        EXTENSION_ID    = "le717.html-skeleton";
 
 
     /* ------- End Module Importing ------- */
@@ -178,7 +180,8 @@ define(function (require, exports, module) {
     function _showSkellyDialog() {
         /* Display the HTML Skeleton box */
 
-        var skellyDialog = Dialogs.showModalDialogUsingTemplate(skellyDialogHtml),
+        var localized = Mustache.render(skellyDialogHtml, Strings);
+        var skellyDialog = Dialogs.showModalDialogUsingTemplate(localized),
             $doneButton = skellyDialog.getElement().find('.dialog-button[data-button-id="ok"]');
 
         // Upon closing the dialog, run function to gather and apply choices
@@ -212,7 +215,7 @@ define(function (require, exports, module) {
         ExtensionUtils.loadStyleSheet(module, "css/style.css");
 
         // Assign a keyboard shortcut and item in Edit menu
-        CommandManager.register("Insert HTML elements\u2026", EXTENSION_ID, _showSkellyDialog);
+        CommandManager.register(Strings.INSERT_HTML_ELEMENTS, EXTENSION_ID, _showSkellyDialog);
         var menu = Menus.getMenu(Menus.AppMenuBar.EDIT_MENU);
         menu.addMenuItem(EXTENSION_ID, "Ctrl-Shift-N");
     });
