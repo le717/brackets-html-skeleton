@@ -25,7 +25,7 @@ define(function (require, exports, module) {
         ExtensionUtils  = brackets.getModule("utils/ExtensionUtils"),
         Menus           = brackets.getModule("command/Menus"),
 
-        Strings         = require("./strings"),
+        Strings         = require("strings"),
 
         // Pull in the entire dialog
         skellyDialogHtml    = require("text!htmlContent/mainDialog.html"),
