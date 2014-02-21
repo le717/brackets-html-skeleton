@@ -26,7 +26,7 @@
 
 define({
     // menu
-    "INSERT_HTML_ELEMENTS" : "HTML Elemente einfügen…",
+    "INSERT_HTML_ELEMENTS" : "HTML Elemente einfügen\u2026",
 
     // mainDialog
     "DIALOG_TITLE" : "HTML Skeleton",
