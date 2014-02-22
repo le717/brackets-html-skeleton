@@ -3,16 +3,28 @@
     Created 2014 Triangle717
     <http://Triangle717.WordPress.com/>
 
-    Licensed under The MIT Licenses
+    Licensed under The MIT License
 */
 
-/* Prevent the dialog from having a vertical scrollbar */
-.html-skeleton-modal-body { overflow-y: hidden; }
+/* Prevent the dialog from having a horizontal scrollbar */
+.html-skeleton-modal-body { overflow-x: hidden; }
 
-/* Position the logo on the right */
-#html-skeleton-figure {
+/* Hide loaded image details and path */
+#img-header, #img-path { display: none; }
+
+/* Position the image on the right */
+#img-preview {
+    width: 270px;
+    height: 270px;
     float: right;
+    -webkit-transform: translate(40px, -20px);
+    transform: translate(40px, -20px);
+}
+
+/* Shift the dialog content (excluding image) up */
+.html-skeleton-content {
     -webkit-transform: translateY(-20px);
+    transform: translateY(-20px);
 }
 
 /* Space the check boxes apart a bit */

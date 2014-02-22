@@ -6,7 +6,7 @@
     Created 2014 Triangle717
     <http://Triangle717.WordPress.com/>
 
-    Licensed under The MIT Licenses
+    Licensed under The MIT License
 */
 
 
@@ -188,11 +188,15 @@ define(function (require, exports, module) {
         var skellyDialog = Dialogs.showModalDialogUsingTemplate(localized),
             $doneButton = skellyDialog.getElement().find('.dialog-button[data-button-id="ok"]');
 
+        // Display logo using Bracket's viewer
+        ImageViewer.render(skellyLogo, $(".html-skeleton-image"));
+
+        // Hide image stats
+        $("#img-tip").remove();
+        $("#img-scale").remove();
+
         // Upon closing the dialog, run function to gather and apply choices
         $doneButton.on("click", _getOptions);
-
-        // Display the logo
-        $("#html-skeleton-figure").attr("src", skellyLogo);
 
         /* FUTURE Disabled unless persistent values are a good thing to have */
         // If the width and height boxes are not the default size (0), reuse the previous value.
