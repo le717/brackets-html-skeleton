@@ -23,14 +23,17 @@ define(function (require, exports, module) {
         Document        = brackets.getModule("document/Document"),
         EditorManager   = brackets.getModule("editor/EditorManager"),
         ExtensionUtils  = brackets.getModule("utils/ExtensionUtils"),
+        ImageViewer     = brackets.getModule("editor/ImageViewer"),
         Menus           = brackets.getModule("command/Menus"),
+        ProjectManager  = brackets.getModule("project/ProjectManager"),
 
+        // Import dialog localization
         Strings         = require("strings"),
 
-        // Pull in the entire dialog
+        // Pull in the extension dialog
         skellyDialogHtml    = require("text!htmlContent/mainDialog.html"),
 
-        // Grab our logo to display in the dialog
+        // Grab the logo to display in the dialog
         skellyLogo      = require.toUrl("img/HTML-Skeleton.svg"),
 
         // The extension ID
@@ -52,7 +55,7 @@ define(function (require, exports, module) {
     var skellyBones = [
             // Only the head and body tags + title and meta
             '<!DOCTYPE html>\n<html lang="">\n<head>\n' + fourSpaceIndent +
-                '<meta charset="utf-8">\n' + fourSpaceIndent + '<title></title>\n' +
+                '<meta charset="UTF-8">\n' + fourSpaceIndent + '<title></title>\n' +
                 '\n</head>\n\n<body>\n' + fourSpaceIndent + '\n</body>\n</html>\n',
 
             // External stylesheet
@@ -69,7 +72,7 @@ define(function (require, exports, module) {
 
             // Full HTML skeleton
             '<!DOCTYPE html>\n<html lang="">\n<head>\n' + fourSpaceIndent +
-                '<meta charset="utf-8">\n' + fourSpaceIndent + '<title></title>\n' +
+                '<meta charset="UTF-8">\n' + fourSpaceIndent + '<title></title>\n' +
                 fourSpaceIndent + '<link rel="stylesheet" type="text/css" href="">' + '\n</head>\n\n<body>\n' +
                 fourSpaceIndent + '<script src=""></script>\n</body>\n</html>\n'
         ];
@@ -155,6 +158,7 @@ define(function (require, exports, module) {
             // Add the image tag to `finalElements` for addition in document,
             // replacing the default size with the the new values
             finalElements.push(
+                //FIXME regex
                 imageCode.replace('<img width="0" height="0"',
                                       '<img width="' + $imgWidth +
                                       '" height="' + $imgHeight + '"')
@@ -211,7 +215,7 @@ define(function (require, exports, module) {
     AppInit.appReady(function () {
         /* Load the extension after Brackets itself has finished loading */
 
-        // Load any required CSS
+        // Load extension CSS
         ExtensionUtils.loadStyleSheet(module, "css/style.css");
 
         // Assign a keyboard shortcut and item in Edit menu

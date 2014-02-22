@@ -25,10 +25,10 @@
 /*global define */
 
 define({
-    // menu
+    // Menu item
     "INSERT_HTML_ELEMENTS" : "HTML Elemente einfügen\u2026",
 
-    // mainDialog
+    // mainDialog.html
     "DIALOG_TITLE" : "HTML Skeleton",
     "DIALOG_EXTENSION_DESCRIPTION" : "HTML Skeleton erlaubt Ihnen, verschiedene HTML-Elemente schnell und einfach in Ihr Dokument einzufügen.",
     "USAGE" : "Benutzung",
@@ -43,7 +43,7 @@ define({
     "INLINE_SCRIPT" : "Inline-Script",
     "PICTURE_IMAGE" : "Grafik/Bild",
     "WIDTH" : "Breite",
-    "HEIGHT"  : "Höhe",
+    "HEIGHT" : "Höhe",
     "FULL_SKELETON" : "Komplettes HTML Grundgerüst",
     "FULL_SKELETON_DESCRIPTION" : "Enthält alle obigen Elemente, außer Inline-Stylesheet, Inline-Script und Grafik/Bild",
     "BTN_CANCEL" : "Abbrechen",
