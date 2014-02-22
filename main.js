@@ -78,7 +78,7 @@ define(function (require, exports, module) {
         ];
 
     // Picture/Image
-    var imageCode = '<img width="0" height="0" src="" />';
+    var imageCode = '<img width="size-x" height="size-y" src="" />';
 
 
     /* ------- End Available HTML Elements ------- */
@@ -117,8 +117,9 @@ define(function (require, exports, module) {
     function _getOptions() {
         /* Get element choices */
 
-        // Stores the elements to be added
-        var finalElements = [],
+        var imageCodeNew,
+            // Stores the elements to be added
+            finalElements = [],
 
             // Store all the option IDs for easier access
             optionIDs = ["#head-body", "#extern-style-tag", "#inline-style-tag",
@@ -139,9 +140,15 @@ define(function (require, exports, module) {
 
         // The picture/image box is checked
         if ($("#img-tag:checked").val() === "on") {
+
+            // Set values to zero in case either field is not filled out
+            $imgWidth = 0;
+            $imgHeight = 0;
+
             // The width box was filled out, use that value
             if ($imgWidthID.val()) {
                 $imgWidth = $imgWidthID.val();
+
             } else {
                 // The width box was empty, reset to 0
                 $imgWidth = 0;
@@ -150,24 +157,17 @@ define(function (require, exports, module) {
             // The height box was filled out, use that value
             if ($imgHeightID.val()) {
                 $imgHeight = $imgHeightID.val();
+
             } else {
                 // The height box was empty, reset to 0
                 $imgHeight = 0;
             }
 
             // Add the image tag to `finalElements` for addition in document,
-            // replacing the default size with the the new values
-            finalElements.push(
-                //FIXME regex
-                imageCode.replace('<img width="0" height="0"',
-                                      '<img width="' + $imgWidth +
-                                      '" height="' + $imgHeight + '"')
-            );
-
-        } else {
-            // The box was not checked, reset sizes
-            $imgWidth = 0;
-            $imgHeight = 0;
+            // replacing the invalid values with valid ones
+            imageCodeNew = imageCode.replace(/size-x/, $imgWidth);
+            imageCodeNew = imageCodeNew.replace(/size-y/, $imgHeight);
+            finalElements.push(imageCodeNew);
         }
 
         // Finally, run process to add the selected elements
