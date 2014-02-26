@@ -4,6 +4,7 @@
     <http://Triangle717.WordPress.com/>
 
     Licensed under The MIT License
+    <http://opensource.org/licenses/MIT/>
 */
 
 /* Prevent the dialog from having a horizontal scrollbar */
@@ -17,14 +18,15 @@
     width: 270px;
     height: 270px;
     float: right;
-    -webkit-transform: translate(40px, -20px);
-    transform: translate(40px, -20px);
+    position: relative;
+    bottom: 30px;
+    right: -60px;
 }
 
-/* Shift the dialog content (excluding image) up */
+/* Shift the dialog content (excluding the image) up */
 .html-skeleton-content {
-    -webkit-transform: translateY(-20px);
-    transform: translateY(-20px);
+    position: relative;
+    bottom: 20px;
 }
 
 /* Space the check boxes apart a bit */
