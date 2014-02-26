@@ -7,6 +7,7 @@
     <http://Triangle717.WordPress.com/>
 
     Licensed under The MIT License
+    <http://opensource.org/licenses/MIT/>
 */
 
 
@@ -140,10 +141,6 @@ define(function (require, exports, module) {
 
         // The picture/image box is checked
         if ($("#img-tag:checked").val() === "on") {
-
-            // Set values to zero in case either field is not filled out
-            $imgWidth = 0;
-            $imgHeight = 0;
 
             // The width box was filled out, use that value
             if ($imgWidthID.val()) {
