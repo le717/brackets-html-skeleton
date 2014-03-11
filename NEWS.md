@@ -1,5 +1,14 @@
 # News #
 
+## 1.1.4 ##
+
+### 3/??/14 ###
+
+* Replace `transform` CSS properties ([#8](https://github.com/le717/brackets-html-skeleton/issues/8))
+* Removed duplicate value assignments
+* Indent HTML and CSS using two space soft tabs ([http://mdo.github.io/code-guide/#html-syntax](http://mdo.github.io/code-guide/#html-syntax)
+[http://mdo.github.io/code-guide/#css-syntax](http://mdo.github.io/code-guide/#css-syntax))
+
 ## 1.1.3 ##
 
 ### 2/22/14 ###
