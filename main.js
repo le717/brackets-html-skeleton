@@ -1,5 +1,5 @@
 /* jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 2, maxerr: 50 */
-/* global define, brackets, $, require, Mustache */
+/* global define, brackets, $, require, Mustache, window */
 
 /*
   HTML Skeleton
@@ -18,35 +18,81 @@ define(function (require, exports, module) {
   "use strict";
 
   // Import the required Brackets modules
-  var AppInit         = brackets.getModule("utils/AppInit"),
-      CommandManager  = brackets.getModule("command/CommandManager"),
-      Dialogs         = brackets.getModule("widgets/Dialogs"),
-      Document        = brackets.getModule("document/Document"),
-      EditorManager   = brackets.getModule("editor/EditorManager"),
-      ExtensionUtils  = brackets.getModule("utils/ExtensionUtils"),
-      ImageViewer     = brackets.getModule("editor/ImageViewer"),
-      Menus           = brackets.getModule("command/Menus"),
-      ProjectManager  = brackets.getModule("project/ProjectManager"),
+  var AppInit            = brackets.getModule("utils/AppInit"),
+      CommandManager     = brackets.getModule("command/CommandManager"),
+      Dialogs            = brackets.getModule("widgets/Dialogs"),
+      Document           = brackets.getModule("document/Document"),
+      EditorManager      = brackets.getModule("editor/EditorManager"),
+      ExtensionUtils     = brackets.getModule("utils/ExtensionUtils"),
+      ImageViewer        = brackets.getModule("editor/ImageViewer"),
+      Menus              = brackets.getModule("command/Menus"),
+      PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
+      ProjectManager     = brackets.getModule("project/ProjectManager"),
 
       // Import dialog localization
-      Strings         = require("strings"),
+      Strings            = require("strings"),
 
       // Pull in the extension dialog
-      skellyDialogHtml    = require("text!htmlContent/mainDialog.html"),
+      skellyDialogHtml   = require("text!htmlContent/mainDialog.html"),
 
       // Grab the logo to display in the dialog
-      skellyLogo      = require.toUrl("img/HTML-Skeleton.svg"),
-      EXTENSION_ID    = "le717.html-skeleton";
+      skellyLogo         = require.toUrl("img/HTML-Skeleton.svg"),
+      EXTENSION_ID       = "le717.html-skeleton";
+
+  window.indentUnits = null;
 
 
   /* ------- End Module Importing ------- */
 
+  // Get user's indentation settings
+  PreferencesManager.on("change", function (e, data) {
+    data.ids.forEach(function (value) {
+
+      // The `useTabChar` preference was changed, update our settings
+      if (value === "useTabChar") {
+        // FIXME Put this value in the global namspace
+        //window.indentUnits = _getIndentSize();
+        _getIndentSize();
+      }
+    });
+  });
+
+
+  /* ------- Begin Reading Indentation Preference ------- */
+
+
+  function _repeat(str, num) {
+    /* Taken from http://stackoverflow.com/a/4550005 */
+    return (new Array(num + 1)).join(str);
+  }
+
+  function _getIndentSize() {
+    /* Get the user's indentation settings for inserted code */
+
+    var indentUnits, indentUnitsInt,
+        tabCharPref = PreferencesManager.get("useTabChar", PreferencesManager.CURRENT_PROJECT);
+
+    // The user is using tabs
+    if (tabCharPref) {
+      indentUnitsInt = PreferencesManager.get("tabSize");
+      indentUnits = _repeat("\u0009", indentUnitsInt);
+
+      // The user is using spaces
+    } else {
+      indentUnitsInt = PreferencesManager.get("spaceUnits");
+      indentUnits = _repeat("\u0020", indentUnitsInt);
+    }
+    console.log("HTML SKELETON - INDENT UNITS " + [tabCharPref, indentUnitsInt]);
+    return indentUnits;
+
+  }
+
+
+  /* ------- End Reading Indentation Preference ------- */
+
 
   /* ------- Begin Available HTML Elements ------- */
 
-  // Assign a variable for 2 space indentation for easier coding
-  // FUTURE Replace with Sprint 37 preferences system
-  var twoSpaceIndent = "\u0020\u0020";
 
   // Placeholder variables for image size
   var $imgWidth = 0,
@@ -54,9 +100,9 @@ define(function (require, exports, module) {
 
   var skellyBones = [
     // Only the head and body tags + title and meta
-    '<!DOCTYPE html>\n<html lang="">\n<head>\n' + twoSpaceIndent +
-    '<meta charset="UTF-8">\n' + twoSpaceIndent + '<title></title>\n' +
-    '\n</head>\n\n<body>\n' + twoSpaceIndent + '\n</body>\n</html>\n',
+    '<!DOCTYPE html>\n<html lang="">\n<head>\n' + window.indentUnits +
+    '<meta charset="UTF-8">\n' + window.indentUnits + '<title></title>\n' +
+    '\n</head>\n\n<body>\n' + window.indentUnits + '\n</body>\n</html>\n',
 
     // External stylesheet
     '<link rel="stylesheet" href="">',
@@ -71,10 +117,10 @@ define(function (require, exports, module) {
     '<script></script>',
 
     // Full HTML skeleton
-    '<!DOCTYPE html>\n<html lang="">\n<head>\n' + twoSpaceIndent +
-    '<meta charset="UTF-8">\n' + twoSpaceIndent + '<title></title>\n' +
-    twoSpaceIndent + '<link rel="stylesheet" href="">' + '\n</head>\n\n<body>\n' +
-    twoSpaceIndent + '<script src=""></script>\n</body>\n</html>\n'
+    '<!DOCTYPE html>\n<html lang="">\n<head>\n' + window.indentUnits +
+    '<meta charset="UTF-8">\n' + window.indentUnits + '<title></title>\n' +
+    window.indentUnits + '<link rel="stylesheet" href="">' + '\n</head>\n\n<body>\n' +
+    window.indentUnits + '<script src=""></script>\n</body>\n</html>\n'
   ];
 
   // Picture/Image
@@ -186,6 +232,22 @@ define(function (require, exports, module) {
 
     // Display logo using Bracket's viewer
     ImageViewer.render(skellyLogo, $(".html-skeleton-image"));
+
+    //var verticalign = $(".html-skeleton-image").toArray();
+    //console.log(verticalign);
+
+    //verticalign.forEach(function (value, index) {
+      //console.log(value);
+    //for (var i = 0; i < verticalign.length; i++) {
+      //var vwide = $(verticalign[index]).width();
+      //var vtall = $(verticalign[index]).height();
+
+      //console.log(vwide);
+      //console.log(vtall);
+
+      //$("#img-preview").css("width", vwide);
+      //$("#img-preview").css("height", vtall);
+    //});
 
     // Hide image stats
     $("#img-tip").remove();
