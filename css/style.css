@@ -11,16 +11,17 @@
 .html-skeleton-modal-body { overflow-x: hidden; }
 
 /* Hide loaded image details and path */
-#img-header, #img-path { display: none; }
+#img-header,
+#img-path { display: none; }
 
 /* Position the image on the right */
 #img-preview {
+  position: relative;
+  right: -60px;
+  bottom: 30px;
   width: 270px;
   height: 270px;
   float: right;
-  position: relative;
-  bottom: 30px;
-  right: -60px;
 }
 
 /* Shift the dialog content (excluding the image) up */
@@ -44,10 +45,10 @@
 
 /* Accommodate the "Full HTML skeleton" description */
 #full-skelly-description {
-  font-size: 12px;
-  display: inline-block;
   position: relative;
   bottom: 5px;
+  display: inline-block;
+  font-size: 12px;
 }
 
 /* Enlarge the "x" between image dimensions */

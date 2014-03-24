@@ -44,8 +44,9 @@ define(function (require, exports, module) {
 
   /* ------- Begin Available HTML Elements ------- */
 
-  // Assign a variable for 4 space indentation for easier coding
-  var fourSpaceIndent = "\u0020\u0020\u0020\u0020";
+  // Assign a variable for 2 space indentation for easier coding
+  // FUTURE Replace with Sprint 37 prefs system
+  var twoSpaceIndent = "\u0020\u0020";
 
   // Placeholder variables for image size
   var $imgWidth = 0,
@@ -53,9 +54,9 @@ define(function (require, exports, module) {
 
   var skellyBones = [
     // Only the head and body tags + title and meta
-    '<!DOCTYPE html>\n<html lang="">\n<head>\n' + fourSpaceIndent +
-    '<meta charset="UTF-8">\n' + fourSpaceIndent + '<title></title>\n' +
-    '\n</head>\n\n<body>\n' + fourSpaceIndent + '\n</body>\n</html>\n',
+    '<!DOCTYPE html>\n<html lang="">\n<head>\n' + twoSpaceIndent +
+    '<meta charset="UTF-8">\n' + twoSpaceIndent + '<title></title>\n' +
+    '\n</head>\n\n<body>\n' + twoSpaceIndent + '\n</body>\n</html>\n',
 
     // External stylesheet
     '<link rel="stylesheet" href="">',
@@ -70,10 +71,10 @@ define(function (require, exports, module) {
     '<script></script>',
 
     // Full HTML skeleton
-    '<!DOCTYPE html>\n<html lang="">\n<head>\n' + fourSpaceIndent +
-    '<meta charset="UTF-8">\n' + fourSpaceIndent + '<title></title>\n' +
-    fourSpaceIndent + '<link rel="stylesheet" href="">' + '\n</head>\n\n<body>\n' +
-    fourSpaceIndent + '<script src=""></script>\n</body>\n</html>\n'
+    '<!DOCTYPE html>\n<html lang="">\n<head>\n' + twoSpaceIndent +
+    '<meta charset="UTF-8">\n' + twoSpaceIndent + '<title></title>\n' +
+    twoSpaceIndent + '<link rel="stylesheet" href="">' + '\n</head>\n\n<body>\n' +
+    twoSpaceIndent + '<script src=""></script>\n</body>\n</html>\n'
   ];
 
   // Picture/Image
@@ -217,10 +218,10 @@ define(function (require, exports, module) {
     // Load extension CSS
     ExtensionUtils.loadStyleSheet(module, "css/style.css");
 
-    // Assign a keyboard shortcut and item in Edit menu
+    // Create a menu item in the Edit menu
     CommandManager.register(Strings.INSERT_HTML_ELEMENTS, EXTENSION_ID, _showSkellyDialog);
     var menu = Menus.getMenu(Menus.AppMenuBar.EDIT_MENU);
-    menu.addMenuItem(EXTENSION_ID, "Ctrl-Shift-N");
+    menu.addMenuItem(EXTENSION_ID);
   });
 });
 

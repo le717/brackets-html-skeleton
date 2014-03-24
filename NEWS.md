@@ -10,6 +10,8 @@
 [http://mdo.github.io/code-guide/#css-syntax](http://mdo.github.io/code-guide/#css-syntax))
 * Indent JavaScript using twp space soft tabs (per [https://github.com/styleguide/javascript](https://github.com/styleguide/javascript))
 * Update HTML elements per aforementioned style guide
+* Changed code indentation to two spaces (was four spaces)
+* Removed keyboard shortcut
 
 ## 1.1.3 ##
 
