@@ -45,7 +45,7 @@ define(function (require, exports, module) {
   /* ------- Begin Available HTML Elements ------- */
 
   // Assign a variable for 2 space indentation for easier coding
-  // FUTURE Replace with Sprint 37 prefs system
+  // FUTURE Replace with Sprint 37 preferences system
   var twoSpaceIndent = "\u0020\u0020";
 
   // Placeholder variables for image size
@@ -193,16 +193,6 @@ define(function (require, exports, module) {
 
     // Upon closing the dialog, run function to gather and apply choices
     $doneButton.on("click", _getOptions);
-
-    /* FUTURE Disabled unless persistent values are a good thing to have */
-    // If the width and height boxes are not the default size (0), reuse the previous value.
-    // Technically, the values are already reused, but this makes it more obvious.
-    //        if ($imgWidth !== 0) {
-    //            $("#img-width").val($imgWidth);
-    //        }
-    //        if ($imgHeight !== 0) {
-    //           $("#img-height").val($imgHeight);
-    //        }
   }
 
 

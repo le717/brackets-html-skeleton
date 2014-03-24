@@ -11,7 +11,7 @@ Method 2: Download directly from GitHub using either the [latest revision](https
 # Usage #
 
 1. Place your cursor in the location you want to insert the elements
-2. Open the dialog by pressing `<Ctrl + Shift + N>` or by going to `Edit > Insert HTML Elements`
+2. Open the dialog by going to `Edit > Insert HTML Elements`
 3. Select the desired elements, and press Done
 4. Fill in all blank attributes as needed
 
