@@ -32,11 +32,12 @@ define(function (require, exports, module) {
       // Import dialog localization
       Strings            = require("strings"),
 
-      // Pull in the extension dialog
-      skellyDialogHtml   = require("text!htmlContent/mainDialog.html"),
+      // Pull in any required HTML
+      skeletonDialogHtml = require("text!htmlContent/mainDialog.html"),
+      toolbarButtonCode  = '<a href="#" id="html-skeleton-toolbar">',
 
       // Grab the logo to display in the dialog
-      skellyLogo         = require.toUrl("img/HTML-Skeleton.svg"),
+      skeletonLogo       = require.toUrl("img/HTML-Skeleton.svg"),
       EXTENSION_ID       = "le717.html-skeleton";
 
   window.indentUnits = null;
@@ -98,7 +99,7 @@ define(function (require, exports, module) {
   var $imgWidth = 0,
       $imgHeight = 0;
 
-  var skellyBones = [
+  var skeletonBones = [
     // Only the head and body tags + title and meta
     '<!DOCTYPE html>\n<html lang="">\n<head>\n' + window.indentUnits +
     '<meta charset="UTF-8">\n' + window.indentUnits + '<title></title>\n' +
@@ -169,7 +170,7 @@ define(function (require, exports, module) {
 
         // Store all the option IDs for easier access
         optionIDs = ["#head-body", "#extern-style-tag", "#inline-style-tag",
-                     "#extern-script-tag", "#inline-script-tag", "#full-skelly"
+                     "#extern-script-tag", "#inline-script-tag", "#full-skeleton"
                     ],
 
         // Shortcuts to the image size input boxes
@@ -180,7 +181,7 @@ define(function (require, exports, module) {
     // to `finalElements` for addition in document
     optionIDs.forEach(function (value, index) {
       if ($(value + ":checked").val() === "on") {
-        finalElements.push(skellyBones[index]);
+        finalElements.push(skeletonBones[index]);
       }
     });
 
@@ -223,15 +224,15 @@ define(function (require, exports, module) {
   /* ------- Begin HTML Skeleton Dialog Box ------- */
 
 
-  function _showSkellyDialog() {
+  function _showSkeletonDialog() {
     /* Display the HTML Skeleton box */
 
-    var localized = Mustache.render(skellyDialogHtml, Strings);
-    var skellyDialog = Dialogs.showModalDialogUsingTemplate(localized),
-        $doneButton = skellyDialog.getElement().find('.dialog-button[data-button-id="ok"]');
+    var localizedDialog = Mustache.render(skeletonDialogHtml, Strings);
+    var skeletonDialog = Dialogs.showModalDialogUsingTemplate(localizedDialog),
+        $doneButton = skeletonDialog.getElement().find('.dialog-button[data-button-id="ok"]');
 
     // Display logo using Bracket's viewer
-    ImageViewer.render(skellyLogo, $(".html-skeleton-image"));
+    ImageViewer.render(skeletonLogo, $(".html-skeleton-image"));
 
     //var verticalign = $(".html-skeleton-image").toArray();
     //console.log(verticalign);
@@ -271,9 +272,15 @@ define(function (require, exports, module) {
     ExtensionUtils.loadStyleSheet(module, "css/style.css");
 
     // Create a menu item in the Edit menu
-    CommandManager.register(Strings.INSERT_HTML_ELEMENTS, EXTENSION_ID, _showSkellyDialog);
+    CommandManager.register(Strings.INSERT_HTML_ELEMENTS, EXTENSION_ID, _showSkeletonDialog);
     var menu = Menus.getMenu(Menus.AppMenuBar.EDIT_MENU);
     menu.addMenuItem(EXTENSION_ID);
+
+    // Create toolbar icon
+    var $toolbarButton = $(toolbarButtonCode);
+    $toolbarButton.appendTo("#main-toolbar > .buttons");
+    $toolbarButton.attr("title", "HTML Skeleton");
+    $toolbarButton.click(_showSkeletonDialog);
   });
 });
 

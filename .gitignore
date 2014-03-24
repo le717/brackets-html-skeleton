@@ -3,8 +3,6 @@
 *.js
 *.html
 Releases/
-img/*
-!img/*.png
 
 #############
 ## Windows
