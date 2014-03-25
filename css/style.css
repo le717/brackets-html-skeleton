@@ -14,17 +14,22 @@
 /* Prevent the dialog from having a horizontal scrollbar */
 .html-skeleton-modal-body { overflow-x: hidden; }
 
-/* Hide loaded image details and path */
-#img-header,
-#img-path { display: none; }
+/* Position image container */
+.html-skeleton-image {
+  top: -20px;
+  right: -10px;
+  float: right;
+  left: 5px;
+}
+
+/* Hide Bracket's image path and size display */
+.html-skeleton-image #img-header,
+.html-skeleton-image #img-path { display: none; }
 
 /* Position the image on the right */
-#img-preview {
-  position: relative;
-  right: -60px;
-  bottom: 30px;
+.html-skeleton-image #img-preview {
   width: 270px;
-  height: 270px;
+  height: 240px;
   float: right;
 }
 
@@ -35,16 +40,18 @@
 }
 
 /* Space the check boxes apart a bit */
-.html-skeleton > input {
-  margin-bottom: 4px;
-}
+.html-skeleton > input { margin-bottom: 4px; }
 
 /* Reduce the amount of blank space underneath the number fields */
-.html-skeleton > input[type="number"] {
+.html-skeleton > input[type="number"] {  margin-bottom: 4px; }
+
+/* Align the browse button with the other elements */
+a[data-button-id="browse"] {
   margin-bottom: 4px;
+  margin-left: 10px;
 }
 
-/* Do not place the labels on a new line */
+/* Do not place input labels on a new line */
 .html-skeleton > label { display: inline; }
 
 /* Accommodate the "Full HTML skeleton" description */
