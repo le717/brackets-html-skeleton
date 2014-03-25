@@ -1,5 +1,5 @@
 /* jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 2, maxerr: 50 */
-/* global define, brackets, $, require, Mustache, window */
+/* global define, brackets, $, require, Mustache, window, Image */
 
 /*
   HTML Skeleton
@@ -236,23 +236,26 @@ define(function (require, exports, module) {
 
     // The following trick is from http://css-tricks.com/snippets/jquery/get-an-images-native-width/
     // Create a new (offscreen) image
+    // TODO Refactor this into a new function
     $("#img-preview").bind("load", function() {
       var newImageForSizing = new Image();
       newImageForSizing.src = $("#img-preview").attr("src");
 
-      // Now we can get accurate image demitions
-      var imageWidth = newImageForSizing.width;
-      var imageHeight = newImageForSizing.height;
-      //console.log(imageWidth);
-      //console.log(imageHeight);
+      // Now we can get accurate image dimensions
+      var imageWidth = newImageForSizing.width,
+          imageHeight = newImageForSizing.height;
+
+      // If the image width and heights are not zero, update the size inputs with the values
+      //if (imageWidth !== 0) {
+        //$("#img-width").val(imageWidth);
+      //}
+      //if (imageHeight !== 0) {
+        //$("#img-height").val(imageHeight);
+      //}
+
+      //$("#img-preview").css("width", imageWidth / 2);
+      //$("#img-preview").css("height", imageHeight / 2);
     });
-
-    //var verticalign = $(".html-skeleton-image").toArray();
-    //console.log(verticalign);
-
-      //$("#img-preview").css("width", vwide);
-      //$("#img-preview").css("height", vtall);
-   //});
 
     // Hide image stats
     $("#img-tip").remove();
