@@ -2,7 +2,8 @@
 *.bak
 *.js
 *.html
-Releases/
+Releases
+Testing
 
 #############
 ## Windows

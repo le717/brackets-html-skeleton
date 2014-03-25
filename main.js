@@ -38,9 +38,10 @@ define(function (require, exports, module) {
 
       // Grab the logo to display in the dialog
       skeletonLogo       = require.toUrl("img/HTML-Skeleton.svg"),
-      EXTENSION_ID       = "le717.html-skeleton";
+      EXTENSION_ID       = "le717.html-skeleton",
 
-  var indentUnits;
+      // User's indent settings
+      indentUnits        = "";
 
 
   /* ------- End Module Importing ------- */
@@ -57,32 +58,33 @@ define(function (require, exports, module) {
   function _getIndentSize() {
     /* Get the user's indentation settings for inserted code */
 
-    var indentUnitsInt,
+    var newIndentUnits, indentUnitsInt,
         tabCharPref = PreferencesManager.get("useTabChar", PreferencesManager.CURRENT_PROJECT);
 
     // The user is using tabs
     if (tabCharPref) {
       indentUnitsInt = PreferencesManager.get("tabSize");
-      indentUnits = _repeat("\u0009", indentUnitsInt);
+      newIndentUnits = _repeat("\u0009", indentUnitsInt);
 
       // The user is using spaces
     } else {
       indentUnitsInt = PreferencesManager.get("spaceUnits");
-      indentUnits = _repeat("\u0020", indentUnitsInt);
+      newIndentUnits = _repeat("\u0020", indentUnitsInt);
     }
-    console.log("HTML SKELETON - INDENT UNITS " + [tabCharPref, indentUnitsInt]);
-    //return indentUnits;
+    return newIndentUnits;
   }
 
   // Get user's indentation settings
   PreferencesManager.on("change", function (e, data) {
     data.ids.forEach(function (value) {
 
-      // The `useTabChar` preference was changed, update our settings
-      if (value === "useTabChar") {
-        // FIXME Put this value in the global namspace
-        //indentUnits = _getIndentSize();
-        _getIndentSize();
+      // A relavant preference was changed, update our settings
+      // FUTURE Keep an eye out for `softTabs` in Sprint 38
+      if (value === "useTabChar" || value === "tabSize" || value === "spaceUnits") {
+        // Do NOT attempt to asign `indentUnits` directly to the function.
+        // It will completely break otherwise.
+        var temp = _getIndentSize();
+        indentUnits = temp;
       }
     });
   });
@@ -100,9 +102,8 @@ define(function (require, exports, module) {
 
   var skeletonBones = [
     // Only the head and body tags + title and meta
-    '<!DOCTYPE html>\n<html lang="">\n<head>\n' + indentUnits +
-    '<meta charset="UTF-8">\n' + indentUnits + '<title></title>\n' +
-    '\n</head>\n\n<body>\n' + indentUnits + '\n</body>\n</html>\n',
+    '<!DOCTYPE html>\n<html lang="">\n<head>\nindent-size<meta charset="UTF-8">\n' +
+    'indent-size<title></title>\n\n</head>\n\n<body>\nindent-size\n</body>\n</html>\n',
 
     // External stylesheet
     '<link rel="stylesheet" href="">',
@@ -117,10 +118,9 @@ define(function (require, exports, module) {
     '<script></script>',
 
     // Full HTML skeleton
-    '<!DOCTYPE html>\n<html lang="">\n<head>\n' + indentUnits +
-    '<meta charset="UTF-8">\n' + indentUnits + '<title></title>\n' +
-    indentUnits + '<link rel="stylesheet" href="">' + '\n</head>\n\n<body>\n' +
-    indentUnits + '<script src=""></script>\n</body>\n</html>\n'
+    '<!DOCTYPE html>\n<html lang="">\n<head>\nindent-size<meta charset="UTF-8">\n' +
+    'indent-size<title></title>\nindent-size<link rel="stylesheet" href="">' +
+    '\n</head>\n\n<body>\nindent-size<script src=""></script>\n</body>\n</html>\n'
   ];
 
   // Picture/Image
@@ -135,7 +135,7 @@ define(function (require, exports, module) {
   function _insertAllTheCodes(finalElements) {
     /* Inter the selected elements into the document */
 
-    // Get the last active editor because the dialog steals focus
+    // Get the last active editor
     var editor = EditorManager.getActiveEditor();
     if (editor) {
       // Get the cursor position
@@ -145,6 +145,10 @@ define(function (require, exports, module) {
       finalElements.reverse().forEach(function (value) {
         //  Wrap the actions in a `batchOperation` call, per guidelines
         editor.document.batchOperation(function() {
+
+          // Do a regex search for the `indent-size` keyword
+          // and replace it with the user's indent settings
+          value = value.replace(/indent-size/g, indentUnits);
 
           // Insert the selected elements at the current cursor position
           editor.document.replaceRange(value, cursor);
@@ -224,9 +228,7 @@ define(function (require, exports, module) {
 
 
   function _showSkeletonDialog() {
-    /* Display the HTML Skeleton box */
-
-    console.log(indentUnits);
+    /* Display dialog box */
 
     var localizedDialog = Mustache.render(skeletonDialogHtml, Strings);
     var skeletonDialog = Dialogs.showModalDialogUsingTemplate(localizedDialog),

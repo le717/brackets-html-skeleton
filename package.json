@@ -7,7 +7,7 @@
     "author": "Triangle717 (http://Triangle717.WordPress.com)",
     "license": "The MIT License",
     "engines": {
-        "brackets": ">=0.30.0"
+        "brackets": ">=0.37.0"
     },
     "keywords": [
         "HTML",
