@@ -231,24 +231,28 @@ define(function (require, exports, module) {
     var skeletonDialog = Dialogs.showModalDialogUsingTemplate(localizedDialog),
         $doneButton = skeletonDialog.getElement().find('.dialog-button[data-button-id="ok"]');
 
-    // Display logo using Bracket's viewer
+    // Display logo using Bracket's own image viewer
     ImageViewer.render(skeletonLogo, $(".html-skeleton-image"));
+
+    // The following trick is from http://css-tricks.com/snippets/jquery/get-an-images-native-width/
+    // Create a new (offscreen) image
+    $("#img-preview").bind("load", function() {
+      var newImageForSizing = new Image();
+      newImageForSizing.src = $("#img-preview").attr("src");
+
+      // Now we can get accurate image demitions
+      var imageWidth = newImageForSizing.width;
+      var imageHeight = newImageForSizing.height;
+      //console.log(imageWidth);
+      //console.log(imageHeight);
+    });
 
     //var verticalign = $(".html-skeleton-image").toArray();
     //console.log(verticalign);
 
-    //verticalign.forEach(function (value, index) {
-      //console.log(value);
-    //for (var i = 0; i < verticalign.length; i++) {
-      //var vwide = $(verticalign[index]).width();
-      //var vtall = $(verticalign[index]).height();
-
-      //console.log(vwide);
-      //console.log(vtall);
-
       //$("#img-preview").css("width", vwide);
       //$("#img-preview").css("height", vtall);
-    //});
+   //});
 
     // Hide image stats
     $("#img-tip").remove();
