@@ -57,7 +57,7 @@ define(function (require, exports, module) {
   function _getIndentSize() {
     /* Get the user's indentation settings for inserted code */
 
-    var indentUnits, indentUnitsInt,
+    var indentUnitsInt,
         tabCharPref = PreferencesManager.get("useTabChar", PreferencesManager.CURRENT_PROJECT);
 
     // The user is using tabs
