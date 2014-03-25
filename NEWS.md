@@ -1,5 +1,14 @@
 # News #
 
+## 1.2.0 ##
+
+### ??/??/14 ##
+
+* Updated minimum Brackets version to Sprint 37
+* Use user indentation settings via new Preferences System from Sprint 37
+* Add toolbar icon, design finalized by [@rioforce](https://github.com/rioforce)
+* Various code improvements
+
 ## 1.1.4 ##
 
 ### 3/24/14 ###
