@@ -16,11 +16,14 @@
 
 /* Position image container */
 .html-skeleton-image {
-  top: -20px;
+  top: -25px;
   right: -10px;
   float: right;
   left: 5px;
 }
+
+/* Decrease the size of the image path */
+.html-skeleton-image span { font-size: 12px; }
 
 /* Hide Bracket's image path and size display */
 .html-skeleton-image #img-header,
