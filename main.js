@@ -40,23 +40,10 @@ define(function (require, exports, module) {
       skeletonLogo       = require.toUrl("img/HTML-Skeleton.svg"),
       EXTENSION_ID       = "le717.html-skeleton";
 
-  window.indentUnits = null;
+  var indentUnits;
 
 
   /* ------- End Module Importing ------- */
-
-  // Get user's indentation settings
-  PreferencesManager.on("change", function (e, data) {
-    data.ids.forEach(function (value) {
-
-      // The `useTabChar` preference was changed, update our settings
-      if (value === "useTabChar") {
-        // FIXME Put this value in the global namspace
-        //window.indentUnits = _getIndentSize();
-        _getIndentSize();
-      }
-    });
-  });
 
 
   /* ------- Begin Reading Indentation Preference ------- */
@@ -84,9 +71,21 @@ define(function (require, exports, module) {
       indentUnits = _repeat("\u0020", indentUnitsInt);
     }
     console.log("HTML SKELETON - INDENT UNITS " + [tabCharPref, indentUnitsInt]);
-    return indentUnits;
-
+    //return indentUnits;
   }
+
+  // Get user's indentation settings
+  PreferencesManager.on("change", function (e, data) {
+    data.ids.forEach(function (value) {
+
+      // The `useTabChar` preference was changed, update our settings
+      if (value === "useTabChar") {
+        // FIXME Put this value in the global namspace
+        //indentUnits = _getIndentSize();
+        _getIndentSize();
+      }
+    });
+  });
 
 
   /* ------- End Reading Indentation Preference ------- */
@@ -101,9 +100,9 @@ define(function (require, exports, module) {
 
   var skeletonBones = [
     // Only the head and body tags + title and meta
-    '<!DOCTYPE html>\n<html lang="">\n<head>\n' + window.indentUnits +
-    '<meta charset="UTF-8">\n' + window.indentUnits + '<title></title>\n' +
-    '\n</head>\n\n<body>\n' + window.indentUnits + '\n</body>\n</html>\n',
+    '<!DOCTYPE html>\n<html lang="">\n<head>\n' + indentUnits +
+    '<meta charset="UTF-8">\n' + indentUnits + '<title></title>\n' +
+    '\n</head>\n\n<body>\n' + indentUnits + '\n</body>\n</html>\n',
 
     // External stylesheet
     '<link rel="stylesheet" href="">',
@@ -118,10 +117,10 @@ define(function (require, exports, module) {
     '<script></script>',
 
     // Full HTML skeleton
-    '<!DOCTYPE html>\n<html lang="">\n<head>\n' + window.indentUnits +
-    '<meta charset="UTF-8">\n' + window.indentUnits + '<title></title>\n' +
-    window.indentUnits + '<link rel="stylesheet" href="">' + '\n</head>\n\n<body>\n' +
-    window.indentUnits + '<script src=""></script>\n</body>\n</html>\n'
+    '<!DOCTYPE html>\n<html lang="">\n<head>\n' + indentUnits +
+    '<meta charset="UTF-8">\n' + indentUnits + '<title></title>\n' +
+    indentUnits + '<link rel="stylesheet" href="">' + '\n</head>\n\n<body>\n' +
+    indentUnits + '<script src=""></script>\n</body>\n</html>\n'
   ];
 
   // Picture/Image
@@ -227,6 +226,8 @@ define(function (require, exports, module) {
   function _showSkeletonDialog() {
     /* Display the HTML Skeleton box */
 
+    console.log(indentUnits);
+
     var localizedDialog = Mustache.render(skeletonDialogHtml, Strings);
     var skeletonDialog = Dialogs.showModalDialogUsingTemplate(localizedDialog),
         $doneButton = skeletonDialog.getElement().find('.dialog-button[data-button-id="ok"]');
@@ -286,7 +287,7 @@ define(function (require, exports, module) {
     // Create toolbar icon
     var $toolbarButton = $(toolbarButtonCode);
     $toolbarButton.appendTo("#main-toolbar > .buttons");
-    $toolbarButton.attr("title", "HTML Skeleton");
+    $toolbarButton.attr("title", Strings.DIALOG_TITLE);
     $toolbarButton.click(_showSkeletonDialog);
   });
 });
