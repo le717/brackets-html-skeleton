@@ -1,5 +1,5 @@
 /* jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 2, maxerr: 50 */
-/* global define, brackets, $, require, Mustache, window, Image */
+/* global define, brackets, $, require, Mustache, Image */
 
 /*
   HTML Skeleton
@@ -24,6 +24,7 @@ define(function (require, exports, module) {
       Document           = brackets.getModule("document/Document"),
       EditorManager      = brackets.getModule("editor/EditorManager"),
       ExtensionUtils     = brackets.getModule("utils/ExtensionUtils"),
+      //FileSystem         = brackets.getModule("filesystem/FileSystem"),
       ImageViewer        = brackets.getModule("editor/ImageViewer"),
       Menus              = brackets.getModule("command/Menus"),
       PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
@@ -38,10 +39,14 @@ define(function (require, exports, module) {
 
       // Grab the logo to display in the dialog
       skeletonLogo       = require.toUrl("img/HTML-Skeleton.svg"),
+      //skeletonLogo2       = require.toUrl("img/HTML-Skeleton.png"),
       EXTENSION_ID       = "le717.html-skeleton",
 
       // User's indent settings
-      indentUnits        = "";
+      indentUnits        = "",
+
+      // Localize the dialog box
+      localizedDialog = Mustache.render(skeletonDialogHtml, Strings);
 
 
   /* ------- End Module Importing ------- */
@@ -78,10 +83,10 @@ define(function (require, exports, module) {
   PreferencesManager.on("change", function (e, data) {
     data.ids.forEach(function (value) {
 
-      // A relavant preference was changed, update our settings
+      // A relevant preference was changed, update our settings
       // FUTURE Keep an eye out for `softTabs` in Sprint 38
       if (value === "useTabChar" || value === "tabSize" || value === "spaceUnits") {
-        // Do NOT attempt to asign `indentUnits` directly to the function.
+        // Do NOT attempt to assign `indentUnits` directly to the function.
         // It will completely break otherwise.
         var temp = _getIndentSize();
         indentUnits = temp;
@@ -224,29 +229,29 @@ define(function (require, exports, module) {
   /* ------- End HTML Element Choices ------- */
 
 
-  /* ------- Begin HTML Skeleton Dialog Box ------- */
+  /* ------- Begin HTML Skeleton Dialog Boxes ------- */
 
 
   function _showSkeletonDialog() {
     /* Display dialog box */
 
-    var localizedDialog = Mustache.render(skeletonDialogHtml, Strings);
     var skeletonDialog = Dialogs.showModalDialogUsingTemplate(localizedDialog),
         $doneButton = skeletonDialog.getElement().find('.dialog-button[data-button-id="ok"]');
 
     // Display logo using Bracket's own image viewer
     ImageViewer.render(skeletonLogo, $(".html-skeleton-image"));
 
-    // The following trick is from http://css-tricks.com/snippets/jquery/get-an-images-native-width/
+    /* The following trick is from http://css-tricks.com/snippets/jquery/get-an-images-native-width/ */
+
     // Create a new (offscreen) image
     // TODO Refactor this into a new function
-    $("#img-preview").bind("load", function() {
-      var newImageForSizing = new Image();
-      newImageForSizing.src = $("#img-preview").attr("src");
-
-      // Now we can get accurate image dimensions
-      var imageWidth = newImageForSizing.width,
-          imageHeight = newImageForSizing.height;
+//    $("#img-preview").bind("load", function() {
+//      var newImageForSizing = new Image();
+//      newImageForSizing.src = $("#img-preview").attr("src");
+//
+//      // Now we can get accurate image dimensions
+//      var imageWidth = newImageForSizing.width,
+//          imageHeight = newImageForSizing.height;
 
       // If the image width and heights are not zero, update the size inputs with the values
       //if (imageWidth !== 0) {
@@ -256,9 +261,23 @@ define(function (require, exports, module) {
         //$("#img-height").val(imageHeight);
       //}
 
-      //$("#img-preview").css("width", imageWidth / 2);
-      //$("#img-preview").css("height", imageHeight / 2);
-    });
+//      window.setTimeout(function() {
+//        $("#img-preview").attr("src", skeletonLogo2);
+//        $(".html-skeleton-image").css("position", "relative");
+//        $(".html-skeleton-image #img-preview").css("box-shadow","0px 1px 6px black");
+//
+//        // Make the image path relative
+//        var skeletonLogo2Path = ProjectManager.makeProjectRelativeIfPossible(skeletonLogo2);
+//
+//        // If the path is longer than 50 characters, split it up for better displaying
+//        if (skeletonLogo2Path.length > 50) {
+//          skeletonLogo2Path = skeletonLogo2Path.substring(0, 51) + "<br>" + skeletonLogo2Path.substring(50, skeletonLogo2Path.length);
+//        }
+//
+//        // Show the file path
+//        $(".html-skeleton-image span").html(skeletonLogo2Path);
+//      }, 3000);
+//    });
 
     // Hide image stats
     $("#img-tip").remove();
@@ -268,8 +287,23 @@ define(function (require, exports, module) {
     $doneButton.on("click", _getOptions);
   }
 
+  //var $dialog = skeletonDialog.getElement();
+  //var $browseForImageBtn = $("#change-directory", $dialog);
+  /*function _showBrowseDialogBox() {
+    $browseForImageBtn.click(function (e) {
+      FileSystem.showOpenDialog(false, false, "Choose an image", null, null,
+                                function (closedDialog, selectedFiles) {
+                                  if (!closedDialog && selectedFiles && selectedFiles.length > 0 && selectedFiles[0].length > 0) {
+                                    console.log(selectedFiles[0]);
+                                  }
+                                });
 
-  /* ------- End HTML Skeleton Dialog Box ------- */
+      e.preventDefault();
+      e.stopPropagation();
+    });
+  }*/
+
+  /* ------- End HTML Skeleton Dialog Boxes ------- */
 
 
   /* ------- Begin Extension Initialization ------- */
