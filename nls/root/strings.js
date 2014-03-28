@@ -41,7 +41,7 @@ define({
     "INLINE_STYLESHEET"            : "Inline Stylesheet",
     "EXTERNAL_SCRIPT"              : "External Script",
     "INLINE_SCRIPT"                : "Inline Script",
-    "PICTURE_IMAGE"                : "Picture/Image",
+    "PICTURE_IMAGE"                : "Image",
     "WIDTH"                        : "Width",
     "HEIGHT"                       : "Height",
     "FULL_SKELETON"                : "Full HTML skeleton",

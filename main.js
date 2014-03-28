@@ -127,8 +127,8 @@ define(function (require, exports, module) {
     '\n</head>\n\n<body>\nindent-size<script src=""></script>\n</body>\n</html>\n'
   ];
 
-  // Picture/Image
-  var imageCode = '<img src="" alt="" width="size-x" height="size-y" />';
+  // Image
+  var imageCode = '<img src="src-url" alt="" width="size-x" height="size-y" />';
 
 
   /* ------- End Available HTML Elements ------- */
@@ -181,8 +181,8 @@ define(function (require, exports, module) {
                     ],
 
         // Shortcuts to the image size input boxes
-        $imgWidthID = $("#img-width"),
-        $imgHeightID = $("#img-height");
+        $imgWidthID = $(".html-skeleton #img-width"),
+        $imgHeightID = $(".html-skeleton #img-height");
 
     // For each option that is checked, add the corresponding element
     // to `finalElements` for addition in document
@@ -193,7 +193,7 @@ define(function (require, exports, module) {
     });
 
     // The picture/image box is checked
-    if ($("#img-tag:checked").val() === "on") {
+    if ($(".html-skeleton #img-tag:checked").val() === "on") {
 
       // The width box was filled out, use that value
       if ($imgWidthID.val()) {
@@ -215,7 +215,8 @@ define(function (require, exports, module) {
 
       // Add the image tag to `finalElements` for addition in document,
       // replacing the invalid values with valid ones
-      imageCodeNew = imageCode.replace(/size-x/, $imgWidth);
+      imageCodeNew = imageCode.replace(/src-url/, $(".html-skeleton-image span").text());
+      imageCodeNew = imageCodeNew.replace(/size-x/, $imgWidth);
       imageCodeNew = imageCodeNew.replace(/size-y/, $imgHeight);
       finalElements.push(imageCodeNew);
     }
@@ -311,8 +312,8 @@ define(function (require, exports, module) {
       // Add a small shadow to the image container
       $(".html-skeleton-image #img-preview").css("box-shadow","0px 1px 6px black");
 
-      // Make the image path relative
-      var userImageFile = ProjectManager.makeProjectRelativeIfPossible(userImageFile);
+      // Make the image path relative (if possible)
+      userImageFile = ProjectManager.makeProjectRelativeIfPossible(userImageFile);
 
       // If the path is longer than 50 characters, split it up for better displaying
       if (userImageFile.length > 50) {
