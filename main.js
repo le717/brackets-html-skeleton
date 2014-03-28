@@ -24,7 +24,7 @@ define(function (require, exports, module) {
       Document           = brackets.getModule("document/Document"),
       EditorManager      = brackets.getModule("editor/EditorManager"),
       ExtensionUtils     = brackets.getModule("utils/ExtensionUtils"),
-      //FileSystem         = brackets.getModule("filesystem/FileSystem"),
+      FileSystem         = brackets.getModule("filesystem/FileSystem"),
       ImageViewer        = brackets.getModule("editor/ImageViewer"),
       Menus              = brackets.getModule("command/Menus"),
       PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
@@ -39,7 +39,6 @@ define(function (require, exports, module) {
 
       // Grab the logo to display in the dialog
       skeletonLogo       = require.toUrl("img/HTML-Skeleton.svg"),
-      //skeletonLogo2       = require.toUrl("img/HTML-Skeleton.png"),
       EXTENSION_ID       = "le717.html-skeleton",
 
       // User's indent settings
@@ -232,78 +231,101 @@ define(function (require, exports, module) {
   /* ------- Begin HTML Skeleton Dialog Boxes ------- */
 
 
-  function _showSkeletonDialog() {
+  function _handleSkeletonButton() {
     /* Display dialog box */
 
     var skeletonDialog = Dialogs.showModalDialogUsingTemplate(localizedDialog),
-        $doneButton = skeletonDialog.getElement().find('.dialog-button[data-button-id="ok"]');
+        $dialog = skeletonDialog.getElement(),
+        $doneButton = $('.dialog-button[data-button-id="ok"]', $dialog);
+
+    // If the Browse button is clicked, proceed to open the browse dialog
+    $('.dialog-button[data-button-id="browse"]', $dialog).on("click", function(e) {
+      _showImageFileDialog(e);
+    });
 
     // Display logo using Bracket's own image viewer
+    // TODO I am not using any special features of ImageViewer like I thought I needed to,
+    // so switch back to a "plain" img tag.
+    // It would remove the need for the new Image() trick too.
     ImageViewer.render(skeletonLogo, $(".html-skeleton-image"));
 
-    /* The following trick is from http://css-tricks.com/snippets/jquery/get-an-images-native-width/ */
-
-    // Create a new (offscreen) image
-    // TODO Refactor this into a new function
-//    $("#img-preview").bind("load", function() {
-//      var newImageForSizing = new Image();
-//      newImageForSizing.src = $("#img-preview").attr("src");
-//
-//      // Now we can get accurate image dimensions
-//      var imageWidth = newImageForSizing.width,
-//          imageHeight = newImageForSizing.height;
-
-      // If the image width and heights are not zero, update the size inputs with the values
-      //if (imageWidth !== 0) {
-        //$("#img-width").val(imageWidth);
-      //}
-      //if (imageHeight !== 0) {
-        //$("#img-height").val(imageHeight);
-      //}
-
-//      window.setTimeout(function() {
-//        $("#img-preview").attr("src", skeletonLogo2);
-//        $(".html-skeleton-image").css("position", "relative");
-//        $(".html-skeleton-image #img-preview").css("box-shadow","0px 1px 6px black");
-//
-//        // Make the image path relative
-//        var skeletonLogo2Path = ProjectManager.makeProjectRelativeIfPossible(skeletonLogo2);
-//
-//        // If the path is longer than 50 characters, split it up for better displaying
-//        if (skeletonLogo2Path.length > 50) {
-//          skeletonLogo2Path = skeletonLogo2Path.substring(0, 51) + "<br>" + skeletonLogo2Path.substring(50, skeletonLogo2Path.length);
-//        }
-//
-//        // Show the file path
-//        $(".html-skeleton-image span").html(skeletonLogo2Path);
-//      }, 3000);
-//    });
-
     // Hide image stats
-    $("#img-tip").remove();
-    $("#img-scale").remove();
+    $(".html-skeleton-image #img-tip").remove();
+    $(".html-skeleton-image #img-scale").remove();
 
     // Upon closing the dialog, run function to gather and apply choices
     $doneButton.on("click", _getOptions);
   }
 
-  //var $dialog = skeletonDialog.getElement();
-  //var $browseForImageBtn = $("#change-directory", $dialog);
-  /*function _showBrowseDialogBox() {
-    $browseForImageBtn.click(function (e) {
-      FileSystem.showOpenDialog(false, false, "Choose an image", null, null,
-                                function (closedDialog, selectedFiles) {
-                                  if (!closedDialog && selectedFiles && selectedFiles.length > 0 && selectedFiles[0].length > 0) {
-                                    console.log(selectedFiles[0]);
-                                  }
-                                });
+  function _showImageFileDialog(e) {
+    /* Open the file browse dialog for the user to select an image */
 
-      e.preventDefault();
-      e.stopPropagation();
+    // Only display the image if the user selects ones
+    FileSystem.showOpenDialog(false, false, "Choose an image", null, null,
+      function (closedDialog, selectedFile) {
+      if (!closedDialog && selectedFile && selectedFile.length > 0) {
+        _displayImage(selectedFile[0]);
+      }
     });
-  }*/
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
 
   /* ------- End HTML Skeleton Dialog Boxes ------- */
+
+
+  /* ------- Begin user-selected image display ------- */
+
+
+  function _displayImage(userImageFile) {
+    /* Display the user selected image */
+    // FIXME Handle the user selecting a non-image file
+    // Perhaps detect MIME type?
+
+    // Display the image
+    $(".html-skeleton-image #img-preview").attr("src", userImageFile);
+
+    /* The following trick is from http://css-tricks.com/snippets/jquery/get-an-images-native-width/ */
+
+    // Create a new (offscreen) image
+    $(".html-skeleton-image #img-preview").bind("load", function() {
+      var newImageForSizing = new Image();
+      newImageForSizing.src = $(".html-skeleton-image #img-preview").attr("src");
+
+      // Now we can get accurate image dimensions
+      var imageWidth = newImageForSizing.width,
+          imageHeight = newImageForSizing.height;
+
+      // If the image width and heights are not zero, update the size inputs with the values
+      if (imageWidth !== 0) {
+        $("#img-width").val(imageWidth);
+      }
+      if (imageHeight !== 0) {
+        $("#img-height").val(imageHeight);
+      }
+
+      // Position the container
+      $(".html-skeleton-image").css("position", "relative");
+
+      // Add a small shadow to the image container
+      $(".html-skeleton-image #img-preview").css("box-shadow","0px 1px 6px black");
+
+      // Make the image path relative
+      var userImageFile = ProjectManager.makeProjectRelativeIfPossible(userImageFile);
+
+      // If the path is longer than 50 characters, split it up for better displaying
+      if (userImageFile.length > 50) {
+        userImageFile = userImageFile.substring(0, 51) + "<br>" + userImageFile.substring(50, userImageFile.length);
+      }
+
+      // Show the file path
+      $(".html-skeleton-image span").html(userImageFile);
+    });
+  }
+
+
+  /* ------- End user-selected image display ------- */
 
 
   /* ------- Begin Extension Initialization ------- */
@@ -316,7 +338,7 @@ define(function (require, exports, module) {
     ExtensionUtils.loadStyleSheet(module, "css/style.css");
 
     // Create a menu item in the Edit menu
-    CommandManager.register(Strings.INSERT_HTML_ELEMENTS, EXTENSION_ID, _showSkeletonDialog);
+    CommandManager.register(Strings.INSERT_HTML_ELEMENTS, EXTENSION_ID, _handleSkeletonButton);
     var menu = Menus.getMenu(Menus.AppMenuBar.EDIT_MENU);
     menu.addMenuItem(EXTENSION_ID);
 
@@ -324,7 +346,7 @@ define(function (require, exports, module) {
     var $toolbarButton = $(toolbarButtonCode);
     $toolbarButton.appendTo("#main-toolbar > .buttons");
     $toolbarButton.attr("title", Strings.DIALOG_TITLE);
-    $toolbarButton.click(_showSkeletonDialog);
+    $toolbarButton.click(_handleSkeletonButton);
   });
 });
 
