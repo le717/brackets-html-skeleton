@@ -9,7 +9,11 @@
     </p>
 
     <!-- HTML Skeleton logo by http://rioforce.WordPress.com -->
-    <div class="html-skeleton-image"></div>
+    <div class="html-skeleton-image"><span></span></div>
+<!--
+    <span class="html-skeleton" id="img-path"></span>
+    <img class="html-skeleton-image" />
+-->
 
     <div class="html-skeleton-content">
       <h3>{{USAGE}}</h3>
@@ -39,14 +43,16 @@
         <input type="checkbox" id="img-tag" />
         <label for="img-tag">{{PICTURE_IMAGE}}<br></label>
 
-        <input id="img-width" type="number" min="0" placeholder="{{WIDTH}}" /><span class="html-skeleton" id="img-size-x"> x </span>
-        <input id="img-height" type="number" min="0" placeholder="{{HEIGHT}}" />
+        <input class="html-skeleton" id="img-width" type="number" min="0" placeholder="{{WIDTH}}" />
+        <span class="html-skeleton" id="img-size-x"> x </span>
+        <input class="html-skeleton" id="img-height" type="number" min="0" placeholder="{{HEIGHT}}" />
+        <a class="dialog-button btn" data-button-id="browse" href="#">{{BTN_BROWSE}}</a>
 
         <br>
-        <input id="full-skelly" type="checkbox" />
+        <input id="full-skeleton" type="checkbox" />
 
-        <label for="full-skelly">{{FULL_SKELETON}}<br>
-          <span id="full-skelly-description">{{FULL_SKELETON_DESCRIPTION}}</span>
+        <label for="full-skeleton">{{FULL_SKELETON}}<br>
+          <span id="full-skeleton-description">{{FULL_SKELETON_DESCRIPTION}}</span>
         </label>
       </form>
     </div>  <!-- #html-skeleton-content -->

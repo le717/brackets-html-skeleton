@@ -1,18 +1,19 @@
 {
-    "name": "le717.html-skeleton",
-    "title": "HTML Skeleton",
-    "description": "HTML Skeleton allows you to add various HTML elements straight into your document, freeing you from typing it yourself.",
-    "homepage": "https://github.com/le717/brackets-html-skeleton",
-    "version": "1.1.4",
-    "author": "Triangle717 (http://Triangle717.WordPress.com)",
-    "license": "The MIT License",
-    "engines": {
-        "brackets": ">=0.30.0"
-    },
-    "keywords": [
-        "HTML",
-        "html",
-        "HTML Skeleton"
-    ],
-    "categories": ["snippets", "codegen"]
+  "name": "le717.html-skeleton",
+  "title": "HTML Skeleton",
+  "description": "Insert a variety of HTML elements into your document with ease.",
+  "homepage": "https://github.com/le717/brackets-html-skeleton",
+  "version": "1.2.0",
+  "author": "Triangle717 (http://Triangle717.WordPress.com)",
+  "license": "MIT",
+  "engines": {
+      "brackets": ">=0.37.0"
+  },
+  "keywords": [
+    "HTML",
+    "html",
+    "HTML Skeleton",
+    "code snippets"
+  ],
+  "categories": ["snippets", "codegen"]
 }
