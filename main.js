@@ -187,7 +187,7 @@ define(function (require, exports, module) {
     // For each option that is checked, add the corresponding element
     // to `finalElements` for addition in document
     optionIDs.forEach(function (value, index) {
-      if ($(value + ":checked").val() === "on") {
+      if ($(".html-skeleton " + value + ":checked").val() === "on") {
         finalElements.push(skeletonBones[index]);
       }
     });
