@@ -15,7 +15,7 @@
 #img-path { display: none; }
 
 /* Position the image on the right */
-#img-preview {
+.html-skeleton-image #img-preview {
   position: relative;
   right: -60px;
   bottom: 30px;

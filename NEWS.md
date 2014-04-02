@@ -1,5 +1,11 @@
 # News #
 
+## 1.1.5 ##
+
+### 4/2/14 ###
+
+* Brackets' image preview is changed due to css conflict ([#10](https://github.com/le717/brackets-html-skeleton/issues/10))
+
 ## 1.1.4 ##
 
 ### 3/24/14 ###
