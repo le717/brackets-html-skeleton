@@ -26,6 +26,7 @@ define(function (require, exports, module) {
       ExtensionUtils     = brackets.getModule("utils/ExtensionUtils"),
       FileSystem         = brackets.getModule("filesystem/FileSystem"),
       ImageViewer        = brackets.getModule("editor/ImageViewer"),
+      LanguageManager    = brackets.getModule("language/LanguageManager"),
       Menus              = brackets.getModule("command/Menus"),
       PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
       ProjectManager     = brackets.getModule("project/ProjectManager"),
@@ -45,19 +46,34 @@ define(function (require, exports, module) {
       indentUnits        = "",
 
       // Localize the dialog box
-      localizedDialog = Mustache.render(skeletonDialogHtml, Strings);
+      localizedDialog    = Mustache.render(skeletonDialogHtml, Strings),
+
+      // Valid image files (as supported by Brackets)
+      imageFiles         = LanguageManager.getLanguage("image")._fileExtensions.concat(LanguageManager.getLanguage("xml")._fileExtensions[0]);
 
 
   /* ------- End Module Importing ------- */
 
 
-  /* ------- Begin Reading Indentation Preference ------- */
+  /* ------- Begin Polyfills ------- */
 
 
   function _repeat(str, num) {
-    /* Taken from http://stackoverflow.com/a/4550005 */
+    /* Polyfill, taken from http://stackoverflow.com/a/4550005 */
     return (new Array(num + 1)).join(str);
   }
+
+  function endsWith(str, suffix) {
+    /* Polyfill, taken from http://stackoverflow.com/a/2548133 */
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+  }
+
+
+  /* ------- End Polyfills ------- */
+
+
+  /* ------- Begin Reading Indentation Preference ------- */
+
 
   function _getIndentSize() {
     /* Get the user's indentation settings for inserted code */
@@ -187,13 +203,13 @@ define(function (require, exports, module) {
     // For each option that is checked, add the corresponding element
     // to `finalElements` for addition in document
     optionIDs.forEach(function (value, index) {
-      if ($(".html-skeleton " + value + ":checked").val() === "on") {
+      if ($(".html-skeleton " + value).prop("checked")) {
         finalElements.push(skeletonBones[index]);
       }
     });
 
     // The picture/image box is checked
-    if ($(".html-skeleton #img-tag:checked").val() === "on") {
+    if ($(".html-skeleton #img-tag").prop("checked")) {
 
       // The width box was filled out, use that value
       if ($imgWidthID.val()) {
@@ -244,10 +260,7 @@ define(function (require, exports, module) {
       _showImageFileDialog(e);
     });
 
-    // Display logo using Bracket's own image viewer
-    // TODO I am not using any special features of ImageViewer like I thought I needed to,
-    // so switch back to a "plain" img tag.
-    // It would remove the need for the new Image() trick too.
+    // Display logo (and any user images) using Brackets' ImageViewer
     ImageViewer.render(skeletonLogo, $(".html-skeleton-image"));
 
     // Hide image stats
@@ -262,7 +275,7 @@ define(function (require, exports, module) {
     /* Open the file browse dialog for the user to select an image */
 
     // Only display the image if the user selects ones
-    FileSystem.showOpenDialog(false, false, "Choose an image", null, null,
+    FileSystem.showOpenDialog(false, false, "Choose an image", null, imageFiles,
       function (closedDialog, selectedFile) {
       if (!closedDialog && selectedFile && selectedFile.length > 0) {
         _displayImage(selectedFile[0]);
@@ -282,9 +295,18 @@ define(function (require, exports, module) {
   function _displayImage(userImageFile) {
     /* Display the user selected image */
     // FIXME Handle the user selecting a non-image file
-    // Perhaps detect MIME type?
 
-    // Display the image
+//    if (brackets.platform === "win") {
+//      console.log("Brackets running on Windows");
+//    }
+
+    // The Image checkbox was not checked before now. Since the user has opened an image,
+    // let's assume the user wants to use it and check the box.
+    if (!$(".html-skeleton #img-tag").prop("checked")) {
+      $(".html-skeleton #img-tag").prop("checked", true);
+    }
+
+    // Display the image using full path
     $(".html-skeleton-image #img-preview").attr("src", userImageFile);
 
     /* The following trick is from http://css-tricks.com/snippets/jquery/get-an-images-native-width/ */
