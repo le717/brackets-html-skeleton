@@ -44,7 +44,7 @@ define({
     "PICTURE_IMAGE"                : "Image",
     "WIDTH"                        : "Width",
     "HEIGHT"                       : "Height",
-    "FULL_SKELETON"                : "Full HTML skeleton",
+    "FULL_SKELETON"                : "Full HTML Skeleton",
     "FULL_SKELETON_DESCRIPTION"    : "Includes all elements above except inline stylesheet, inline script, and image",
     "BTN_CANCEL"                   : "Cancel",
     "BTN_DONE"                     : "Done",
