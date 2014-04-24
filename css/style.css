@@ -23,10 +23,15 @@
 }
 
 /* Decrease the size of the image path */
-.html-skeleton-image span { font-size: 12px; }
+.html-skeleton-image #img-src,
+.html-skeleton-image #img-error-text { font-size: 12px; }
 
 /* Hide Bracket's image path and size display */
-.html-skeleton-image #img-header { display: none; }
+.html-skeleton-image #img-header,
+.html-skeleton-image #img-path { display: none; }
+
+/* Turn the error text red */
+.html-skeleton-image #img-error-text { color: red; }
 
 /* Position the image on the right */
 .html-skeleton-image #img-preview {
