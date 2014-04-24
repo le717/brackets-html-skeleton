@@ -49,7 +49,7 @@ define(function (require, exports, module) {
       localizedDialog    = Mustache.render(skeletonDialogHtml, Strings),
 
       // Valid image files (as supported by Brackets)
-      imageFiles         = LanguageManager.getLanguage("image")._fileExtensions.concat(LanguageManager.getLanguage("xml")._fileExtensions[0]);
+      imageFiles         = LanguageManager.getLanguage("image")._fileExtensions.concat("svg");
 
 
   /* ------- End Module Importing ------- */
@@ -96,15 +96,14 @@ define(function (require, exports, module) {
 
   // Get user's indentation settings
   PreferencesManager.on("change", function (e, data) {
-    data.ids.forEach(function (value) {
+    data.ids.forEach(function (value, index) {
 
       // A relevant preference was changed, update our settings
-      // FUTURE Keep an eye out for `softTabs` in Sprint 38
       if (value === "useTabChar" || value === "tabSize" || value === "spaceUnits") {
         // Do NOT attempt to assign `indentUnits` directly to the function.
         // It will completely break otherwise.
-        var temp = _getIndentSize();
-        indentUnits = temp;
+        var tempVar = _getIndentSize();
+        indentUnits = tempVar;
       }
     });
   });
@@ -123,7 +122,7 @@ define(function (require, exports, module) {
   var skeletonBones = [
     // Only the head and body tags + title and meta
     '<!DOCTYPE html>\n<html lang="">\n<head>\nindent-size<meta charset="UTF-8">\n' +
-    'indent-size<title></title>\n\n</head>\n\n<body>\nindent-size\n</body>\n</html>\n',
+    'indent-size<title></title>\n</head>\n\n<body>\nindent-size\n</body>\n</html>\n',
 
     // External stylesheet
     '<link rel="stylesheet" href="">',
@@ -131,16 +130,13 @@ define(function (require, exports, module) {
     // Inline stylesheet
     '<style></style>',
 
-    // External script
+    // External (and edited to be inline) script
     '<script src=""></script>',
-
-    // Inline script
-    '<script></script>',
 
     // Full HTML skeleton
     '<!DOCTYPE html>\n<html lang="">\n<head>\nindent-size<meta charset="UTF-8">\n' +
-    'indent-size<title></title>\nindent-size<link rel="stylesheet" href="">' +
-    '\n</head>\n\n<body>\nindent-size<script src=""></script>\n</body>\n</html>\n'
+    'indent-size<title></title>\nindent-size<link rel="stylesheet" href="">\n' +
+    '</head>\n\n<body>\nindent-size<script src=""></script>\n</body>\n</html>\n'
   ];
 
   // Image
@@ -162,7 +158,7 @@ define(function (require, exports, module) {
       var cursor = editor.getCursorPos();
 
       // Get the elements from the list in reverse so everything is added in the proper order
-      finalElements.reverse().forEach(function (value) {
+      finalElements.reverse().forEach(function (value, index) {
         //  Wrap the actions in a `batchOperation` call, per guidelines
         editor.document.batchOperation(function() {
 
@@ -204,11 +200,24 @@ define(function (require, exports, module) {
     // to `finalElements` for addition in document
     optionIDs.forEach(function (value, index) {
       if ($(".html-skeleton " + value).prop("checked")) {
-        finalElements.push(skeletonBones[index]);
+
+        // The inline script box was checked, reuse external script string
+        if (index === 4) {
+          finalElements.push(skeletonBones[3].replace(/ src="">/, ">"));
+
+          // Because of the script element editing above, redirect the
+          // Full HTML Skeleton option to the proper index
+        } else if (index === 5) {
+          finalElements.push(skeletonBones[4]);
+
+        } else {
+          // It was another element that does not require editing/redirecting
+          finalElements.push(skeletonBones[index]);
+        }
       }
     });
 
-    // The picture/image box is checked
+    // The picture/image box was checked
     if ($(".html-skeleton #img-tag").prop("checked")) {
 
       // The width box was filled out, use that value
@@ -231,7 +240,7 @@ define(function (require, exports, module) {
 
       // Add the image tag to `finalElements` for addition in document,
       // replacing the invalid values with valid ones
-      imageCodeNew = imageCode.replace(/src-url/, $(".html-skeleton-image span").text());
+      imageCodeNew = imageCode.replace(/src-url/, $(".html-skeleton-image #img-src").text());
       imageCodeNew = imageCodeNew.replace(/size-x/, $imgWidth);
       imageCodeNew = imageCodeNew.replace(/size-y/, $imgHeight);
       finalElements.push(imageCodeNew);
@@ -296,25 +305,32 @@ define(function (require, exports, module) {
     /* Display the user selected image */
     // FIXME Handle the user selecting a non-image file
 
+    // Assume the selected file is a valid image
+    var supportedImage = true,
+        $imgPreview    = $(".html-skeleton-image #img-preview"),
+        $showImgPath   = $(".html-skeleton-image #img-src"),
+        $imgErrorText  = $(".html-skeleton-image #img-error-text"),
+        $imgCheckBox   = $(".html-skeleton #img-tag");
+
 //    if (brackets.platform === "win") {
 //      console.log("Brackets running on Windows");
 //    }
 
-    // The Image checkbox was not checked before now. Since the user has opened an image,
+    // The Image check box was not checked before now. Since the user has opened an image,
     // let's assume the user wants to use it and check the box.
-    if (!$(".html-skeleton #img-tag").prop("checked")) {
-      $(".html-skeleton #img-tag").prop("checked", true);
+    if (!$imgCheckBox.prop("checked")) {
+      $imgCheckBox.prop("checked", true);
     }
 
-    // Display the image using full path
-    $(".html-skeleton-image #img-preview").attr("src", userImageFile);
+    // Display the image using the full path
+    $imgPreview.attr("src", userImageFile);
 
     /* The following trick is from http://css-tricks.com/snippets/jquery/get-an-images-native-width/ */
 
-    // Create a new (offscreen) image
-    $(".html-skeleton-image #img-preview").bind("load", function() {
+    // Create a new (off-screen) image
+    $imgPreview.bind("load", function() {
       var newImageForSizing = new Image();
-      newImageForSizing.src = $(".html-skeleton-image #img-preview").attr("src");
+      newImageForSizing.src = $imgPreview.attr("src");
 
       // Now we can get accurate image dimensions
       var imageWidth = newImageForSizing.width,
@@ -332,7 +348,7 @@ define(function (require, exports, module) {
       $(".html-skeleton-image").css("position", "relative");
 
       // Add a small shadow to the image container
-      $(".html-skeleton-image #img-preview").css("box-shadow","0px 1px 6px black");
+      $imgPreview.css("box-shadow", "0px 1px 6px black");
 
       // Make the image path relative (if possible)
       userImageFile = ProjectManager.makeProjectRelativeIfPossible(userImageFile);
@@ -343,7 +359,8 @@ define(function (require, exports, module) {
       }
 
       // Show the file path
-      $(".html-skeleton-image span").html(userImageFile);
+      $showImgPath.html("");
+      $showImgPath.html(userImageFile);
     });
   }
 
