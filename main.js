@@ -285,7 +285,7 @@ define(function (require, exports, module) {
 
     // Only display the image if the user selects ones
     FileSystem.showOpenDialog(false, false, "Choose an image", null, imageFiles,
-      function (closedDialog, selectedFile) {
+    function (closedDialog, selectedFile) {
       if (!closedDialog && selectedFile && selectedFile.length > 0) {
         _displayImage(selectedFile[0]);
       }
@@ -301,6 +301,23 @@ define(function (require, exports, module) {
   /* ------- Begin user-selected image display ------- */
 
 
+  function _imgPathUtils(imgPath) {
+    /* Various image path utilities */
+
+    //console.log(imgPath);
+    // Make the image path relative (if possible)
+    imgPath = ProjectManager.makeProjectRelativeIfPossible(imgPath);
+
+    // If the path is longer than 50 characters, split it up for better displaying
+    if (imgPath.length > 50) {
+      imgPath = imgPath.substring(0, 51) + "<br>" + imgPath.substring(51, imgPath.length);
+    }
+
+    //console.log(imgPath);
+    return imgPath;
+  }
+
+
   function _displayImage(userImageFile) {
     /* Display the user selected image */
     // FIXME Handle the user selecting a non-image file
@@ -312,9 +329,20 @@ define(function (require, exports, module) {
         $imgErrorText  = $(".html-skeleton-image #img-error-text"),
         $imgCheckBox   = $(".html-skeleton #img-tag");
 
-//    if (brackets.platform === "win") {
-//      console.log("Brackets running on Windows");
-//    }
+    if (brackets.platform !== "mac") {
+      // Assume otherwise on other platforms as the file filter drop down is ignored but on Mac (https://trello.com/c/430aXkpq)
+      supportedImage = false;
+
+      // Go through the supported image list and check if the image is supported
+      imageFiles.forEach(function(value, index) {
+        if (endsWith(userImageFile, value)) {
+          // Yes, the image is supported
+          supportedImage = true;
+        }
+      });
+    }
+
+    //console.log("supportedImage: " + supportedImage);
 
     // The Image check box was not checked before now. Since the user has opened an image,
     // let's assume the user wants to use it and check the box.
@@ -322,46 +350,70 @@ define(function (require, exports, module) {
       $imgCheckBox.prop("checked", true);
     }
 
-    // Display the image using the full path
-    $imgPreview.attr("src", userImageFile);
+    // The image is not a supported file type
+    if (!supportedImage) {
 
-    /* The following trick is from http://css-tricks.com/snippets/jquery/get-an-images-native-width/ */
+      //console.log(userImageFile);
 
-    // Create a new (off-screen) image
-    $imgPreview.bind("load", function() {
-      var newImageForSizing = new Image();
-      newImageForSizing.src = $imgPreview.attr("src");
+      // Run process to trim the path
+      userImageFile = _imgPathUtils(userImageFile);
 
-      // Now we can get accurate image dimensions
-      var imageWidth = newImageForSizing.width,
-          imageHeight = newImageForSizing.height;
-
-      // If the image width and heights are not zero, update the size inputs with the values
-      if (imageWidth !== 0) {
-        $("#img-width").val(imageWidth);
-      }
-      if (imageHeight !== 0) {
-        $("#img-height").val(imageHeight);
-      }
-
-      // Position the container
-      $(".html-skeleton-image").css("position", "relative");
-
-      // Add a small shadow to the image container
-      $imgPreview.css("box-shadow", "0px 1px 6px black");
-
-      // Make the image path relative (if possible)
-      userImageFile = ProjectManager.makeProjectRelativeIfPossible(userImageFile);
-
-      // If the path is longer than 50 characters, split it up for better displaying
-      if (userImageFile.length > 50) {
-        userImageFile = userImageFile.substring(0, 51) + "<br>" + userImageFile.substring(50, userImageFile.length);
-      }
-
-      // Show the file path
       $showImgPath.html("");
       $showImgPath.html(userImageFile);
-    });
+      $imgErrorText.html("<br>is not supported for previewing!");
+      $showImgPath.css("color", "red");
+      $imgPreview.css("box-shadow", "");
+      // FIXME Reload the extension logo
+      $imgPreview.attr("src", skeletonLogo);
+      //$imgPreview.attr("src", "");
+
+      //console.log(userImageFile);
+      return false;
+
+      // The image is a supported file type, move on
+    } else {
+
+      // Display the image using the full path
+      $imgPreview.attr("src", userImageFile);
+
+      // Clean possible CSS applied from previewing an invalid image
+      $imgErrorText.html("");
+      $showImgPath.css("color", "");
+
+      /* The following trick is from http://css-tricks.com/snippets/jquery/get-an-images-native-width/ */
+
+      // Create a new (off-screen) image
+      $imgPreview.bind("load", function() {
+        var newImageForSizing = new Image();
+        newImageForSizing.src = $imgPreview.attr("src");
+
+        // Now we can get accurate image dimensions
+        var imageWidth = newImageForSizing.width,
+            imageHeight = newImageForSizing.height;
+
+        // If the image width and heights are not zero, update the size inputs with the values
+        if (imageWidth !== 0) {
+          $("#img-width").val(imageWidth);
+        }
+
+        if (imageHeight !== 0) {
+          $("#img-height").val(imageHeight);
+        }
+
+        // Position the container
+        $(".html-skeleton-image").css("position", "relative");
+
+        // Add a small shadow to the image container
+        $imgPreview.css("box-shadow", "0px 1px 6px black");
+
+        // Run process to trim the path
+        userImageFile = _imgPathUtils(userImageFile);
+
+        // Show the file path
+        $showImgPath.html("");
+        $showImgPath.html(userImageFile);
+      });
+    }
   }
 
 
