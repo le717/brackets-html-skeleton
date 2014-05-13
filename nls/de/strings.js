@@ -49,3 +49,5 @@ define({
     "BTN_CANCEL"                   : "Abbrechen",
     "BTN_DONE"                     : "Fertig",
 });
+
+/* Last translated for d04d101774e59251f89e36f83a261e988b4e39b8 */
