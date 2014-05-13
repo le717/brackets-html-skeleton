@@ -79,7 +79,7 @@ define(function (require, exports, module) {
     /* Get the user's indentation settings for inserted code */
 
     var newIndentUnits, indentUnitsInt,
-        tabCharPref = PreferencesManager.get("useTabChar", PreferencesManager.CURRENT_PROJECT);
+        tabCharPref  = PreferencesManager.get("useTabChar", PreferencesManager.CURRENT_PROJECT);
 
     // The user is using tabs
     if (tabCharPref) {
@@ -102,8 +102,8 @@ define(function (require, exports, module) {
       if (value === "useTabChar" || value === "tabSize" || value === "spaceUnits") {
         // Do NOT attempt to assign `indentUnits` directly to the function.
         // It will completely break otherwise.
-        var tempVar = _getIndentSize();
-        indentUnits = tempVar;
+        var tempVar  = _getIndentSize();
+        indentUnits  = tempVar;
       }
     });
   });
@@ -116,7 +116,7 @@ define(function (require, exports, module) {
 
 
   // Placeholder variables for image size
-  var $imgWidth = 0,
+  var $imgWidth  = 0,
       $imgHeight = 0;
 
   var skeletonBones = [
@@ -188,17 +188,17 @@ define(function (require, exports, module) {
         finalElements = [],
 
         // Store all the option IDs for easier access
-        optionIDs = ["#head-body", "#extern-style-tag", "#inline-style-tag",
-                     "#extern-script-tag", "#inline-script-tag", "#full-skeleton"
-                    ],
+        optionIDs     = ["#head-body", "#extern-style-tag", "#inline-style-tag",
+                         "#extern-script-tag", "#inline-script-tag", "#full-skeleton"
+                        ],
 
         // Shortcuts to the image size input boxes
-        $imgWidthID = $(".html-skeleton #img-width"),
-        $imgHeightID = $(".html-skeleton #img-height");
+        $imgWidthID   = $(".html-skeleton #img-width"),
+        $imgHeightID  = $(".html-skeleton #img-height");
 
     // For each option that is checked, add the corresponding element
     // to `finalElements` for addition in document
-    optionIDs.forEach(function (value, index) {
+    optionIDs.forEach(function(value, index) {
       if ($(".html-skeleton " + value).prop("checked")) {
 
         // The inline script box was checked, reuse external script string
@@ -223,7 +223,6 @@ define(function (require, exports, module) {
       // The width box was filled out, use that value
       if ($imgWidthID.val()) {
         $imgWidth = $imgWidthID.val();
-
       } else {
         // The width box was empty, reset to 0
         $imgWidth = 0;
@@ -232,7 +231,6 @@ define(function (require, exports, module) {
       // The height box was filled out, use that value
       if ($imgHeightID.val()) {
         $imgHeight = $imgHeightID.val();
-
       } else {
         // The height box was empty, reset to 0
         $imgHeight = 0;
@@ -287,7 +285,7 @@ define(function (require, exports, module) {
     FileSystem.showOpenDialog(false, false, "Choose an image", null, imageFiles,
     function (closedDialog, selectedFile) {
       if (!closedDialog && selectedFile && selectedFile.length > 0) {
-        _displayImage(selectedFile[0]);
+        _handleImage(selectedFile[0]);
       }
     });
     e.preventDefault();
@@ -304,7 +302,6 @@ define(function (require, exports, module) {
   function _imgPathUtils(imgPath) {
     /* Various image path utilities */
 
-    //console.log(imgPath);
     // Make the image path relative (if possible)
     imgPath = ProjectManager.makeProjectRelativeIfPossible(imgPath);
 
@@ -312,15 +309,11 @@ define(function (require, exports, module) {
     if (imgPath.length > 50) {
       imgPath = imgPath.substring(0, 51) + "<br>" + imgPath.substring(51, imgPath.length);
     }
-
-    console.log(imgPath);
     return imgPath;
   }
 
-
-  function _displayImage(userImageFile) {
+  function _handleImage(userImageFile) {
     /* Display the user selected image */
-    // FIXME Handle the user selecting a non-image file
 
     // Assume the selected file is a valid image
     var supportedImage = true,
@@ -352,26 +345,34 @@ define(function (require, exports, module) {
 
     // The image is not a supported file type
     if (!supportedImage) {
-
       // Reset the width and height fields
       $imgWidth.val("");
       $imgHeight.val("");
 
-      //console.log(userImageFile);
-
       // Run process to trim the path
       userImageFile = _imgPathUtils(userImageFile);
 
+      // Update display for image
       $showImgPath.html("");
       $showImgPath.html(userImageFile);
       $imgErrorText.html("<br>is not supported for previewing!");
       $showImgPath.css("color", "red");
       $imgPreview.css("box-shadow", "");
-      // FIXME Reload the extension logo
-      //$imgPreview.attr("src", skeletonLogo);
-      $imgPreview.attr("src", "");
 
-      //console.log(userImageFile);
+      /* NOTE I figured out what is going on here.
+       * When this block is run, ideally the extension logo is displayed
+       * rather than the previous (if any) image.
+       * However, what seems to be occuring (even if an unsupported image is loaded on first use)
+       * is the `$imgPreview.bind("load")` detection in the supported image block
+       * is detecting the load and thus treating it as a supported image.
+       *
+       * The fix:
+       * Find a way to isolate the load detection to NOT detect this change.
+       * This is pretty much all that is stopping v1.2.0 from being released
+       */
+
+      //$imgPreview.attr("src", skeletonLogo);
+      //$imgPreview.attr("src", "");
       return false;
 
       // The image is a supported file type, move on
@@ -392,7 +393,6 @@ define(function (require, exports, module) {
         if (imageWidth) {
           $imgWidth.val(imageWidth);
         }
-
         if (imageHeight) {
           $imgHeight.val(imageHeight);
         }
@@ -401,7 +401,7 @@ define(function (require, exports, module) {
         $(".html-skeleton-image").css("position", "relative");
 
         // Add a small shadow to the image container
-        $imgPreview.css("box-shadow", "0px 1px 6px black");
+        $imgPreview.css("box-shadow", "0px 0px 3px black");
 
         // Run process to trim the path
         userImageFile = _imgPathUtils(userImageFile);
@@ -410,6 +410,7 @@ define(function (require, exports, module) {
         $showImgPath.html("");
         $showImgPath.html(userImageFile);
       });
+      return false;
     }
   }
 
