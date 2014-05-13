@@ -313,7 +313,7 @@ define(function (require, exports, module) {
       imgPath = imgPath.substring(0, 51) + "<br>" + imgPath.substring(51, imgPath.length);
     }
 
-    //console.log(imgPath);
+    console.log(imgPath);
     return imgPath;
   }
 
@@ -323,8 +323,9 @@ define(function (require, exports, module) {
     // FIXME Handle the user selecting a non-image file
 
     // Assume the selected file is a valid image
-    var $imageWidth, $imageHeight,
-        supportedImage = true,
+    var supportedImage = true,
+        $imgWidth      = $(".html-skeleton #img-width"),
+        $imgHeight     = $(".html-skeleton #img-height"),
         $imgPreview    = $(".html-skeleton-image #img-preview"),
         $showImgPath   = $(".html-skeleton-image #img-src"),
         $imgErrorText  = $(".html-skeleton-image #img-error-text"),
@@ -343,8 +344,6 @@ define(function (require, exports, module) {
       });
     }
 
-    //console.log("supportedImage: " + supportedImage);
-
     // The Image check box was not checked before now. Since the user has opened an image,
     // let's assume the user wants to use it and check the box.
     if (!$imgCheckBox.prop("checked")) {
@@ -353,6 +352,10 @@ define(function (require, exports, module) {
 
     // The image is not a supported file type
     if (!supportedImage) {
+
+      // Reset the width and height fields
+      $imgWidth.val("");
+      $imgHeight.val("");
 
       //console.log(userImageFile);
 
@@ -373,7 +376,6 @@ define(function (require, exports, module) {
 
       // The image is a supported file type, move on
     } else {
-
       // Display the image using the full path
       $imgPreview.attr("src", userImageFile);
 
@@ -383,31 +385,31 @@ define(function (require, exports, module) {
 
       // Get the image width and height
       $imgPreview.bind("load", function() {
-        $imageWidth  = $imgPreview[0].naturalWidth;
-        $imageHeight = $imgPreview[0].naturalHeight;
+        var imageWidth  = $imgPreview[0].naturalWidth,
+            imageHeight = $imgPreview[0].naturalHeight;
+
+        // If the image width and heights are not zero, update the size inputs with the values
+        if (imageWidth) {
+          $imgWidth.val(imageWidth);
+        }
+
+        if (imageHeight) {
+          $imgHeight.val(imageHeight);
+        }
+
+        // Position the container
+        $(".html-skeleton-image").css("position", "relative");
+
+        // Add a small shadow to the image container
+        $imgPreview.css("box-shadow", "0px 1px 6px black");
+
+        // Run process to trim the path
+        userImageFile = _imgPathUtils(userImageFile);
+
+        // Show the file path
+        $showImgPath.html("");
+        $showImgPath.html(userImageFile);
       });
-
-      // If the image width and heights are not zero, update the size inputs with the values
-      if ($imageWidth !== 0) {
-        $("#img-width").val($imageWidth);
-      }
-
-      if ($imageHeight !== 0) {
-        $("#img-height").val($imageHeight);
-      }
-
-      // Position the container
-      $(".html-skeleton-image").css("position", "relative");
-
-      // Add a small shadow to the image container
-      $imgPreview.css("box-shadow", "0px 1px 6px black");
-
-      // Run process to trim the path
-      userImageFile = _imgPathUtils(userImageFile);
-
-      // Show the file path
-      $showImgPath.html("");
-      $showImgPath.html(userImageFile);
     }
   }
 
@@ -433,7 +435,7 @@ define(function (require, exports, module) {
     var $toolbarButton = $(toolbarButtonCode);
     $toolbarButton.appendTo("#main-toolbar > .buttons");
     $toolbarButton.attr("title", Strings.DIALOG_TITLE);
-    $toolbarButton.click(_handleSkeletonButton);
+    $toolbarButton.on("click", _handleSkeletonButton);
   });
 });
 
