@@ -323,7 +323,8 @@ define(function (require, exports, module) {
     // FIXME Handle the user selecting a non-image file
 
     // Assume the selected file is a valid image
-    var supportedImage = true,
+    var $imageWidth, $imageHeight,
+        supportedImage = true,
         $imgPreview    = $(".html-skeleton-image #img-preview"),
         $showImgPath   = $(".html-skeleton-image #img-src"),
         $imgErrorText  = $(".html-skeleton-image #img-error-text"),
@@ -364,8 +365,8 @@ define(function (require, exports, module) {
       $showImgPath.css("color", "red");
       $imgPreview.css("box-shadow", "");
       // FIXME Reload the extension logo
-      $imgPreview.attr("src", skeletonLogo);
-      //$imgPreview.attr("src", "");
+      //$imgPreview.attr("src", skeletonLogo);
+      $imgPreview.attr("src", "");
 
       //console.log(userImageFile);
       return false;
@@ -380,39 +381,33 @@ define(function (require, exports, module) {
       $imgErrorText.html("");
       $showImgPath.css("color", "");
 
-      /* The following trick is from http://css-tricks.com/snippets/jquery/get-an-images-native-width/ */
-
-      // Create a new (off-screen) image
+      // Get the image width and height
       $imgPreview.bind("load", function() {
-        var newImageForSizing = new Image();
-        newImageForSizing.src = $imgPreview.attr("src");
-
-        // Now we can get accurate image dimensions
-        var imageWidth = newImageForSizing.width,
-            imageHeight = newImageForSizing.height;
-
-        // If the image width and heights are not zero, update the size inputs with the values
-        if (imageWidth !== 0) {
-          $("#img-width").val(imageWidth);
-        }
-
-        if (imageHeight !== 0) {
-          $("#img-height").val(imageHeight);
-        }
-
-        // Position the container
-        $(".html-skeleton-image").css("position", "relative");
-
-        // Add a small shadow to the image container
-        $imgPreview.css("box-shadow", "0px 1px 6px black");
-
-        // Run process to trim the path
-        userImageFile = _imgPathUtils(userImageFile);
-
-        // Show the file path
-        $showImgPath.html("");
-        $showImgPath.html(userImageFile);
+        $imageWidth  = $imgPreview[0].naturalWidth;
+        $imageHeight = $imgPreview[0].naturalHeight;
       });
+
+      // If the image width and heights are not zero, update the size inputs with the values
+      if ($imageWidth !== 0) {
+        $("#img-width").val($imageWidth);
+      }
+
+      if ($imageHeight !== 0) {
+        $("#img-height").val($imageHeight);
+      }
+
+      // Position the container
+      $(".html-skeleton-image").css("position", "relative");
+
+      // Add a small shadow to the image container
+      $imgPreview.css("box-shadow", "0px 1px 6px black");
+
+      // Run process to trim the path
+      userImageFile = _imgPathUtils(userImageFile);
+
+      // Show the file path
+      $showImgPath.html("");
+      $showImgPath.html(userImageFile);
     }
   }
 
