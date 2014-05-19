@@ -25,6 +25,7 @@ define(function (require, exports, module) {
       EditorManager      = brackets.getModule("editor/EditorManager"),
       ExtensionUtils     = brackets.getModule("utils/ExtensionUtils"),
       FileSystem         = brackets.getModule("filesystem/FileSystem"),
+      FileUtils          = brackets.getModule("file/FileUtils"),
       ImageViewer        = brackets.getModule("editor/ImageViewer"),
       LanguageManager    = brackets.getModule("language/LanguageManager"),
       Menus              = brackets.getModule("command/Menus"),
@@ -61,11 +62,6 @@ define(function (require, exports, module) {
   function _repeat(str, num) {
     /* Polyfill, taken from http://stackoverflow.com/a/4550005 */
     return (new Array(num + 1)).join(str);
-  }
-
-  function endsWith(str, suffix) {
-    /* Polyfill, taken from http://stackoverflow.com/a/2548133 */
-    return str.indexOf(suffix, str.length - suffix.length) !== -1;
   }
 
 
@@ -330,7 +326,7 @@ define(function (require, exports, module) {
 
       // Go through the supported image list and check if the image is supported
       imageFiles.forEach(function(value, index) {
-        if (endsWith(userImageFile, value)) {
+        if (FileUtils.getFileExtension(userImageFile) === value) {
           // Yes, the image is supported
           supportedImage = true;
         }
@@ -362,7 +358,7 @@ define(function (require, exports, module) {
       /* NOTE I figured out what is going on here.
        * When this block is run, ideally the extension logo is displayed
        * rather than the previous (if any) image.
-       * However, what seems to be occuring (even if an unsupported image is loaded on first use)
+       * However, what seems to be occurring (even if an unsupported image is loaded on first use)
        * is the `$imgPreview.bind("load")` detection in the supported image block
        * is detecting the load and thus treating it as a supported image.
        *
