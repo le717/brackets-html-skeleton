@@ -31,6 +31,7 @@ define({
     // mainDialog.html
     "DIALOG_TITLE"                 : "HTML Skeleton",
     "DIALOG_EXTENSION_DESCRIPTION" : "HTML Skeleton allows you to add various HTML elements straight into your document, freeing you from typing it yourself.",
+    "FILE_DIALOG_TITLE"            : "Choose an Image",
     "USAGE"                        : "Usage",
     "PLACE_CURSOR"                 : "Place your cursor where you want the elements to be added.",
     "SELECT_ELEMENTS"              : "Select the elements you desire.",
