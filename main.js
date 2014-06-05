@@ -1,5 +1,5 @@
 /* jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 2, maxerr: 50 */
-/* global define, brackets, $, require, Mustache, Image */
+/* global define, brackets, $, require, Mustache */
 
 /*
   HTML Skeleton
@@ -21,7 +21,6 @@ define(function (require, exports, module) {
   var AppInit            = brackets.getModule("utils/AppInit"),
       CommandManager     = brackets.getModule("command/CommandManager"),
       Dialogs            = brackets.getModule("widgets/Dialogs"),
-      Document           = brackets.getModule("document/Document"),
       EditorManager      = brackets.getModule("editor/EditorManager"),
       ExtensionUtils     = brackets.getModule("utils/ExtensionUtils"),
       FileSystem         = brackets.getModule("filesystem/FileSystem"),
@@ -32,10 +31,7 @@ define(function (require, exports, module) {
       PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
       ProjectManager     = brackets.getModule("project/ProjectManager"),
 
-      // Import dialog localization
       Strings            = require("strings"),
-
-      // Pull in any required HTML
       skeletonDialogHtml = require("text!htmlContent/mainDialog.html"),
       toolbarButtonCode  = '<a href="#" id="html-skeleton-toolbar">',
 
@@ -278,7 +274,7 @@ define(function (require, exports, module) {
     /* Open the file browse dialog for the user to select an image */
 
     // Only display the image if the user selects ones
-    FileSystem.showOpenDialog(false, false, "Choose an image", null, imageFiles,
+    FileSystem.showOpenDialog(false, false, Strings.FILE_DIALOG_TITLE, null, imageFiles,
     function (closedDialog, selectedFile) {
       if (!closedDialog && selectedFile && selectedFile.length > 0) {
         _handleImage(selectedFile[0]);
@@ -312,13 +308,15 @@ define(function (require, exports, module) {
     /* Display the user selected image */
 
     // Assume the selected file is a valid image
-    var supportedImage = true,
+    var imageWidth     = 0,
+        imageHeight    = 0,
+        supportedImage = true,
         $imgWidth      = $(".html-skeleton #img-width"),
         $imgHeight     = $(".html-skeleton #img-height"),
+        $imgCheckBox   = $(".html-skeleton #img-tag"),
         $imgPreview    = $(".html-skeleton-image #img-preview"),
         $showImgPath   = $(".html-skeleton-image #img-src"),
-        $imgErrorText  = $(".html-skeleton-image #img-error-text"),
-        $imgCheckBox   = $(".html-skeleton #img-tag");
+        $imgErrorText  = $(".html-skeleton-image #img-error-text");
 
     if (brackets.platform !== "mac") {
       // Assume otherwise on other platforms as the file filter drop down is ignored but on Mac (https://trello.com/c/430aXkpq)
@@ -353,7 +351,7 @@ define(function (require, exports, module) {
       $showImgPath.html(userImageFile);
       $imgErrorText.html("<br>is not supported for previewing!");
       $showImgPath.css("color", "red");
-      $imgPreview.css("box-shadow", "");
+      $imgPreview.removeClass("html-skeleton-image-shadow");
 
       /* NOTE I figured out what is going on here.
        * When this block is run, ideally the extension logo is displayed
@@ -362,7 +360,7 @@ define(function (require, exports, module) {
        * is the `$imgPreview.bind("load")` detection in the supported image block
        * is detecting the load and thus treating it as a supported image.
        *
-       * The fix:
+       * FIXME
        * Find a way to isolate the load detection to NOT detect this change.
        * This is pretty much all that is stopping v1.2.0 from being released
        */
@@ -382,8 +380,8 @@ define(function (require, exports, module) {
 
       // Get the image width and height
       $imgPreview.bind("load", function() {
-        var imageWidth  = $imgPreview[0].naturalWidth,
-            imageHeight = $imgPreview[0].naturalHeight;
+        imageWidth  = $imgPreview[0].naturalWidth;
+        imageHeight = $imgPreview[0].naturalHeight;
 
         // If the image width and heights are not zero, update the size inputs with the values
         if (imageWidth) {
@@ -397,7 +395,7 @@ define(function (require, exports, module) {
         $(".html-skeleton-image").css("position", "relative");
 
         // Add a small shadow to the image container
-        $imgPreview.css("box-shadow", "0px 0px 3px black");
+        $imgPreview.addClass("html-skeleton-image-shadow");
 
         // Run process to trim the path
         userImageFile = _imgPathUtils(userImageFile);
