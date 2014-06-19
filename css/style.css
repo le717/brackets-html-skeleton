@@ -1,10 +1,10 @@
-/*
-  HTML Skeleton
-  Created 2014 Triangle717
-  <http://Triangle717.WordPress.com/>
-
-  Licensed under The MIT License
-  <http://opensource.org/licenses/MIT/>
+/**
+ * HTML Skeleton
+ * Created 2014 Triangle717
+ * <http://Triangle717.WordPress.com/>
+ *
+ * Licensed under The MIT License
+ * <http://opensource.org/licenses/MIT/>
 */
 
 
@@ -24,13 +24,13 @@
 
 /* Decrease the size of the image path */
 .html-skeleton-image #img-src,
-.html-skeleton-image #img-error-text { font-size: 12px; }
+.html-skeleton-image #img-error-text { font-size: 0.9em; }
 
 /* Hide Bracket's image path and size display */
 .html-skeleton-image #img-header,
 .html-skeleton-image #img-path { display: none; }
 
-/* Turn the error text red */
+/* Error text */
 .html-skeleton-image #img-error-text { color: red; }
 
 /* Position the image on the right */
@@ -39,6 +39,9 @@
   height: 240px;
   float: right;
 }
+
+/* Slight shadow around image */
+.html-skeleton-image-shadow { box-shadow: 0 0 3px black; }
 
 /* Shift the dialog content (excluding the image) up */
 .html-skeleton-content {
