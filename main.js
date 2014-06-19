@@ -1,13 +1,13 @@
 /* jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 2, maxerr: 50 */
 /* global define, brackets, $, require, Mustache */
 
-/*
-  HTML Skeleton
-  Created 2014 Triangle717
-  <http://Triangle717.WordPress.com/>
-
-  Licensed under The MIT License
-  <http://opensource.org/licenses/MIT/>
+/**
+ * HTML Skeleton
+ * Created 2014 Triangle717
+ * <http://Triangle717.WordPress.com/>
+ *
+ * Licensed under The MIT License
+ * <http://opensource.org/licenses/MIT/>
 */
 
 
@@ -30,22 +30,17 @@ define(function (require, exports, module) {
       Menus              = brackets.getModule("command/Menus"),
       PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
       ProjectManager     = brackets.getModule("project/ProjectManager"),
-
       Strings            = require("strings"),
       skeletonDialogHtml = require("text!htmlContent/mainDialog.html"),
       toolbarButtonCode  = '<a href="#" id="html-skeleton-toolbar">',
-
       // Grab the logo to display in the dialog
       skeletonLogo       = require.toUrl("img/HTML-Skeleton.svg"),
       EXTENSION_ID       = "le717.html-skeleton",
-
       // User's indent settings
       indentUnits        = "",
-
       // Localize the dialog box
       localizedDialog    = Mustache.render(skeletonDialogHtml, Strings),
-
-      // Valid image files (as supported by Brackets)
+      // Valid image files + SVG (as supported by Brackets)
       imageFiles         = LanguageManager.getLanguage("image")._fileExtensions.concat("svg");
 
 
@@ -178,12 +173,10 @@ define(function (require, exports, module) {
     var imageCodeNew,
         // Stores the elements to be added
         finalElements = [],
-
         // Store all the option IDs for easier access
         optionIDs     = ["#head-body", "#extern-style-tag", "#inline-style-tag",
                          "#extern-script-tag", "#inline-script-tag", "#full-skeleton"
                         ],
-
         // Shortcuts to the image size input boxes
         $imgWidthID   = $(".html-skeleton #img-width"),
         $imgHeightID  = $(".html-skeleton #img-height");
@@ -212,20 +205,31 @@ define(function (require, exports, module) {
     // The picture/image box was checked
     if ($(".html-skeleton #img-tag").prop("checked")) {
 
+      var $inputWidth  = $imgWidthID.val(),
+          $inputHeight = $imgHeightID.val();
+
       // The width box was filled out, use that value
-      if ($imgWidthID.val()) {
-        $imgWidth = $imgWidthID.val();
-      } else {
-        // The width box was empty, reset to 0
-        $imgWidth = 0;
+      switch ($inputWidth) {
+        case "270":
+          $imgWidth = 0;
+          break;
+        case "":
+          $imgWidth = 0;
+          break;
+        default:
+          $imgWidth = $inputWidth;
       }
 
       // The height box was filled out, use that value
-      if ($imgHeightID.val()) {
-        $imgHeight = $imgHeightID.val();
-      } else {
-        // The height box was empty, reset to 0
-        $imgHeight = 0;
+      switch ($inputHeight) {
+        case "240":
+          $imgHeight = 0;
+          break;
+        case "":
+          $imgHeight = 0;
+          break;
+        default:
+          $imgHeight = $inputHeight;
       }
 
       // Add the image tag to `finalElements` for addition in document,
@@ -275,11 +279,11 @@ define(function (require, exports, module) {
 
     // Only display the image if the user selects ones
     FileSystem.showOpenDialog(false, false, Strings.FILE_DIALOG_TITLE, null, imageFiles,
-    function (closedDialog, selectedFile) {
-      if (!closedDialog && selectedFile && selectedFile.length > 0) {
-        _handleImage(selectedFile[0]);
-      }
-    });
+                              function (closedDialog, selectedFile) {
+                                if (!closedDialog && selectedFile && selectedFile.length > 0) {
+                                  _handleImage(selectedFile[0]);
+                                }
+                              });
     e.preventDefault();
     e.stopPropagation();
   }
@@ -353,18 +357,7 @@ define(function (require, exports, module) {
       $showImgPath.css("color", "red");
       $imgPreview.removeClass("html-skeleton-image-shadow");
 
-      /* NOTE I figured out what is going on here.
-       * When this block is run, ideally the extension logo is displayed
-       * rather than the previous (if any) image.
-       * However, what seems to be occurring (even if an unsupported image is loaded on first use)
-       * is the `$imgPreview.bind("load")` detection in the supported image block
-       * is detecting the load and thus treating it as a supported image.
-       *
-       * FIXME
-       * Find a way to isolate the load detection to NOT detect this change.
-       * This is pretty much all that is stopping v1.2.0 from being released
-       */
-
+      // Display extension logo
       $imgPreview.attr("src", skeletonLogo);
       return false;
 
@@ -377,10 +370,8 @@ define(function (require, exports, module) {
       $imgErrorText.html("");
       $showImgPath.css("color", "");
 
-      // Position the container
+      // Position and add small shadow to container
       $(".html-skeleton-image").css("position", "relative");
-
-      // Add a small shadow to the image container
       $imgPreview.addClass("html-skeleton-image-shadow");
 
       // Run process to trim the path
