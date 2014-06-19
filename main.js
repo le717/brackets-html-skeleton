@@ -365,8 +365,7 @@ define(function (require, exports, module) {
        * This is pretty much all that is stopping v1.2.0 from being released
        */
 
-      //$imgPreview.attr("src", skeletonLogo);
-      //$imgPreview.attr("src", "");
+      $imgPreview.attr("src", skeletonLogo);
       return false;
 
       // The image is a supported file type, move on
@@ -377,6 +376,19 @@ define(function (require, exports, module) {
       // Clean possible CSS applied from previewing an invalid image
       $imgErrorText.html("");
       $showImgPath.css("color", "");
+
+      // Position the container
+      $(".html-skeleton-image").css("position", "relative");
+
+      // Add a small shadow to the image container
+      $imgPreview.addClass("html-skeleton-image-shadow");
+
+      // Run process to trim the path
+      userImageFile = _imgPathUtils(userImageFile);
+
+      // Show the file path
+      $showImgPath.html("");
+      $showImgPath.html(userImageFile);
 
       // Get the image width and height
       $imgPreview.bind("load", function() {
@@ -390,21 +402,8 @@ define(function (require, exports, module) {
         if (imageHeight) {
           $imgHeight.val(imageHeight);
         }
-
-        // Position the container
-        $(".html-skeleton-image").css("position", "relative");
-
-        // Add a small shadow to the image container
-        $imgPreview.addClass("html-skeleton-image-shadow");
-
-        // Run process to trim the path
-        userImageFile = _imgPathUtils(userImageFile);
-
-        // Show the file path
-        $showImgPath.html("");
-        $showImgPath.html(userImageFile);
       });
-      return false;
+      return true;
     }
   }
 

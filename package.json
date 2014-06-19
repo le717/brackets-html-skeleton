@@ -4,7 +4,7 @@
   "description": "Insert a variety of HTML elements into your document with ease.",
   "homepage": "https://github.com/le717/brackets-html-skeleton",
   "version": "1.2.0",
-  "author": "Triangle717 (http://Triangle717.WordPress.com)",
+  "author": "Triangle717 <le717.code@yahoo.com> (http://Triangle717.WordPress.com)",
   "license": "MIT",
   "engines": {
       "brackets": ">=0.37.0"
