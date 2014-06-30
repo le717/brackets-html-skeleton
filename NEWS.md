@@ -4,7 +4,7 @@
 
 ### 6/30/2014 ##
 
-* Added Italian translation ([#17](https://github.com/le717/brackets-html-skeleton/issues/7), [#18](https://github.com/le717/brackets-html-skeleton/issues/18)), submitted by [@Denisov21](https://github.com/Denisov21)
+* Added Italian translation ([#17](https://github.com/le717/brackets-html-skeleton/issues/17), [#18](https://github.com/le717/brackets-html-skeleton/issues/18)), submitted by [@Denisov21](https://github.com/Denisov21)
 
 ## 1.2.0 ##
 
