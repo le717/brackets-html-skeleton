@@ -1,17 +1,14 @@
 /* jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 2, maxerr: 50 */
 /* global define, brackets, $, require, Mustache */
 
-/**
+/*
  * HTML Skeleton
  * Created 2014 Triangle717
  * <http://Triangle717.WordPress.com/>
  *
  * Licensed under The MIT License
  * <http://opensource.org/licenses/MIT/>
-*/
-
-
-/* ------- Begin Module Importing ------- */
+ */
 
 
 define(function (require, exports, module) {
@@ -44,14 +41,14 @@ define(function (require, exports, module) {
       imageFiles         = LanguageManager.getLanguage("image")._fileExtensions.concat("svg");
 
 
-  /* ------- End Module Importing ------- */
-
-
   /* ------- Begin Polyfills ------- */
 
 
+  /**
+   * @private
+   * Polyfill, taken from http://stackoverflow.com/a/4550005
+   */
   function _repeat(str, num) {
-    /* Polyfill, taken from http://stackoverflow.com/a/4550005 */
     return (new Array(num + 1)).join(str);
   }
 
@@ -62,9 +59,11 @@ define(function (require, exports, module) {
   /* ------- Begin Reading Indentation Preference ------- */
 
 
+  /**
+   * @private
+   * Get the user's indentation settings for inserted code
+   */
   function _getIndentSize() {
-    /* Get the user's indentation settings for inserted code */
-
     var newIndentUnits, indentUnitsInt,
         tabCharPref  = PreferencesManager.get("useTabChar", PreferencesManager.CURRENT_PROJECT);
 
@@ -127,7 +126,7 @@ define(function (require, exports, module) {
   ];
 
   // Image
-  var imageCode = '<img src="src-url" alt="" width="size-x" height="size-y" />';
+  var imageCode = '<img src="src-url" alt="" width="size-x" height="size-y">';
 
 
   /* ------- End Available HTML Elements ------- */
@@ -135,9 +134,12 @@ define(function (require, exports, module) {
 
   /* ------- Begin HTML Element Adding ------- */
 
-  function _insertAllTheCodes(finalElements) {
-    /* Inter the selected elements into the document */
 
+  /**
+   * @private
+   * Insert the selected elements into the document
+   */
+  function _insertAllTheCodes(finalElements) {
     // Get the last active editor
     var editor = EditorManager.getActiveEditor();
     if (editor) {
@@ -167,9 +169,11 @@ define(function (require, exports, module) {
   /* ------- Begin HTML Element Choices ------- */
 
 
+  /**
+   * @private
+   * Get element choices
+   */
   function _getOptions() {
-    /* Get element choices */
-
     var imageCodeNew,
         // Stores the elements to be added
         finalElements = [],
@@ -188,7 +192,7 @@ define(function (require, exports, module) {
 
         // The inline script box was checked, reuse external script string
         if (index === 4) {
-          finalElements.push(skeletonBones[3].replace(/ src="">/, ">"));
+          finalElements.push(skeletonBones[3].replace(/\ssrc="">/, ">"));
 
           // Because of the script element editing above, redirect the
           // Full HTML Skeleton option to the proper index
@@ -204,7 +208,6 @@ define(function (require, exports, module) {
 
     // The picture/image box was checked
     if ($(".html-skeleton #img-tag").prop("checked")) {
-
       var $inputWidth  = $imgWidthID.val(),
           $inputHeight = $imgHeightID.val();
 
@@ -250,10 +253,11 @@ define(function (require, exports, module) {
 
   /* ------- Begin HTML Skeleton Dialog Boxes ------- */
 
-
+  /**
+   * @private
+   * Display dialog box
+   */
   function _handleSkeletonButton() {
-    /* Display dialog box */
-
     var skeletonDialog = Dialogs.showModalDialogUsingTemplate(localizedDialog),
         $dialog = skeletonDialog.getElement(),
         $doneButton = $('.dialog-button[data-button-id="ok"]', $dialog);
@@ -274,9 +278,11 @@ define(function (require, exports, module) {
     $doneButton.on("click", _getOptions);
   }
 
+  /**
+   * @private
+   * Open the file browse dialog for the user to select an image
+   */
   function _showImageFileDialog(e) {
-    /* Open the file browse dialog for the user to select an image */
-
     // Only display the image if the user selects ones
     FileSystem.showOpenDialog(false, false, Strings.FILE_DIALOG_TITLE, null, imageFiles,
                               function (closedDialog, selectedFile) {
@@ -294,10 +300,11 @@ define(function (require, exports, module) {
 
   /* ------- Begin user-selected image display ------- */
 
-
+  /**
+   * @private
+   * Various image path utilities
+   */
   function _imgPathUtils(imgPath) {
-    /* Various image path utilities */
-
     // Make the image path relative (if possible)
     imgPath = ProjectManager.makeProjectRelativeIfPossible(imgPath);
 
@@ -308,10 +315,11 @@ define(function (require, exports, module) {
     return imgPath;
   }
 
+  /**
+   * @private
+   * Display the user selected image
+   */
   function _handleImage(userImageFile) {
-    /* Display the user selected image */
-
-    // Assume the selected file is a valid image
     var imageWidth     = 0,
         imageHeight    = 0,
         supportedImage = true,
@@ -404,10 +412,11 @@ define(function (require, exports, module) {
 
   /* ------- Begin Extension Initialization ------- */
 
-
-  AppInit.appReady(function () {
-    /* Load the extension after Brackets itself has finished loading */
-
+  /**
+   * @private
+   * Load the extension after Brackets itself has finished loading
+   */
+  AppInit.appReady(function() {
     // Load extension CSS
     ExtensionUtils.loadStyleSheet(module, "css/style.css");
 
