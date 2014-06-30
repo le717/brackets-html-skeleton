@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1"
+	 id="svg2" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 24 24"
+	 enable-background="new 0 0 24 24" xml:space="preserve">
+<title>HTML Skeleton Toolbar Icon</title>
+<g>
+	<path id="rect3998" fill="#BABABA" d="M5.2,3C4,3,3,4,3,5.2v13.6C3,20,4,21,5.2,21h13.6c1.2,0,2.2-1,2.2-2.2V5.2C21,4,20,3,18.8,3
+		H5.2z M13.8,5.5h1.9L11,17.8H9.2L13.8,5.5z M9.2,8.4l-0.1,1.8l-3.6,2l3.3,2l0,1.8l-5.4-3.4v-0.9L9.2,8.4z M14.9,8.4l5.8,3.4v0.9
+		L15.3,16l0-1.8l3.4-2l-3.6-2L14.9,8.4z"/>
+</g>
+</svg>

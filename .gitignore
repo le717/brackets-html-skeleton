@@ -1,10 +1,9 @@
 *.tmp
 *.bak
-*.js
 *.html
-Releases/
-img/*
-!img/*.png
+img
+Releases
+Testing
 
 #############
 ## Windows

@@ -1,5 +1,16 @@
 # News #
 
+## 1.2.0 ##
+
+### 6/29/14 ##
+
+* Updated minimum Brackets version to Sprint 37
+* Use user indentation settings via new Preferences System from Sprint 37
+* Add toolbar icon, design finalized by [@rioforce](https://github.com/rioforce)
+* Allow user to browse for image, preview that image, and use the path to the image and the image width and height in code snippet
+Supports all formats classified as images by Brackets core plus beta support for SVG images
+* Various code improvements and cleanup
+
 ## 1.1.5 ##
 
 ### 4/2/14 ###
