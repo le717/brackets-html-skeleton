@@ -25,6 +25,6 @@ See [NEWS.md](NEWS.md) for all changes.
 
 [The MIT License](LICENSE.md)
 
-Extension loading taken from the [Edge Web Fonts extension for Brackets](https://github.com/adobe/brackets-edge-web-fonts).
+Created 2014 [Triangle717](http://le717.github.io)
 
 Logo created by [**@rioforce**](https://github.com/rioforce) ([http://rioforce.wordpress.com](http://rioforce.WordPress.com)).

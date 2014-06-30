@@ -211,26 +211,26 @@ define(function (require, exports, module) {
       var $inputWidth  = $imgWidthID.val(),
           $inputHeight = $imgHeightID.val();
 
-      // The width box was filled out, use that value
+      // The values could not be picked out,
+      // Use 0 instead
+      // NOTE: For SVGs, temp action until #15 is complete
       switch ($inputWidth) {
-        case "270":
-          $imgWidth = 0;
-          break;
         case "":
           $imgWidth = 0;
           break;
+        // The width box was filled out, use that value
         default:
           $imgWidth = $inputWidth;
       }
 
-      // The height box was filled out, use that value
+      // The values could not be picked out,
+      // Use 0 instead
+      // NOTE: For SVGs, temp action until #15 is complete
       switch ($inputHeight) {
-        case "240":
-          $imgHeight = 0;
-          break;
         case "":
           $imgHeight = 0;
           break;
+        // The height box was filled out, use that value
         default:
           $imgHeight = $inputHeight;
       }
