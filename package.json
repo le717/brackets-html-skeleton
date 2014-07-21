@@ -18,5 +18,10 @@
     "categories": [
         "snippets",
         "codegen"
-    ]
+    ],
+    "i18n": [
+      "en",
+      "de",
+      "it"
+  ]
 }
