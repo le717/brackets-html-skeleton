@@ -36,24 +36,24 @@ define(function (require, exports, module) {
    */
   function detectSVGSize(svgFile) {
     _readSVG(svgFile).done(function(content) {
-      var sizeFound = false;
-      var viewBoxIndex = content.indexOf("viewBox");
-      var backgroundIndex = content.indexOf("enable-background");
+      var sizeFound       = false,
+          viewBoxIndex    = content.indexOf("viewBox"),
+          backgroundIndex = content.indexOf("enable-background");
 
       // Get the values of the viewBox and enable-background attributes
       // FIXME Inkscape SVGs need more trimming to get enable-background
       // FIXME What if the attributes are not present at all?
       // FIXME More than 2-value numbers break this entirely
-      var viewBox = content.slice(viewBoxIndex, backgroundIndex).replace(/viewBox="/i, "");
-      viewBox = viewBox.slice(0, viewBox.lastIndexOf('"'));
-      var background = content.slice(backgroundIndex, backgroundIndex + content.indexOf(">")).replace(/enable-background="new\s/i, "");
-      background = background.slice(0, background.lastIndexOf('"'));
+      var viewBox    = content.slice(viewBoxIndex, backgroundIndex).replace(/viewBox="/i, ""),
+          background = content.slice(backgroundIndex, backgroundIndex + content.indexOf(">")).replace(/enable-background="new\s/i, "");
+      viewBox        = viewBox.slice(0, viewBox.lastIndexOf('"'));
+      background     = background.slice(0, background.lastIndexOf('"'));
 
 //      console.log(viewBox);
 //      console.log(background);
 
       // Now that we have the values, get only the relevant parts
-      var viewBoxSizes = viewBox.split(" "),
+      var viewBoxSizes    = viewBox.split(" "),
           backgroundSizes = background.split(" ");
       viewBoxSizes.splice(0, 2);
       backgroundSizes.splice(0, 2);
