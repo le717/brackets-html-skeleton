@@ -35,10 +35,15 @@ define(function (require, exports, module) {
    * @return {String[]} If available, the width and height of the SVG. Otherwise, NaN for both values.
    */
   function detectSVGSize(svgFile) {
-    _readSVG(svgFile).done(function(content) {
+    _readSVG(svgFile).then(function(content) {
       var sizeFound       = false,
           viewBoxIndex    = content.indexOf("viewBox"),
           backgroundIndex = content.indexOf("enable-background");
+
+      var $svgContainer     = $("<div/>").css("display", "none").html(content);
+      var $viewBoxWidth     = $svgContainer.find("svg").prop("viewBox").baseVal.width,
+          $viewBoxHeight    = $svgContainer.find("svg").prop("viewBox").baseVal.height,
+          $enableBackground = $svgContainer.find("svg").attr("enable-background");
 
       // Get the values of the viewBox and enable-background attributes
       // FIXME Inkscape SVGs need more trimming to get enable-background
