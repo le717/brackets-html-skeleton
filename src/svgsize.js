@@ -11,7 +11,6 @@
  */
 
 
-
 define(function (require, exports, module) {
   "use strict";
   var FileSystem = brackets.getModule("filesystem/FileSystem"),
@@ -20,7 +19,7 @@ define(function (require, exports, module) {
   /**
    * @private
    * Get SVG file object information
-   * @param {String} Absolute path to SVG file
+   * @param svgFile {string} Absolute path to SVG file
    * @return {$.promise}
    */
   function _readSVG(svgFile) {
@@ -28,74 +27,49 @@ define(function (require, exports, module) {
   }
 
   /**
+   * @private
+   * @param width The proposed width of the SVG.
+   * @param height The proposed height of the SVG.
+   * @return {boolean} True if width and height are not zero, false otherwise.
+   */
+  function _checkIfValid(width, height) {
+    return (width && height) !== 0;
+  }
+
+  /**
    * Attempt to extract the width and height of SVG images
    * from the viewBox and enable-background attributes when
    * dedicated width and height attributes are missing.
-   * @param {String} Absolute path to SVG file
-   * @return {String[]} If available, the width and height of the SVG. Otherwise, NaN for both values.
+   * @param svgFile {string} Absolute path to SVG file
+   * @return {string[]} If available, the width and height of the SVG. Otherwise, NaN for both values.
    */
   function detectSVGSize(svgFile) {
+
+    var svgSize = [NaN, NaN];
     _readSVG(svgFile).then(function(content) {
-      var sizeFound       = false,
-          viewBoxIndex    = content.indexOf("viewBox"),
-          backgroundIndex = content.indexOf("enable-background");
+      // Add the SVG to the DOM, then extract the viewBox and
+      // enable-background attribute values from the SVG
+      var $svgContainer     = $("<div/>").css("display", "none").html(content),
+          $svgElement       = $svgContainer.find("svg");
+      var viewBoxWidth      = $svgElement.prop("viewBox").baseVal.width,
+          viewBoxHeight     = $svgElement.prop("viewBox").baseVal.height,
+          enableBackground  = $svgElement.attr("enable-background");
 
-      var $svgContainer     = $("<div/>").css("display", "none").html(content);
-      var $viewBoxWidth     = $svgContainer.find("svg").prop("viewBox").baseVal.width,
-          $viewBoxHeight    = $svgContainer.find("svg").prop("viewBox").baseVal.height,
-          $enableBackground = $svgContainer.find("svg").attr("enable-background");
+      // Extract the width and hight values from the background
+      var backgroundSizes   = enableBackground.split(" ");
+      var backgroundWidth   = backgroundSizes[3],
+          backgroundHeight  = backgroundSizes[4];
 
-      // Get the values of the viewBox and enable-background attributes
-      // FIXME Inkscape SVGs need more trimming to get enable-background
-      // FIXME What if the attributes are not present at all?
-      // FIXME More than 2-value numbers break this entirely
-      var viewBox    = content.slice(viewBoxIndex, backgroundIndex).replace(/viewBox="/i, ""),
-          background = content.slice(backgroundIndex, backgroundIndex + content.indexOf(">")).replace(/enable-background="new\s/i, "");
-      viewBox        = viewBox.slice(0, viewBox.lastIndexOf('"'));
-      background     = background.slice(0, background.lastIndexOf('"'));
-
-//      console.log(viewBox);
-//      console.log(background);
-
-      // Now that we have the values, get only the relevant parts
-      var viewBoxSizes    = viewBox.split(" "),
-          backgroundSizes = background.split(" ");
-      viewBoxSizes.splice(0, 2);
-      backgroundSizes.splice(0, 2);
-
-//      console.log("viewBoxSizes " + viewBoxSizes);
-//      console.log("backgroundSizes " + backgroundSizes);
-
-      // If the size is present in the viewBox values (they usually are),
-      // use those values for the width and height
-      // FIXME This is very bad logic (0????)
-      viewBoxSizes.forEach(function(value, index) {
-        if (parseInt(value) !== 0) {
-          sizeFound = true;
-        }
-      });
-      if (sizeFound) {
-        return viewBoxSizes;
-      }
-
-      // If the width and height are not in viewBox, look for them in enable-background
-      // FIXME This is very bad logic (0????)
-      backgroundSizes.forEach(function(value, index) {
-        if (parseInt(value) !== 0) {
-          sizeFound = true;
-        }
-      });
-
-//      console.log(sizeFound);
-
-      if (sizeFound) {
-        return backgroundSizes;
-        // The width and height could not be found at all,
-        // send back NaN values to signal this
-      } else {
-        return [NaN, NaN];
-      }
+      if (_checkIfValid(viewBoxWidth, viewBoxHeight)) {
+        svgSize = [viewBoxWidth, viewBoxHeight];
+      } else if (_checkIfValid(backgroundWidth, backgroundHeight)) {
+        svgSize = [backgroundWidth, backgroundHeight];
+      } //else {
+//        svgSize = [NaN, NaN];
+//      }
     });
+//    console.log(svgSize);
+//    return svgSize;
   }
 
   exports.detectSVGSize = detectSVGSize;
