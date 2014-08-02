@@ -1,5 +1,9 @@
 # News #
 
+## 1.2.2 ##
+
+* Support package.json `i18n` key added in Brackets [Release 42](https://github.com/adobe/brackets/wiki/Release-Notes:-0.42#newimproved-extensibility-apis)
+
 ## 1.2.1 ##
 
 ### 6/30/2014 ##
@@ -82,6 +86,6 @@ to support new HTML elements using a dialog box rather than a straight keyboard 
 
 ## 0.7.3 ##
 
-###  1/25/2014 ###
+### 1/25/2014 ###
 
 * Initial release
