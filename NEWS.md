@@ -2,6 +2,8 @@
 
 ## 1.2.2 ##
 
+### 8/2/2014 ##
+
 * Support package.json `i18n` key added in Brackets [Release 42](https://github.com/adobe/brackets/wiki/Release-Notes:-0.42#newimproved-extensibility-apis)
 
 ## 1.2.1 ##
