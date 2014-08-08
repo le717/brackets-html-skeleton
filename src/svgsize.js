@@ -1,5 +1,5 @@
 /* jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 2, maxerr: 50 */
-/* global define, brackets, $, require, Mustache, document */
+/* global define, brackets, $ */
 
 /*
  * HTML Skeleton
