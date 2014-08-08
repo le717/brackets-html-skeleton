@@ -41,7 +41,7 @@ define(function (require, exports, module) {
    * from the viewBox and enable-background attributes when
    * dedicated width and height attributes are missing.
    * @param svgFile {string} Absolute path to SVG file
-   * @return {string[]} If available, the width and height of the SVG. Otherwise, NaN for both values.
+   * @return {number[]} If available, the width and height of the SVG. Otherwise, NaN for both values.
    */
   function detectSVGSize(svgFile) {
 
@@ -49,16 +49,16 @@ define(function (require, exports, module) {
     _readSVG(svgFile).then(function(content) {
       // Add the SVG to the DOM, then extract the viewBox and
       // enable-background attribute values from the SVG
-      var $svgContainer     = $("<div/>").css("display", "none").html(content),
-          $svgElement       = $svgContainer.find("svg");
-      var viewBoxWidth      = $svgElement.prop("viewBox").baseVal.width,
-          viewBoxHeight     = $svgElement.prop("viewBox").baseVal.height,
-          enableBackground  = $svgElement.attr("enable-background");
+      var $svgContainer    = $("<div/>").css("display", "none").html(content),
+          $svgElement      = $svgContainer.find("svg");
+      var viewBoxWidth     = $svgElement.prop("viewBox").baseVal.width,
+          viewBoxHeight    = $svgElement.prop("viewBox").baseVal.height,
+          enableBackground = $svgElement.attr("enable-background");
 
       // Extract the width and hight values from the background
-      var backgroundSizes   = enableBackground.split(" ");
-      var backgroundWidth   = backgroundSizes[3],
-          backgroundHeight  = backgroundSizes[4];
+      var backgroundSizes  = enableBackground.split(" ");
+      var backgroundWidth  = parseInt(backgroundSizes[3]),
+          backgroundHeight = parseInt(backgroundSizes[4]);
 
       if (_checkIfValid(viewBoxWidth, viewBoxHeight)) {
         svgSize = [viewBoxWidth, viewBoxHeight];
@@ -67,6 +67,12 @@ define(function (require, exports, module) {
       } //else {
 //        svgSize = [NaN, NaN];
 //      }
+//      console.log(viewBoxWidth);
+//      console.log(viewBoxHeight);
+//      console.log(backgroundWidth);
+//      console.log(backgroundHeight);
+//      console.log(svgSize);
+      return svgSize;
     });
 //    console.log(svgSize);
 //    return svgSize;
