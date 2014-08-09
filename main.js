@@ -1,5 +1,4 @@
 /* jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 2, maxerr: 50 */
-/* global define, brackets, $, require, Mustache */
 
 /*
  * HTML Skeleton
@@ -27,41 +26,40 @@ define(function (require, exports, module) {
       Menus              = brackets.getModule("command/Menus"),
       PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
       ProjectManager     = brackets.getModule("project/ProjectManager"),
+      ImageFiles         = LanguageManager.getLanguage("image")._fileExtensions.concat("svg"),
+      SvgSize            = require("src/SvgSize"),
       Strings            = require("strings"),
-      skeletonDialogHtml = require("text!htmlContent/mainDialog.html"),
-      toolbarButtonCode  = '<a href="#" id="html-skeleton-toolbar">',
-      // Grab the logo to display in the dialog
       skeletonLogo       = require.toUrl("img/HTML-Skeleton.svg"),
-      EXTENSION_ID       = "le717.html-skeleton",
-      // User's indent settings
+      skeletonDialogHtml = require("text!htmlContent/mainDialog.html"),
+      toolbarButtonCode  = "<a href='#' id='html-skeleton-toolbar'>";
+
+      var EXTENSION_ID   = "le717.html-skeleton",
       indentUnits        = "",
-      // Localize the dialog box
-      localizedDialog    = Mustache.render(skeletonDialogHtml, Strings),
-      // Valid image files + SVG (as supported by Brackets)
-      imageFiles         = LanguageManager.getLanguage("image")._fileExtensions.concat("svg");
+      localizedDialog    = Mustache.render(skeletonDialogHtml, Strings);
 
 
   /* ------- Begin Polyfills ------- */
 
-
   /**
    * @private
-   * Polyfill, taken from http://stackoverflow.com/a/4550005
+   * Polyfill from http://stackoverflow.com/a/4550005
+   * @param str // TODO Write me!!
+   * @param num // TODO Write me!!
+   * @return // TODO Write me!!
    */
   function _repeat(str, num) {
     return (new Array(num + 1)).join(str);
   }
-
 
   /* ------- End Polyfills ------- */
 
 
   /* ------- Begin Reading Indentation Preference ------- */
 
-
   /**
    * @private
-   * Get the user's indentation settings for inserted code
+   * Get the current indentation settings for use in inserted code
+   * @return User's current indentation settings
    */
   function _getIndentSize() {
     var newIndentUnits, indentUnitsInt,
@@ -83,7 +81,6 @@ define(function (require, exports, module) {
   // Get user's indentation settings
   PreferencesManager.on("change", function (e, data) {
     data.ids.forEach(function (value, index) {
-
       // A relevant preference was changed, update our settings
       if (value === "useTabChar" || value === "tabSize" || value === "spaceUnits") {
         // Do NOT attempt to assign `indentUnits` directly to the function.
@@ -94,12 +91,10 @@ define(function (require, exports, module) {
     });
   });
 
-
   /* ------- End Reading Indentation Preference ------- */
 
 
   /* ------- Begin Available HTML Elements ------- */
-
 
   // Placeholder variables for image size
   var $imgWidth  = 0,
@@ -107,33 +102,31 @@ define(function (require, exports, module) {
 
   var skeletonBones = [
     // Only the head and body tags + title and meta
-    '<!DOCTYPE html>\n<html lang="">\n<head>\nindent-size<meta charset="UTF-8">\n' +
-    'indent-size<title></title>\n</head>\n\n<body>\nindent-size\n</body>\n</html>\n',
+    "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='UTF-8'>\n" +
+    "indent-size<title></title>\n</head>\n\n<body>\nindent-size\n</body>\n</html>\n",
 
     // External stylesheet
-    '<link rel="stylesheet" href="">',
+    "<link rel='stylesheet' href=''>",
 
     // Inline stylesheet
-    '<style></style>',
+    "<style></style>",
 
     // External (and edited to be inline) script
-    '<script src=""></script>',
+    "<script src=''></script>",
 
     // Full HTML skeleton
-    '<!DOCTYPE html>\n<html lang="">\n<head>\nindent-size<meta charset="UTF-8">\n' +
-    'indent-size<title></title>\nindent-size<link rel="stylesheet" href="">\n' +
-    '</head>\n\n<body>\nindent-size<script src=""></script>\n</body>\n</html>\n'
+    "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='UTF-8'>\n" +
+    "indent-size<title></title>\nindent-size<link rel='stylesheet' href=''>\n" +
+    "</head>\n\n<body>\nindent-size<script src=''></script>\n</body>\n</html>\n"
   ];
 
   // Image
-  var imageCode = '<img src="src-url" alt="" width="size-x" height="size-y">';
-
+  var imageCode = "<img src='src-url' alt='' width='size-x' height='size-y'>";
 
   /* ------- End Available HTML Elements ------- */
 
 
   /* ------- Begin HTML Element Adding ------- */
-
 
   /**
    * @private
@@ -153,7 +146,9 @@ define(function (require, exports, module) {
 
           // Do a regex search for the `indent-size` keyword
           // and replace it with the user's indent settings
+          // Also replace all single quotes with double quotes
           value = value.replace(/indent-size/g, indentUnits);
+          value = value.replace(/'/g, "\"");
 
           // Insert the selected elements at the current cursor position
           editor.document.replaceRange(value, cursor);
@@ -162,12 +157,10 @@ define(function (require, exports, module) {
     }
   }
 
-
   /* ------- End HTML Element Adding ------- */
 
 
   /* ------- Begin HTML Element Choices ------- */
-
 
   /**
    * @private
@@ -247,7 +240,6 @@ define(function (require, exports, module) {
     _insertAllTheCodes(finalElements);
   }
 
-
   /* ------- End HTML Element Choices ------- */
 
 
@@ -260,10 +252,10 @@ define(function (require, exports, module) {
   function _handleSkeletonButton() {
     var skeletonDialog = Dialogs.showModalDialogUsingTemplate(localizedDialog),
         $dialog = skeletonDialog.getElement(),
-        $doneButton = $('.dialog-button[data-button-id="ok"]', $dialog);
+        $doneButton = $(".dialog-button[data-button-id='ok']", $dialog);
 
     // If the Browse button is clicked, proceed to open the browse dialog
-    $('.dialog-button[data-button-id="browse"]', $dialog).on("click", function(e) {
+    $(".dialog-button[data-button-id='browse']", $dialog).on("click", function(e) {
       _showImageFileDialog(e);
     });
 
@@ -284,7 +276,7 @@ define(function (require, exports, module) {
    */
   function _showImageFileDialog(e) {
     // Only display the image if the user selects ones
-    FileSystem.showOpenDialog(false, false, Strings.FILE_DIALOG_TITLE, null, imageFiles,
+    FileSystem.showOpenDialog(false, false, Strings.FILE_DIALOG_TITLE, null, ImageFiles,
                               function (closedDialog, selectedFile) {
                                 if (!closedDialog && selectedFile && selectedFile.length > 0) {
                                   _handleImage(selectedFile[0]);
@@ -293,7 +285,6 @@ define(function (require, exports, module) {
     e.preventDefault();
     e.stopPropagation();
   }
-
 
   /* ------- End HTML Skeleton Dialog Boxes ------- */
 
@@ -325,17 +316,18 @@ define(function (require, exports, module) {
         supportedImage = true,
         $imgWidth      = $(".html-skeleton #img-width"),
         $imgHeight     = $(".html-skeleton #img-height"),
-        $imgCheckBox   = $(".html-skeleton #img-tag"),
         $imgPreview    = $(".html-skeleton-image #img-preview"),
         $showImgPath   = $(".html-skeleton-image #img-src"),
+        $imgCheckBox   = $(".html-skeleton #img-tag"),
         $imgErrorText  = $(".html-skeleton-image #img-error-text");
 
     if (brackets.platform !== "mac") {
-      // Assume otherwise on other platforms as the file filter drop down is ignored but on Mac (https://trello.com/c/430aXkpq)
+      // Assume otherwise on other platforms as the file filter drop down
+      // is ignored except on Mac (https://trello.com/c/430aXkpq)
       supportedImage = false;
 
       // Go through the supported image list and check if the image is supported
-      imageFiles.forEach(function(value, index) {
+      ImageFiles.forEach(function(value, index) {
         if (FileUtils.getFileExtension(userImageFile) === value) {
           // Yes, the image is supported
           supportedImage = true;
@@ -406,11 +398,7 @@ define(function (require, exports, module) {
     }
   }
 
-
   /* ------- End user-selected image display ------- */
-
-
-  /* ------- Begin Extension Initialization ------- */
 
   /**
    * @private
@@ -432,6 +420,3 @@ define(function (require, exports, module) {
     $toolbarButton.on("click", _handleSkeletonButton);
   });
 });
-
-
-/* ------- End Extension Initialization ------- */
