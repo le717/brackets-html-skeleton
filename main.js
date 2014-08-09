@@ -168,13 +168,10 @@ define(function (require, exports, module) {
    */
   function _getOptions() {
     var imageCodeNew,
-        // Stores the elements to be added
         finalElements = [],
-        // Store all the option IDs for easier access
         optionIDs     = ["#head-body", "#extern-style-tag", "#inline-style-tag",
                          "#extern-script-tag", "#inline-script-tag", "#full-skeleton"
                         ],
-        // Shortcuts to the image size input boxes
         $imgWidthID   = $(".html-skeleton #img-width"),
         $imgHeightID  = $(".html-skeleton #img-height");
 
@@ -206,7 +203,6 @@ define(function (require, exports, module) {
 
       // The values could not be picked out,
       // Use 0 instead
-      // NOTE: For SVGs, temp action until #15 is complete
       switch ($inputWidth) {
         case "":
           $imgWidth = 0;
@@ -218,7 +214,6 @@ define(function (require, exports, module) {
 
       // The values could not be picked out,
       // Use 0 instead
-      // NOTE: For SVGs, temp action until #15 is complete
       switch ($inputHeight) {
         case "":
           $imgHeight = 0;
@@ -310,9 +305,13 @@ define(function (require, exports, module) {
    * @private
    * Display the user selected image
    */
-  function _handleImage(userImageFile) {
+  function _handleImage(imagePath) {
     var imageWidth     = 0,
         imageHeight    = 0,
+        svgWidth       = 0,
+        svgHeight      = 0,
+        shortImagePath = "",
+        isSvgImage     = false,
         supportedImage = true,
         $imgWidth      = $(".html-skeleton #img-width"),
         $imgHeight     = $(".html-skeleton #img-height"),
@@ -328,9 +327,12 @@ define(function (require, exports, module) {
 
       // Go through the supported image list and check if the image is supported
       ImageFiles.forEach(function(value, index) {
-        if (FileUtils.getFileExtension(userImageFile) === value) {
+        if (FileUtils.getFileExtension(imagePath) === value) {
           // Yes, the image is supported
           supportedImage = true;
+
+          // Check also if it is an SVG image
+          isSvgImage = value === "svg" ? true : false;
         }
       });
     }
@@ -348,11 +350,10 @@ define(function (require, exports, module) {
       $imgHeight.val("");
 
       // Run process to trim the path
-      userImageFile = _imgPathUtils(userImageFile);
+      shortImagePath = _imgPathUtils(imagePath);
 
       // Update display for image
-      $showImgPath.html("");
-      $showImgPath.html(userImageFile);
+      $showImgPath.html(shortImagePath);
       $imgErrorText.html("<br>is not supported for previewing!");
       $showImgPath.css("color", "red");
       $imgPreview.removeClass("html-skeleton-image-shadow");
@@ -364,7 +365,7 @@ define(function (require, exports, module) {
       // The image is a supported file type, move on
     } else {
       // Display the image using the full path
-      $imgPreview.attr("src", userImageFile);
+      $imgPreview.attr("src", imagePath);
 
       // Clean possible CSS applied from previewing an invalid image
       $imgErrorText.html("");
@@ -375,18 +376,28 @@ define(function (require, exports, module) {
       $imgPreview.addClass("html-skeleton-image-shadow");
 
       // Run process to trim the path
-      userImageFile = _imgPathUtils(userImageFile);
+      shortImagePath = _imgPathUtils(imagePath);
 
       // Show the file path
-      $showImgPath.html("");
-      $showImgPath.html(userImageFile);
+      $showImgPath.html(shortImagePath);
 
       // Get the image width and height
       $imgPreview.bind("load", function() {
-        imageWidth  = $imgPreview[0].naturalWidth;
-        imageHeight = $imgPreview[0].naturalHeight;
+        imageWidth  = $imgPreview.prop("naturalWidth");
+        imageHeight = $imgPreview.prop("naturalHeight");
 
-        // If the image width and heights are not zero, update the size inputs with the values
+        // Rigoursly extract the SVG width and heights
+//       if (isSvgImage && imageWidth === 270 && imageHeight === 240) {
+//         var detectSizes = SvgSize.detectSVGSize(imagePath);
+//         svgWidth  = detectSizes[0];
+//         svgHeight = detectSizes[1];
+//         $imgWidth.val(svgWidth);
+//         $imgHeight.val(svgHeight);
+//         return true;
+//      }
+
+        // If the image width and heights are not zero,
+        // update the size inputs with the values
         if (imageWidth) {
           $imgWidth.val(imageWidth);
         }
