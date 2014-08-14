@@ -72,6 +72,7 @@ define(function (require, exports, module) {
 //      console.log(backgroundWidth);
 //      console.log(backgroundHeight);
 //      console.log(svgSize);
+      $svgContainer.remove();
       return svgSize;
     });
 //    console.log(svgSize);
