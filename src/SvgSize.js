@@ -33,7 +33,7 @@ define(function(require, exports, module) {
    * @return {boolean} True if width and height are not zero, false otherwise.
    */
   function _checkIfValid(width, height) {
-    return (width && height) !== 0;
+    return !Number.isNaN(width) && !Number.isNaN(height) && (width && height) !== 0;
   }
 
   /**
@@ -44,7 +44,7 @@ define(function(require, exports, module) {
    * @return {$.Promise}
    */
   function detectSVGSize(svgFile) {
-    var result  = new $.Deferred();
+    var result = new $.Deferred();
 
     _readSVG(svgFile).then(function(content) {
       // Add the SVG to the DOM, then extract the viewBox and
@@ -53,12 +53,18 @@ define(function(require, exports, module) {
           $svgElement      = $svgContainer.find("svg");
       var viewBoxWidth     = $svgElement.prop("viewBox").baseVal.width,
           viewBoxHeight    = $svgElement.prop("viewBox").baseVal.height,
-          enableBackground = $svgElement.attr("enable-background");
+          enableBackground = $svgElement.attr("enable-background") !== undefined ?
+                             $svgElement.attr("enable-background") : "";
 
       // Extract the width and hight values from the background
       var backgroundSizes  = enableBackground.split(" ");
       var backgroundWidth  = parseInt(backgroundSizes[3]),
           backgroundHeight = parseInt(backgroundSizes[4]);
+
+//      console.log(viewBoxWidth);
+//      console.log(viewBoxHeight);
+//      console.log(backgroundWidth);
+//      console.log(backgroundHeight);
 
       // Check the validity of the extracted values,
       // preferring viewBox values

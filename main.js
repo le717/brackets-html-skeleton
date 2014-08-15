@@ -116,7 +116,7 @@ define(function(require, exports, module) {
   function _insertAllTheCodes(elements) {
     // Get the last active editor
     var editor = EditorManager.getActiveEditor();
-  
+
     if (editor) {
       // Get the elements from the list in reverse so everything is added in the proper order
       // TODO Remove reverse()
@@ -162,12 +162,12 @@ define(function(require, exports, module) {
 
         // The inline script box was checked, reuse external script string
         if (index === 4) {
-          finalElements.push(skeletonBones[3].replace(/\ssrc="">/, ">"));
+          finalElements.push(skeletonBones[index - 1].replace(/\ssrc="">/, ">"));
 
           // Because of the script element editing above, redirect the
           // Full HTML Skeleton option to the proper index
         } else if (index === 5) {
-          finalElements.push(skeletonBones[4]);
+          finalElements.push(skeletonBones[index - 1]);
 
         } else {
           // It was another element that does not require editing/redirecting
@@ -282,8 +282,6 @@ define(function(require, exports, module) {
   function _handleImage(imagePath) {
     var imageWidth     = 0,
         imageHeight    = 0,
-        svgWidth       = 0,
-        svgHeight      = 0,
         shortImagePath = "",
         isSvgImage     = false,
         supportedImage = true,
@@ -358,20 +356,18 @@ define(function(require, exports, module) {
         imageWidth  = $imgPreview.prop("naturalWidth");
         imageHeight = $imgPreview.prop("naturalHeight");
 
-        // Rigoursly extract the SVG width and heights
-       if (isSvgImage && imageWidth === 270 && imageHeight === 240) {
-         var detectSizes = SvgSize.detectSVGSize(imagePath);
-
-         detectSizes.then(function(value) {
-           console.log(value);
-         });
-
-//         svgWidth  = detectSizes[0];
-//         svgHeight = detectSizes[1];
-//         $imgWidth.val(svgWidth);
-//         $imgHeight.val(svgHeight);
+        // Rigorously extract the SVG width and heights
+//       if (isSvgImage && imageWidth === 270 && imageHeight === 240) {
+//         var detectSizes = SvgSize.detectSVGSize(imagePath);
+//         detectSizes.then(function(sizes) {
+//           console.log(sizes);
+//           if (!Number.isNaN(sizes[0]) && !Number.isNaN(sizes[1])) {
+//             $imgWidth.val(sizes[0]);
+//             $imgHeight.val(sizes[1]);
+//           }
+//         });
 //         return true;
-      }
+//      }
 
         // If the image width and heights are not zero,
         // update the size inputs with the values
