@@ -10,10 +10,9 @@
  */
 
 
-define(function (require, exports, module) {
+define(function(require, exports, module) {
   "use strict";
 
-  // Import the required Brackets modules
   var AppInit            = brackets.getModule("utils/AppInit"),
       CommandManager     = brackets.getModule("command/CommandManager"),
       Dialogs            = brackets.getModule("widgets/Dialogs"),
@@ -37,29 +36,22 @@ define(function (require, exports, module) {
       indentUnits        = "",
       localizedDialog    = Mustache.render(skeletonDialogHtml, Strings);
 
-
-  /* ------- Begin Polyfills ------- */
-
   /**
    * @private
    * Polyfill from http://stackoverflow.com/a/4550005
-   * @param str // TODO Write me!!
-   * @param num // TODO Write me!!
-   * @return // TODO Write me!!
+   * @param str Text to be repeated.
+   * @param num Number of times text should be repeated.
+   * @return {string} repeated the number of times stated.
    */
   function _repeat(str, num) {
     return (new Array(num + 1)).join(str);
   }
 
-  /* ------- End Polyfills ------- */
-
-
-  /* ------- Begin Reading Indentation Preference ------- */
 
   /**
    * @private
    * Get the current indentation settings for use in inserted code
-   * @return User's current indentation settings
+   * @return {string} User's current indentation settings
    */
   function _getIndentSize() {
     var newIndentUnits, indentUnitsInt,
@@ -91,14 +83,6 @@ define(function (require, exports, module) {
     });
   });
 
-  /* ------- End Reading Indentation Preference ------- */
-
-
-  /* ------- Begin Available HTML Elements ------- */
-
-  // Placeholder variables for image size
-  var $imgWidth  = 0,
-      $imgHeight = 0;
 
   var skeletonBones = [
     // Only the head and body tags + title and meta
@@ -123,24 +107,21 @@ define(function (require, exports, module) {
   // Image
   var imageCode = "<img src='src-url' alt='' width='size-x' height='size-y'>";
 
-  /* ------- End Available HTML Elements ------- */
-
-
-  /* ------- Begin HTML Element Adding ------- */
 
   /**
    * @private
    * Insert the selected elements into the document
+   * @param elements The elements to be inserted into the document
    */
-  function _insertAllTheCodes(finalElements) {
+  function _insertAllTheCodes(elements) {
     // Get the last active editor
     var editor = EditorManager.getActiveEditor();
+  
     if (editor) {
-      // Get the cursor position
-      var cursor = editor.getCursorPos();
-
       // Get the elements from the list in reverse so everything is added in the proper order
-      finalElements.reverse().forEach(function (value, index) {
+      // TODO Remove reverse()
+      var cursor = editor.getCursorPos();
+      elements.reverse().forEach(function (value, index) {
         //  Wrap the actions in a `batchOperation` call, per guidelines
         editor.document.batchOperation(function() {
 
@@ -157,10 +138,6 @@ define(function (require, exports, module) {
     }
   }
 
-  /* ------- End HTML Element Adding ------- */
-
-
-  /* ------- Begin HTML Element Choices ------- */
 
   /**
    * @private
@@ -168,10 +145,13 @@ define(function (require, exports, module) {
    */
   function _getOptions() {
     var imageCodeNew,
+        imgWidth      = 0,
+        imgHeight     = 0,
         finalElements = [],
-        optionIDs     = ["#head-body", "#extern-style-tag", "#inline-style-tag",
-                         "#extern-script-tag", "#inline-script-tag", "#full-skeleton"
-                        ],
+        optionIDs     = [
+          "#head-body", "#extern-style-tag", "#inline-style-tag",
+          "#extern-script-tag", "#inline-script-tag", "#full-skeleton"
+        ],
         $imgWidthID   = $(".html-skeleton #img-width"),
         $imgHeightID  = $(".html-skeleton #img-height");
 
@@ -205,29 +185,29 @@ define(function (require, exports, module) {
       // Use 0 instead
       switch ($inputWidth) {
         case "":
-          $imgWidth = 0;
+          imgWidth = 0;
           break;
         // The width box was filled out, use that value
         default:
-          $imgWidth = $inputWidth;
+          imgWidth = $inputWidth;
       }
 
       // The values could not be picked out,
       // Use 0 instead
       switch ($inputHeight) {
         case "":
-          $imgHeight = 0;
+          imgHeight = 0;
           break;
         // The height box was filled out, use that value
         default:
-          $imgHeight = $inputHeight;
+          imgHeight = $inputHeight;
       }
 
       // Add the image tag to `finalElements` for addition in document,
       // replacing the invalid values with valid ones
       imageCodeNew = imageCode.replace(/src-url/, $(".html-skeleton-image #img-src").text());
-      imageCodeNew = imageCodeNew.replace(/size-x/, $imgWidth);
-      imageCodeNew = imageCodeNew.replace(/size-y/, $imgHeight);
+      imageCodeNew = imageCodeNew.replace(/size-x/, imgWidth);
+      imageCodeNew = imageCodeNew.replace(/size-y/, imgHeight);
       finalElements.push(imageCodeNew);
     }
 
@@ -235,10 +215,6 @@ define(function (require, exports, module) {
     _insertAllTheCodes(finalElements);
   }
 
-  /* ------- End HTML Element Choices ------- */
-
-
-  /* ------- Begin HTML Skeleton Dialog Boxes ------- */
 
   /**
    * @private
@@ -246,8 +222,8 @@ define(function (require, exports, module) {
    */
   function _handleSkeletonButton() {
     var skeletonDialog = Dialogs.showModalDialogUsingTemplate(localizedDialog),
-        $dialog = skeletonDialog.getElement(),
-        $doneButton = $(".dialog-button[data-button-id='ok']", $dialog);
+        $dialog        = skeletonDialog.getElement(),
+        $doneButton    = $(".dialog-button[data-button-id='ok']", $dialog);
 
     // If the Browse button is clicked, proceed to open the browse dialog
     $(".dialog-button[data-button-id='browse']", $dialog).on("click", function(e) {
@@ -265,6 +241,7 @@ define(function (require, exports, module) {
     $doneButton.on("click", _getOptions);
   }
 
+
   /**
    * @private
    * Open the file browse dialog for the user to select an image
@@ -281,10 +258,6 @@ define(function (require, exports, module) {
     e.stopPropagation();
   }
 
-  /* ------- End HTML Skeleton Dialog Boxes ------- */
-
-
-  /* ------- Begin user-selected image display ------- */
 
   /**
    * @private
@@ -300,6 +273,7 @@ define(function (require, exports, module) {
     }
     return imgPath;
   }
+
 
   /**
    * @private
@@ -352,13 +326,11 @@ define(function (require, exports, module) {
       // Run process to trim the path
       shortImagePath = _imgPathUtils(imagePath);
 
-      // Update display for image
+      // Update display for image and display extension logo
       $showImgPath.html(shortImagePath);
       $imgErrorText.html("<br>is not supported for previewing!");
       $showImgPath.css("color", "red");
       $imgPreview.removeClass("html-skeleton-image-shadow");
-
-      // Display extension logo
       $imgPreview.attr("src", skeletonLogo);
       return false;
 
@@ -387,14 +359,19 @@ define(function (require, exports, module) {
         imageHeight = $imgPreview.prop("naturalHeight");
 
         // Rigoursly extract the SVG width and heights
-//       if (isSvgImage && imageWidth === 270 && imageHeight === 240) {
-//         var detectSizes = SvgSize.detectSVGSize(imagePath);
+       if (isSvgImage && imageWidth === 270 && imageHeight === 240) {
+         var detectSizes = SvgSize.detectSVGSize(imagePath);
+
+         detectSizes.then(function(value) {
+           console.log(value);
+         });
+
 //         svgWidth  = detectSizes[0];
 //         svgHeight = detectSizes[1];
 //         $imgWidth.val(svgWidth);
 //         $imgHeight.val(svgHeight);
 //         return true;
-//      }
+      }
 
         // If the image width and heights are not zero,
         // update the size inputs with the values
@@ -409,7 +386,6 @@ define(function (require, exports, module) {
     }
   }
 
-  /* ------- End user-selected image display ------- */
 
   /**
    * @private

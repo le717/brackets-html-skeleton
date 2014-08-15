@@ -11,7 +11,7 @@
  */
 
 
-define(function (require, exports, module) {
+define(function(require, exports, module) {
   "use strict";
   var FileSystem = brackets.getModule("filesystem/FileSystem"),
       FileUtils  = brackets.getModule("file/FileUtils");
@@ -20,7 +20,7 @@ define(function (require, exports, module) {
    * @private
    * Get SVG file object information
    * @param svgFile {string} Absolute path to SVG file
-   * @return {$.promise}
+   * @return {$.Promise}
    */
   function _readSVG(svgFile) {
     return FileUtils.readAsText(FileSystem.getFileForPath(svgFile));
@@ -41,15 +41,15 @@ define(function (require, exports, module) {
    * from the viewBox and enable-background attributes when
    * dedicated width and height attributes are missing.
    * @param svgFile {string} Absolute path to SVG file
-   * @return {number[]} If available, the width and height of the SVG. Otherwise, NaN for both values.
+   * @return {$.Promise}
    */
   function detectSVGSize(svgFile) {
+    var result  = new $.Deferred();
 
-    var svgSize = [NaN, NaN];
     _readSVG(svgFile).then(function(content) {
       // Add the SVG to the DOM, then extract the viewBox and
       // enable-background attribute values from the SVG
-      var $svgContainer    = $("<div/>").css("display", "none").html(content),
+      var $svgContainer    = $("<div class='html-skeleton-svg'/>").css("display", "none").html(content),
           $svgElement      = $svgContainer.find("svg");
       var viewBoxWidth     = $svgElement.prop("viewBox").baseVal.width,
           viewBoxHeight    = $svgElement.prop("viewBox").baseVal.height,
@@ -60,23 +60,17 @@ define(function (require, exports, module) {
       var backgroundWidth  = parseInt(backgroundSizes[3]),
           backgroundHeight = parseInt(backgroundSizes[4]);
 
-      if (_checkIfValid(viewBoxWidth, viewBoxHeight)) {
-        svgSize = [viewBoxWidth, viewBoxHeight];
-      } else if (_checkIfValid(backgroundWidth, backgroundHeight)) {
-        svgSize = [backgroundWidth, backgroundHeight];
-      } //else {
-//        svgSize = [NaN, NaN];
-//      }
-//      console.log(viewBoxWidth);
-//      console.log(viewBoxHeight);
-//      console.log(backgroundWidth);
-//      console.log(backgroundHeight);
-//      console.log(svgSize);
+      // Check the validity of the extracted values,
+      // preferring viewBox values
+      var svgSize =
+          _checkIfValid(viewBoxWidth, viewBoxHeight) ? [viewBoxWidth, viewBoxHeight] :
+          _checkIfValid(backgroundWidth, backgroundHeight) ? [backgroundWidth, backgroundHeight] : [NaN, NaN];
+
+      // Remove container from DOM, resolve the promise
       $svgContainer.remove();
-      return svgSize;
+      result.resolve(svgSize);
     });
-//    console.log(svgSize);
-//    return svgSize;
+    return result.promise();
   }
 
   exports.detectSVGSize = detectSVGSize;
