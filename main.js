@@ -119,7 +119,6 @@ define(function(require, exports, module) {
 
     if (editor) {
       // Get the elements from the list in reverse so everything is added in the proper order
-      // TODO Remove reverse()
       var cursor = editor.getCursorPos();
       elements.reverse().forEach(function (value, index) {
         //  Wrap the actions in a `batchOperation` call, per guidelines

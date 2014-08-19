@@ -31,7 +31,7 @@
 .html-skeleton-image #img-path { display: none; }
 
 /* Error text */
-.html-skeleton-image #img-error-text { color: red; }
+.html-skeleton-image #img-error-text { color: #f00; }
 
 /* Position the image on the right */
 .html-skeleton-image #img-preview {
@@ -41,7 +41,7 @@
 }
 
 /* Slight shadow around image */
-.html-skeleton-image-shadow { box-shadow: 0 0 3px black; }
+.html-skeleton-image-shadow { box-shadow: 0 0 3px #000; }
 
 /* Shift the dialog content (excluding the image) up */
 .html-skeleton-content {
