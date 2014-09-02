@@ -26,15 +26,15 @@ define(function(require, exports, module) {
       PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
       ProjectManager     = brackets.getModule("project/ProjectManager"),
       ImageFiles         = LanguageManager.getLanguage("image")._fileExtensions.concat("svg"),
-      SvgSize            = require("src/SvgSize"),
+//      SvgSize            = require("src/SvgSize"),
       Strings            = require("strings"),
       skeletonLogo       = require.toUrl("img/HTML-Skeleton.svg"),
       skeletonDialogHtml = require("text!htmlContent/mainDialog.html"),
-      toolbarButtonCode  = "<a href='#' id='html-skeleton-toolbar'>";
+      toolbarButtonCode  = "<a href='#' title='{{DIALOG_TITLE}}' id='html-skeleton-toolbar'>";
 
-      var EXTENSION_ID   = "le717.html-skeleton",
-      indentUnits        = "",
-      localizedDialog    = Mustache.render(skeletonDialogHtml, Strings);
+      var indentUnits     = "",
+          EXTENSION_ID    = "le717.html-skeleton",
+          localizedDialog = Mustache.render(skeletonDialogHtml, Strings);
 
   /**
    * @private
@@ -146,13 +146,13 @@ define(function(require, exports, module) {
     var imageCodeNew,
         imgWidth      = 0,
         imgHeight     = 0,
+        $imgWidthID   = $(".html-skeleton .image-width"),
+        $imgHeightID  = $(".html-skeleton .image-height"),
         finalElements = [],
         optionIDs     = [
           "#head-body", "#extern-style-tag", "#inline-style-tag",
           "#extern-script-tag", "#inline-script-tag", "#full-skeleton"
-        ],
-        $imgWidthID   = $(".html-skeleton #img-width"),
-        $imgHeightID  = $(".html-skeleton #img-height");
+        ];
 
     // For each option that is checked, add the corresponding element
     // to `finalElements` for addition in document
@@ -204,7 +204,7 @@ define(function(require, exports, module) {
 
       // Add the image tag to `finalElements` for addition in document,
       // replacing the invalid values with valid ones
-      imageCodeNew = imageCode.replace(/src-url/, $(".html-skeleton-image #img-src").text());
+      imageCodeNew = imageCode.replace(/src-url/, $(".html-skeleton-image .image-src").text());
       imageCodeNew = imageCodeNew.replace(/size-x/, imgWidth);
       imageCodeNew = imageCodeNew.replace(/size-y/, imgHeight);
       finalElements.push(imageCodeNew);
@@ -230,11 +230,12 @@ define(function(require, exports, module) {
     });
 
     // Display logo (and any user images) using Brackets' ImageViewer
-    ImageViewer.render(skeletonLogo, $(".html-skeleton-image"));
+    new ImageViewer.ImageView(FileSystem.getFileForPath(skeletonLogo), $(".html-skeleton-image"));
+    $(".html-skeleton-image .image-path").html("");
 
     // Hide image stats
-    $(".html-skeleton-image #img-tip").remove();
-    $(".html-skeleton-image #img-scale").remove();
+    $(".html-skeleton-image .image-tip").remove();
+    $(".html-skeleton-image .image-scale").remove();
 
     // Upon closing the dialog, run function to gather and apply choices
     $doneButton.on("click", _getOptions);
@@ -284,12 +285,12 @@ define(function(require, exports, module) {
         shortImagePath = "",
         isSvgImage     = false,
         supportedImage = true,
-        $imgWidth      = $(".html-skeleton #img-width"),
-        $imgHeight     = $(".html-skeleton #img-height"),
-        $imgPreview    = $(".html-skeleton-image #img-preview"),
-        $showImgPath   = $(".html-skeleton-image #img-src"),
+        $imgWidth      = $(".html-skeleton .image-width"),
+        $imgHeight     = $(".html-skeleton .image-height"),
         $imgCheckBox   = $(".html-skeleton #img-tag"),
-        $imgErrorText  = $(".html-skeleton-image #img-error-text");
+        $imgPreview    = $(".html-skeleton-image .image-preview"),
+        $showImgPath   = $(".html-skeleton-image .image-src"),
+        $imgErrorText  = $(".html-skeleton-image .image-error-text");
 
     if (brackets.platform !== "mac") {
       // Assume otherwise on other platforms as the file filter drop down
@@ -396,9 +397,9 @@ define(function(require, exports, module) {
     menu.addMenuItem(EXTENSION_ID);
 
     // Create toolbar icon
-    var $toolbarButton = $(toolbarButtonCode);
+    var renderedToolbarButton = Mustache.render(toolbarButtonCode, Strings);
+    var $toolbarButton = $(renderedToolbarButton);
     $toolbarButton.appendTo("#main-toolbar > .buttons");
-    $toolbarButton.attr("title", Strings.DIALOG_TITLE);
     $toolbarButton.on("click", _handleSkeletonButton);
   });
 });
