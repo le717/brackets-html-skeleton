@@ -114,8 +114,8 @@ define(function(require, exports, module) {
    * @param elements The elements to be inserted into the document
    */
   function _insertAllTheCodes(elements) {
-    // Get the last active editor
-    var editor = EditorManager.getActiveEditor();
+    // Get the document in the full editor
+    var editor = EditorManager.getCurrentFullEditor();
 
     if (editor) {
       // Get the elements from the list in reverse so everything is added in the proper order
@@ -262,15 +262,34 @@ define(function(require, exports, module) {
   /**
    * @private
    * Various image path utilities
+   * @param {string} imgPath The full path to a user-selected image
+   * @return {string} // TODO Write me!
    */
   function _imgPathUtils(imgPath) {
-    // Make the image path relative (if possible)
-    imgPath = ProjectManager.makeProjectRelativeIfPossible(imgPath);
+//    console.log("Base name " + FileUtils.getBaseName(imgPath));
+
+    // Get the directory to the file the code is being inserted into
+    var curFileDir = EditorManager.getCurrentFullEditor().document.file.parentPath;
+
+    // Make sure this is a saved document
+    if (!/_brackets_/.test(curFileDir)) {
+      // If the document and image are in the same folder,
+      // use only the image file name
+      if (curFileDir === imgPath) {
+        imgPath = FileUtils.getBaseName(imgPath);
+      }
+    }
+
+    // FIX THIS
+//    else {
+      // Otherwise, try to make the path as relative as possible
+//    imgPath = ProjectManager.makeProjectRelativeIfPossible(imgPath);
+//    }
 
     // If the path is longer than 50 characters, split it up for better displaying
-    if (imgPath.length > 50) {
-      imgPath = imgPath.substring(0, 51) + "<br>" + imgPath.substring(51, imgPath.length);
-    }
+//    if (imgPath.length > 50) {
+//      imgPath = imgPath.substring(0, 51) + "<br>" + imgPath.substring(51, imgPath.length);
+//    }
     return imgPath;
   }
 
