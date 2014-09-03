@@ -7,7 +7,7 @@
     "author": "Triangle717 <le717.code@yahoo.com> (http://le717.github.io)",
     "license": "MIT",
     "engines": {
-        "brackets": ">=0.37.0"
+        "brackets": ">=0.44.0"
     },
     "keywords": [
         "HTML",
