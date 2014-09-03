@@ -26,15 +26,39 @@ define(function(require, exports, module) {
       PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
       ProjectManager     = brackets.getModule("project/ProjectManager"),
       ImageFiles         = LanguageManager.getLanguage("image")._fileExtensions.concat("svg"),
-//      SvgSize            = require("src/SvgSize"),
+      // SvgSize            = require("src/SvgSize"),
       Strings            = require("strings"),
       skeletonLogo       = require.toUrl("img/HTML-Skeleton.svg"),
       skeletonDialogHtml = require("text!htmlContent/mainDialog.html"),
       toolbarButtonCode  = "<a href='#' title='{{DIALOG_TITLE}}' id='html-skeleton-toolbar'>";
 
-      var indentUnits     = "",
-          EXTENSION_ID    = "le717.html-skeleton",
-          localizedDialog = Mustache.render(skeletonDialogHtml, Strings);
+  var indentUnits     = "",
+      EXTENSION_ID    = "le717.html-skeleton",
+      localizedDialog = Mustache.render(skeletonDialogHtml, Strings);
+
+  var skeletonBones = [
+    // Only the head and body tags + title and meta
+    "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='UTF-8'>\n" +
+    "indent-size<title></title>\n</head>\n\n<body>\nindent-size\n</body>\n</html>\n",
+
+    // External stylesheet
+    "<link rel='stylesheet' href=''>",
+
+    // Inline stylesheet
+    "<style></style>",
+
+    // External (and edited to be inline) script
+    "<script src=''></script>",
+
+    // Full HTML skeleton
+    "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='UTF-8'>\n" +
+    "indent-size<title></title>\nindent-size<link rel='stylesheet' href=''>\n" +
+    "</head>\n\n<body>\nindent-size<script src=''></script>\n</body>\n</html>\n"
+  ];
+
+  // Image
+  var imageCode = "<img src='src-url' alt='' width='size-x' height='size-y'>";
+
 
   /**
    * @private
@@ -82,30 +106,6 @@ define(function(require, exports, module) {
       }
     });
   });
-
-
-  var skeletonBones = [
-    // Only the head and body tags + title and meta
-    "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='UTF-8'>\n" +
-    "indent-size<title></title>\n</head>\n\n<body>\nindent-size\n</body>\n</html>\n",
-
-    // External stylesheet
-    "<link rel='stylesheet' href=''>",
-
-    // Inline stylesheet
-    "<style></style>",
-
-    // External (and edited to be inline) script
-    "<script src=''></script>",
-
-    // Full HTML skeleton
-    "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='UTF-8'>\n" +
-    "indent-size<title></title>\nindent-size<link rel='stylesheet' href=''>\n" +
-    "</head>\n\n<body>\nindent-size<script src=''></script>\n</body>\n</html>\n"
-  ];
-
-  // Image
-  var imageCode = "<img src='src-url' alt='' width='size-x' height='size-y'>";
 
 
   /**
@@ -398,8 +398,7 @@ define(function(require, exports, module) {
 
     // Create toolbar icon
     var renderedToolbarButton = Mustache.render(toolbarButtonCode, Strings);
-    var $toolbarButton = $(renderedToolbarButton);
-    $toolbarButton.appendTo("#main-toolbar > .buttons");
-    $toolbarButton.on("click", _handleSkeletonButton);
+    $(renderedToolbarButton).appendTo("#main-toolbar > .buttons")
+                            .on("click", _handleSkeletonButton);
   });
 });
