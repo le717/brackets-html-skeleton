@@ -23,18 +23,18 @@
 }
 
 /* Decrease the size of the image path */
-.html-skeleton-image #img-src,
-.html-skeleton-image #img-error-text { font-size: 0.9em; }
+.html-skeleton-image .image-src,
+.html-skeleton-image .image-error-text { font-size: 0.9em; }
 
 /* Hide Bracket's image path and size display */
-.html-skeleton-image #img-header,
-.html-skeleton-image #img-path { display: none; }
+.html-skeleton-image .image-header,
+.html-skeleton-image .image-path { display: none; }
 
 /* Error text */
-.html-skeleton-image #img-error-text { color: #f00; }
+.html-skeleton-image .image-error-text { color: #f00; }
 
 /* Position the image on the right */
-.html-skeleton-image #img-preview {
+.html-skeleton-image .image-preview {
   width: 270px;
   height: 240px;
   float: right;
@@ -53,7 +53,7 @@
 .html-skeleton > input { margin-bottom: 4px; }
 
 /* Reduce the amount of blank space underneath the number fields */
-.html-skeleton > input[type="number"] {  margin-bottom: 4px; }
+.html-skeleton > input[type="number"] { margin-bottom: 4px; }
 
 /* Align the browse button with the other elements */
 a[data-button-id="browse"] {
@@ -73,7 +73,7 @@ a[data-button-id="browse"] {
 }
 
 /* Enlarge the "x" between image dimensions */
-.html-skeleton #img-size-x {
+.html-skeleton .letter-x {
   font-weight: 900;
   font-size: 17px;
 }
