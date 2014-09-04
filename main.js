@@ -291,6 +291,20 @@ define(function(require, exports, module) {
     return imageDir;
   }
 
+  
+  /**
+   * @private
+   * Check if the dark theme is enabled and return
+   * the appropriate class name for a slight shadow
+   * on the image preview
+   * @return {string} Appropriate shadow class name
+   */
+  function _getImageShadow() {
+    if ($("body").hasClass("dark")) {
+      return "html-skeleton-img-shadow-dark";
+    }
+    return "html-skeleton-img-shadow";
+  }
 
   /**
    * @private
@@ -345,7 +359,7 @@ define(function(require, exports, module) {
       $showImgPath.html(shortImagePath);
       $imgErrorText.html("<br>is not supported for previewing!");
       $showImgPath.css("color", "red");
-      $imgPreview.removeClass("html-skeleton-image-shadow");
+      $imgPreview.removeClass(_getImageShadow());
       $imgPreview.attr("src", skeletonLogo);
       return false;
 
@@ -360,7 +374,7 @@ define(function(require, exports, module) {
 
       // Position and add small shadow to container
       $(".html-skeleton-image").css("position", "relative");
-      $imgPreview.addClass("html-skeleton-image-shadow");
+      $imgPreview.addClass(_getImageShadow());
 
       // Run process to trim the path
       shortImagePath = _createImageURL(imagePath);
