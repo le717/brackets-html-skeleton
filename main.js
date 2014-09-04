@@ -33,7 +33,6 @@ define(function(require, exports, module) {
       toolbarButtonCode  = "<a href='#' title='{{DIALOG_TITLE}}' id='html-skeleton-toolbar'>";
 
   var indentUnits     = "",
-      EXTENSION_ID    = "le717.html-skeleton",
       localizedDialog = Mustache.render(skeletonDialogHtml, Strings);
 
   var skeletonBones = [
@@ -127,8 +126,9 @@ define(function(require, exports, module) {
           // Do a regex search for the `indent-size` keyword
           // and replace it with the user's indent settings
           // Also replace all single quotes with double quotes
-          value = value.replace(/indent-size/g, indentUnits);
-          value = value.replace(/'/g, "\"");
+          value = value.replace(/indent-size/g, indentUnits)
+                       .replace(/'/g, "\"");
+//          value = value.replace(/'/g, "\"");
 
           // Insert the selected elements at the current cursor position
           editor.document.replaceRange(value, cursor);
@@ -217,6 +217,24 @@ define(function(require, exports, module) {
 
   /**
    * @private
+   * Open the file browse dialog for the user to select an image
+   */
+  function _showImageFileDialog(e) {
+    // Only display the image if the user selects ones
+    FileSystem.showOpenDialog(
+      false, false, Strings.FILE_DIALOG_TITLE,
+      null, ImageFiles, function (closedDialog, selectedFile) {
+        if (!closedDialog && selectedFile && selectedFile.length > 0) {
+          _handleImage(selectedFile[0]);
+        }
+      });
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+
+  /**
+   * @private
    * Display dialog box
    */
   function _handleSkeletonButton() {
@@ -244,53 +262,33 @@ define(function(require, exports, module) {
 
   /**
    * @private
-   * Open the file browse dialog for the user to select an image
+   * Create a usable, valid path the user's selected image relative to document into which it being inserted
+   * @param {string} imageDir The full path to a user-selected image
+   * @return {string} A usable, valid path to the image
    */
-  function _showImageFileDialog(e) {
-    // Only display the image if the user selects ones
-    FileSystem.showOpenDialog(false, false, Strings.FILE_DIALOG_TITLE, null, ImageFiles,
-                              function (closedDialog, selectedFile) {
-                                if (!closedDialog && selectedFile && selectedFile.length > 0) {
-                                  _handleImage(selectedFile[0]);
-                                }
-                              });
-    e.preventDefault();
-    e.stopPropagation();
-  }
-
-
-  /**
-   * @private
-   * Various image path utilities
-   * @param {string} imgPath The full path to a user-selected image
-   * @return {string} // TODO Write me!
-   */
-  function _imgPathUtils(imgPath) {
-//    console.log("Base name " + FileUtils.getBaseName(imgPath));
-
-    // Get the directory to the file the code is being inserted into
-    var curFileDir = EditorManager.getCurrentFullEditor().document.file.parentPath;
+  function _createImageURL(imageDir) {
+    // Get the directory to the file the image is being inserted into
+    // and just the file name of the image
+    var curFileDir  = EditorManager.getCurrentFullEditor().document.file.parentPath,
+        imgFileName = FileUtils.getBaseName(imageDir);
 
     // Make sure this is a saved document
     if (!/_brackets_/.test(curFileDir)) {
       // If the document and image are in the same folder,
       // use only the image file name
-      if (curFileDir === imgPath) {
-        imgPath = FileUtils.getBaseName(imgPath);
+      if (curFileDir.toLowerCase() === imageDir.replace(imgFileName, "").toLowerCase()) {
+        imageDir = imgFileName;
       }
     }
 
-    // FIX THIS
-//    else {
-      // Otherwise, try to make the path as relative as possible
-//    imgPath = ProjectManager.makeProjectRelativeIfPossible(imgPath);
-//    }
+    // Try to make the path as relative as possible
+    imageDir = ProjectManager.makeProjectRelativeIfPossible(imageDir);
 
     // If the path is longer than 50 characters, split it up for better displaying
-//    if (imgPath.length > 50) {
-//      imgPath = imgPath.substring(0, 51) + "<br>" + imgPath.substring(51, imgPath.length);
-//    }
-    return imgPath;
+    if (imageDir.length > 50) {
+      imageDir = imageDir.substring(0, 51) + "<br>" + imageDir.substring(51, imageDir.length);
+    }
+    return imageDir;
   }
 
 
@@ -341,7 +339,7 @@ define(function(require, exports, module) {
       $imgHeight.val("");
 
       // Run process to trim the path
-      shortImagePath = _imgPathUtils(imagePath);
+      shortImagePath = _createImageURL(imagePath);
 
       // Update display for image and display extension logo
       $showImgPath.html(shortImagePath);
@@ -365,7 +363,7 @@ define(function(require, exports, module) {
       $imgPreview.addClass("html-skeleton-image-shadow");
 
       // Run process to trim the path
-      shortImagePath = _imgPathUtils(imagePath);
+      shortImagePath = _createImageURL(imagePath);
 
       // Show the file path
       $showImgPath.html(shortImagePath);
@@ -407,7 +405,8 @@ define(function(require, exports, module) {
    * Load the extension after Brackets itself has finished loading
    */
   AppInit.appReady(function() {
-    // Load extension CSS
+    // Define the extension ID and CSS
+    var EXTENSION_ID = "le717.html-skeleton";
     ExtensionUtils.loadStyleSheet(module, "css/style.css");
 
     // Create a menu item in the Edit menu
@@ -416,8 +415,9 @@ define(function(require, exports, module) {
     menu.addMenuItem(EXTENSION_ID);
 
     // Create toolbar icon
-    var renderedToolbarButton = Mustache.render(toolbarButtonCode, Strings);
-    $(renderedToolbarButton).appendTo("#main-toolbar > .buttons")
+//    var renderedToolbarButton = Mustache.render(toolbarButtonCode, Strings);
+//    $(renderedToolbarButton).appendTo("#main-toolbar > .buttons")
+    $(Mustache.render(toolbarButtonCode, Strings)).appendTo("#main-toolbar > .buttons")
                             .on("click", _handleSkeletonButton);
   });
 });
