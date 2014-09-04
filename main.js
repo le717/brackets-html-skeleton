@@ -142,12 +142,12 @@ define(function(require, exports, module) {
    */
   function _getOptions() {
     var imageCodeNew,
-        imgWidth      = 0,
-        imgHeight     = 0,
+        imgWidth         = 0,
+        imgHeight        = 0,
         $imgWidthInput   = $(".html-skeleton .img-width"),
         $imgHeightInput  = $(".html-skeleton .img-height"),
-        finalElements = [],
-        optionIDs     = [
+        finalElements    = [],
+        optionIDs        = [
           "#head-body", "#extern-style-tag", "#inline-style-tag",
           "#extern-script-tag", "#inline-script-tag", "#full-skeleton"
         ];
@@ -247,6 +247,7 @@ define(function(require, exports, module) {
 
     // Display logo (and any user images) using Brackets' ImageViewer
     new ImageViewer.ImageView(FileSystem.getFileForPath(skeletonLogo), $(".html-skeleton-image"));
+    $(".html-skeleton-image .image-preview").addClass("html-skeleton-img-container");
     $(".html-skeleton-image .image-path").empty();
 
     // Hide image stats
@@ -339,31 +340,31 @@ define(function(require, exports, module) {
       $imgCheckBox.prop("checked", true);
     }
 
+    // Quickly remove the size constraints to get an accurate image size
+    $imgPreview.removeClass("html-skeleton-img-container");
+
     // The image is not a supported file type
     if (!isSupported) {
       // Reset the width and height fields
-      $imgWidthInput.val("");
-      $imgHeightInput.val("");
+      $imgWidthInput.val("0");
+      $imgHeightInput.val("0");
 
       // Run process to trim the path
       shortImagePath = _createImageURL(imagePath);
 
       // Update display for image and display extension logo
-      $imgPathDisplay.html(shortImagePath);
-      $imgErrorText.html("<br>is not supported for previewing!");
       $imgPathDisplay.css("color", "red");
       $imgPreview.removeClass(_getImageShadow());
+      $(".html-skeleton-image").css("position", "relative");
+      $imgPreview.addClass("html-skeleton-img-container");
+
+      $imgPathDisplay.html(shortImagePath);
+      $imgErrorText.html("<br>is not supported for previewing!");
       $imgPreview.attr("src", skeletonLogo);
       return false;
 
       // The image is a supported file type, move on
     } else {
-      // Display the image using the full path
-      $imgPreview.attr("src", imagePath);
-
-      // Clear possible CSS applied from previewing an invalid image
-      $imgErrorText.empty();
-      $imgPathDisplay.css("color", "");
 
       // Position and add small shadow to container
       $(".html-skeleton-image").css("position", "relative");
@@ -372,6 +373,14 @@ define(function(require, exports, module) {
       // Run processes to trim and show the the file path
       shortImagePath = _createImageURL(imagePath);
       $imgPathDisplay.html(shortImagePath);
+
+      // Clear possible CSS applied from previewing an invalid image
+      $imgErrorText.empty();
+      $imgPathDisplay.css("color", "");
+
+      // Display the image using the full path
+      $imgPreview.attr("src", imagePath);
+      $imgPreview.addClass("html-skeleton-img-container");
 
       // Get the image width and height
       $imgPreview.bind("load", function() {
