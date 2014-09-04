@@ -121,15 +121,12 @@ define(function(require, exports, module) {
       // Get the elements from the list in reverse so everything is added in the proper order
       var cursor = editor.getCursorPos();
       elements.reverse().forEach(function (value, index) {
-        //  Wrap the actions in a `batchOperation` call, per guidelines
         editor.document.batchOperation(function() {
-
           // Do a regex search for the `indent-size` keyword
           // and replace it with the user's indent settings
           // Also replace all single quotes with double quotes
           value = value.replace(/indent-size/g, indentUnits)
                        .replace(/'/g, "\"");
-//          value = value.replace(/'/g, "\"");
 
           // Insert the selected elements at the current cursor position
           editor.document.replaceRange(value, cursor);
@@ -147,8 +144,8 @@ define(function(require, exports, module) {
     var imageCodeNew,
         imgWidth      = 0,
         imgHeight     = 0,
-        $imgWidthID   = $(".html-skeleton .image-width"),
-        $imgHeightID  = $(".html-skeleton .image-height"),
+        $imgWidthInput   = $(".html-skeleton .img-width"),
+        $imgHeightInput  = $(".html-skeleton .img-height"),
         finalElements = [],
         optionIDs     = [
           "#head-body", "#extern-style-tag", "#inline-style-tag",
@@ -178,8 +175,8 @@ define(function(require, exports, module) {
 
     // The picture/image box was checked
     if ($(".html-skeleton #img-tag").prop("checked")) {
-      var $inputWidth  = $imgWidthID.val(),
-          $inputHeight = $imgHeightID.val();
+      var $inputWidth  = $imgWidthInput.val(),
+          $inputHeight = $imgHeightInput.val();
 
       // The values could not be picked out,
       // Use 0 instead
@@ -250,7 +247,7 @@ define(function(require, exports, module) {
 
     // Display logo (and any user images) using Brackets' ImageViewer
     new ImageViewer.ImageView(FileSystem.getFileForPath(skeletonLogo), $(".html-skeleton-image"));
-    $(".html-skeleton-image .image-path").html("");
+    $(".html-skeleton-image .image-path").empty();
 
     // Hide image stats
     $(".html-skeleton-image .image-tip").remove();
@@ -292,7 +289,7 @@ define(function(require, exports, module) {
     return imageDir;
   }
 
-  
+
   /**
    * @private
    * Check if the dark theme is enabled and return
@@ -307,59 +304,54 @@ define(function(require, exports, module) {
     return "html-skeleton-img-shadow";
   }
 
+
   /**
    * @private
    * Display the user selected image
    */
   function _handleImage(imagePath) {
-    var imageWidth     = 0,
-        imageHeight    = 0,
-        shortImagePath = "",
-        isSvgImage     = false,
-        supportedImage = true,
-        $imgWidth      = $(".html-skeleton .image-width"),
-        $imgHeight     = $(".html-skeleton .image-height"),
-        $imgCheckBox   = $(".html-skeleton #img-tag"),
-        $imgPreview    = $(".html-skeleton-image .image-preview"),
-        $showImgPath   = $(".html-skeleton-image .image-src"),
-        $imgErrorText  = $(".html-skeleton-image .image-error-text");
+    var imageWidth      = 0,
+        imageHeight     = 0,
+        shortImagePath  = "",
+        isSvgImage      = false,
+        isSupported     = brackets.platform === "mac" ? true : false,
+        $imgWidthInput  = $(".html-skeleton .img-width"),
+        $imgHeightInput = $(".html-skeleton .img-height"),
+        $imgCheckBox    = $(".html-skeleton #img-tag"),
+        $imgPreview     = $(".html-skeleton-image .image-preview"),
+        $imgErrorText   = $(".html-skeleton-image .image-error-text"),
+        $imgPathDisplay = $(".html-skeleton-image .image-src");
 
-    if (brackets.platform !== "mac") {
-      // Assume otherwise on other platforms as the file filter drop down
-      // is ignored except on Mac (https://trello.com/c/430aXkpq)
-      supportedImage = false;
+    // Go through the supported image list and check if the image is supported
+    ImageFiles.forEach(function(value, index) {
+      if (FileUtils.getFileExtension(imagePath) === value) {
+        // Yes, the image is supported
+        isSupported = true;
 
-      // Go through the supported image list and check if the image is supported
-      ImageFiles.forEach(function(value, index) {
-        if (FileUtils.getFileExtension(imagePath) === value) {
-          // Yes, the image is supported
-          supportedImage = true;
-
-          // Check also if it is an SVG image
-          isSvgImage = value === "svg" ? true : false;
-        }
-      });
-    }
+        // Also check if it is an SVG image
+        isSvgImage = value === "svg" ? true : false;
+      }
+    });
 
     // The Image check box was not checked before now. Since the user has opened an image,
-    // let's assume the user wants to use it and check the box.
+    // let's assume the user wants to use it and check the box for them.
     if (!$imgCheckBox.prop("checked")) {
       $imgCheckBox.prop("checked", true);
     }
 
     // The image is not a supported file type
-    if (!supportedImage) {
+    if (!isSupported) {
       // Reset the width and height fields
-      $imgWidth.val("");
-      $imgHeight.val("");
+      $imgWidthInput.val("");
+      $imgHeightInput.val("");
 
       // Run process to trim the path
       shortImagePath = _createImageURL(imagePath);
 
       // Update display for image and display extension logo
-      $showImgPath.html(shortImagePath);
+      $imgPathDisplay.html(shortImagePath);
       $imgErrorText.html("<br>is not supported for previewing!");
-      $showImgPath.css("color", "red");
+      $imgPathDisplay.css("color", "red");
       $imgPreview.removeClass(_getImageShadow());
       $imgPreview.attr("src", skeletonLogo);
       return false;
@@ -369,19 +361,17 @@ define(function(require, exports, module) {
       // Display the image using the full path
       $imgPreview.attr("src", imagePath);
 
-      // Clean possible CSS applied from previewing an invalid image
-      $imgErrorText.html("");
-      $showImgPath.css("color", "");
+      // Clear possible CSS applied from previewing an invalid image
+      $imgErrorText.empty();
+      $imgPathDisplay.css("color", "");
 
       // Position and add small shadow to container
       $(".html-skeleton-image").css("position", "relative");
       $imgPreview.addClass(_getImageShadow());
 
-      // Run process to trim the path
+      // Run processes to trim and show the the file path
       shortImagePath = _createImageURL(imagePath);
-
-      // Show the file path
-      $showImgPath.html(shortImagePath);
+      $imgPathDisplay.html(shortImagePath);
 
       // Get the image width and height
       $imgPreview.bind("load", function() {
@@ -394,8 +384,8 @@ define(function(require, exports, module) {
 //         detectSizes.then(function(sizes) {
 //           console.log(sizes);
 //           if (!Number.isNaN(sizes[0]) && !Number.isNaN(sizes[1])) {
-//             $imgWidth.val(sizes[0]);
-//             $imgHeight.val(sizes[1]);
+//             $imgWidthInput.val(sizes[0]);
+//             $imgHeightInput.val(sizes[1]);
 //           }
 //         });
 //         return true;
@@ -404,10 +394,10 @@ define(function(require, exports, module) {
         // If the image width and heights are not zero,
         // update the size inputs with the values
         if (imageWidth) {
-          $imgWidth.val(imageWidth);
+          $imgWidthInput.val(imageWidth);
         }
         if (imageHeight) {
-          $imgHeight.val(imageHeight);
+          $imgHeightInput.val(imageHeight);
         }
       });
       return true;
@@ -430,9 +420,7 @@ define(function(require, exports, module) {
     menu.addMenuItem(EXTENSION_ID);
 
     // Create toolbar icon
-//    var renderedToolbarButton = Mustache.render(toolbarButtonCode, Strings);
-//    $(renderedToolbarButton).appendTo("#main-toolbar > .buttons")
     $(Mustache.render(toolbarButtonCode, Strings)).appendTo("#main-toolbar > .buttons")
-                            .on("click", _handleSkeletonButton);
+                                                  .on("click", _handleSkeletonButton);
   });
 });
