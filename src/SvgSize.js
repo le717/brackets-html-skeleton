@@ -28,9 +28,9 @@ define(function(require, exports, module) {
 
   /**
    * @private
-   * @param width The proposed width of the SVG.
-   * @param height The proposed height of the SVG.
-   * @return {boolean} True if width and height are not zero, false otherwise.
+   * @param width The proposed width of the SVG
+   * @param height The proposed height of the SVG
+   * @return {boolean} True if width and height are not zero, false otherwise
    */
   function _checkIfValid(width, height) {
     return !Number.isNaN(width) && !Number.isNaN(height) && (width && height) !== 0;
@@ -38,8 +38,7 @@ define(function(require, exports, module) {
 
   /**
    * Attempt to extract the width and height of SVG images
-   * from the viewBox and enable-background attributes when
-   * dedicated width and height attributes are missing.
+   * from the width/height,viewBox and enable-background attributes
    * @param svgfile {string} Absolute path to SVG file
    * @return {$.Promise}
    */
@@ -47,8 +46,7 @@ define(function(require, exports, module) {
     var result = new $.Deferred();
 
     _readSVG(svgfile).then(function(content) {
-      // Add the SVG to the DOM, then extract the viewBox and
-      // enable-background attribute values from the SVG
+      // Add the SVG to the DOM
       var $svgContainer    = $("<div class='html-skeleton-svg'/>").css("display", "none").html(content),
           $svgElement      = $svgContainer.find("svg");
 

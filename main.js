@@ -78,7 +78,7 @@ define(function(require, exports, module) {
    * @return {string} User's current indentation settings
    */
   function _getIndentSize() {
-    // Check the current project's preference on tabs and 
+    // Check the current project's preference on tabs and
     // update the indentation settings for either tabs for spaces
     return (PreferencesManager.get("useTabChar", PreferencesManager.CURRENT_PROJECT) ?
             _repeatString("\u0009", PreferencesManager.get("tabSize")) :
@@ -235,7 +235,6 @@ define(function(require, exports, module) {
     // Display logo (and any user images) using Brackets' ImageViewer
     new ImageViewer.ImageView(FileSystem.getFileForPath(skeletonLogo), $(".html-skeleton-image"));
     $(".html-skeleton-image .image-preview").addClass("html-skeleton-img-container");
-    $(".html-skeleton-image .image-path").empty();
 
     // Hide image stats
     $(".html-skeleton-image .image-tip").remove();
@@ -291,40 +290,43 @@ define(function(require, exports, module) {
    * @return {string} Appropriate shadow class name
    */
   function _getImageShadow() {
-    if ($("body").hasClass("dark")) {
-      return "html-skeleton-img-shadow-dark";
-    }
-    return "html-skeleton-img-shadow";
+    return $("body").hasClass("dark") ? "html-skeleton-img-shadow-dark" : "html-skeleton-img-shadow";
+  }
+
+
+  /**
+   * @private
+   * Update image width/height input fields
+   * @param imageWidth
+   * @param imageHeight
+   */
+  function _updateSizeInput(imageWidth, imageHeight) {
+    var $imgWidthInput  = $(".html-skeleton .img-width"),
+        $imgHeightInput = $(".html-skeleton .img-height");
+
+    $imgWidthInput.val(imageWidth);
+    $imgHeightInput.val(imageHeight);
+    return;
   }
 
 
   /**
    * @private
    * Display the user selected image
+   * @param imagePath
    */
   function _displayImage(imagePath) {
-    var imageWidth      = 0,
-        imageHeight     = 0,
-        shortImagePath  = "",
+    var shortImagePath  = "",
         isSvgImage      = false,
-        isSupported     = brackets.platform === "mac" ? true : false,
-        $imgWidthInput  = $(".html-skeleton .img-width"),
-        $imgHeightInput = $(".html-skeleton .img-height"),
+        isSupported     = false,
         $imgCheckBox    = $(".html-skeleton #img-tag"),
         $imgPreview     = $(".html-skeleton-image .image-preview"),
         $imgErrorText   = $(".html-skeleton-image .image-error-text"),
         $imgPathDisplay = $(".html-skeleton-image .image-src");
 
-    // Go through the supported image list and check if the image is supported
-    ImageFiles.forEach(function(value, index) {
-      if (FileUtils.getFileExtension(imagePath) === value) {
-        // Yes, the image is supported
-        isSupported = true;
-
-        // Also check if it is an SVG image
-        isSvgImage = value === "svg" ? true : false;
-      }
-    });
+    // Check if the image is supported and if it is an SVG image
+    isSupported = LanguageManager.getLanguageForPath(imagePath).getId() === "image";
+    isSvgImage  = FileUtils.getFileExtension(imagePath) === "svg" ? true : false;
 
     // The Image check box was not checked before now. Since the user has opened an image,
     // let's assume the user wants to use it and check the box for them.
@@ -335,14 +337,11 @@ define(function(require, exports, module) {
     // Quickly remove the size constraints to get an accurate image size
     $imgPreview.removeClass("html-skeleton-img-container");
 
-    // The image is not a supported file type
-    if (!isSupported) {
-      // Reset the width and height fields
-      $imgWidthInput.val("0");
-      $imgHeightInput.val("0");
+    // Trim the file path for nice displaying
+    shortImagePath = _createImageURL(imagePath);
 
-      // Run process to trim the path
-      shortImagePath = _createImageURL(imagePath);
+    // The image is not a supported file type
+    if (!isSupported || isSvgImage) {
 
       // Update display for image and display extension logo
       $imgPathDisplay.css("color", "red");
@@ -353,17 +352,18 @@ define(function(require, exports, module) {
       $imgPathDisplay.html(shortImagePath);
       $imgErrorText.html("<br>is not supported for previewing!");
       $imgPreview.attr("src", skeletonLogo);
+
+      _updateSizeInput("", "");
       return false;
 
-      // The image is a supported file type, move on
-    } else {
+      // The image is a supported file type but NOT an SVG
+    } else if (isSupported && !isSvgImage) {
 
       // Position and add small shadow to container
       $(".html-skeleton-image").css("position", "relative");
       $imgPreview.addClass(_getImageShadow());
 
-      // Run processes to trim and show the the file path
-      shortImagePath = _createImageURL(imagePath);
+      // Show the the file path
       $imgPathDisplay.html(shortImagePath);
 
       // Clear possible CSS applied from previewing an invalid image
@@ -373,13 +373,21 @@ define(function(require, exports, module) {
       // Display the image using the full path
       $imgPreview.attr("src", imagePath);
       $imgPreview.addClass("html-skeleton-img-container");
+    }
 
-      // Get the image width and height
-      $imgPreview.bind("load", function() {
-        imageWidth  = $imgPreview.prop("naturalWidth");
-        imageHeight = $imgPreview.prop("naturalHeight");
+    // Get the image width and height
+    $imgPreview.one("load", function() {
+      if (isSupported && !isSvgImage) {
+        var imageWidth  = $imgPreview.prop("naturalWidth"),
+            imageHeight = $imgPreview.prop("naturalHeight");
+        _updateSizeInput(imageWidth, imageHeight);
+      }
+    });
+    return;
+  }
 
-        // Rigorously extract the SVG width and heights
+
+// Rigorously extract the SVG width and heights
 //       if (isSvgImage && imageWidth === 270 && imageHeight === 240) {
 //         var detectSizes = SvgSize.detectSVGSize(imagePath);
 //         detectSizes.then(function(sizes) {
@@ -391,19 +399,6 @@ define(function(require, exports, module) {
 //         });
 //         return true;
 //      }
-
-        // If the image width and heights are not zero,
-        // update the size inputs with the values
-        if (imageWidth) {
-          $imgWidthInput.val(imageWidth);
-        }
-        if (imageHeight) {
-          $imgHeightInput.val(imageHeight);
-        }
-      });
-      return true;
-    }
-  }
 
 
   /**
