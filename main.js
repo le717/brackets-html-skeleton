@@ -4,7 +4,7 @@
 /*
  * HTML Skeleton
  * Created 2014 Triangle717
- * <http://Triangle717.WordPress.com/>
+ * <http://le717.github.io/>
  *
  * Licensed under The MIT License
  * <http://opensource.org/licenses/MIT/>
@@ -67,7 +67,7 @@ define(function(require, exports, module) {
    * @param num Number of times text should be repeated.
    * @return {string} repeated the number of times stated.
    */
-  function _repeat(str, num) {
+  function _repeatString(str, num) {
     return (new Array(num + 1)).join(str);
   }
 
@@ -78,21 +78,13 @@ define(function(require, exports, module) {
    * @return {string} User's current indentation settings
    */
   function _getIndentSize() {
-    var newIndentUnits, indentUnitsInt,
-        tabCharPref  = PreferencesManager.get("useTabChar", PreferencesManager.CURRENT_PROJECT);
-
-    // The user is using tabs
-    if (tabCharPref) {
-      indentUnitsInt = PreferencesManager.get("tabSize");
-      newIndentUnits = _repeat("\u0009", indentUnitsInt);
-
-      // The user is using spaces
-    } else {
-      indentUnitsInt = PreferencesManager.get("spaceUnits");
-      newIndentUnits = _repeat("\u0020", indentUnitsInt);
-    }
-    return newIndentUnits;
+    // Check the current project's preference on tabs and 
+    // update the indentation settings for either tabs for spaces
+    return (PreferencesManager.get("useTabChar", PreferencesManager.CURRENT_PROJECT) ?
+            _repeatString("\u0009", PreferencesManager.get("tabSize")) :
+            _repeatString("\u0020", PreferencesManager.get("spaceUnits")));
   }
+
 
   // Get user's indentation settings
   PreferencesManager.on("change", function (e, data) {
@@ -140,7 +132,7 @@ define(function(require, exports, module) {
    * @private
    * Get element choices
    */
-  function _getOptions() {
+  function _getSelectedElements() {
     var imageCodeNew,
         imgWidth         = 0,
         imgHeight        = 0,
@@ -216,14 +208,14 @@ define(function(require, exports, module) {
   /**
    * @private
    * Open the file browse dialog for the user to select an image
+   * @return {!string} File path to the selected image
    */
-  function _showImageFileDialog(e) {
-    // Only display the image if the user selects ones
+  function _showFileDialog(e) {
     FileSystem.showOpenDialog(
       false, false, Strings.FILE_DIALOG_TITLE,
       null, ImageFiles, function (closedDialog, selectedFile) {
         if (!closedDialog && selectedFile && selectedFile.length > 0) {
-          _handleImage(selectedFile[0]);
+          _displayImage(selectedFile[0]);
         }
       });
     e.preventDefault();
@@ -240,11 +232,6 @@ define(function(require, exports, module) {
         $dialog        = skeletonDialog.getElement(),
         $doneButton    = $(".dialog-button[data-button-id='ok']", $dialog);
 
-    // If the Browse button is clicked, proceed to open the browse dialog
-    $(".dialog-button[data-button-id='browse']", $dialog).on("click", function(e) {
-      _showImageFileDialog(e);
-    });
-
     // Display logo (and any user images) using Brackets' ImageViewer
     new ImageViewer.ImageView(FileSystem.getFileForPath(skeletonLogo), $(".html-skeleton-image"));
     $(".html-skeleton-image .image-preview").addClass("html-skeleton-img-container");
@@ -254,8 +241,13 @@ define(function(require, exports, module) {
     $(".html-skeleton-image .image-tip").remove();
     $(".html-skeleton-image .image-scale").remove();
 
+    // If the Browse button is clicked, proceed to open the browse dialog
+    $(".dialog-button[data-button-id='browse']", $dialog).on("click", function(e) {
+      _showFileDialog(e);
+    });
+
     // Upon closing the dialog, run function to gather and apply choices
-    $doneButton.on("click", _getOptions);
+    $doneButton.on("click", _getSelectedElements);
   }
 
 
@@ -310,7 +302,7 @@ define(function(require, exports, module) {
    * @private
    * Display the user selected image
    */
-  function _handleImage(imagePath) {
+  function _displayImage(imagePath) {
     var imageWidth      = 0,
         imageHeight     = 0,
         shortImagePath  = "",
