@@ -18,8 +18,8 @@ define(function(require, exports, module) {
 
   /**
    * @private
-   * Get SVG file object information
-   * @param svgfile {string} Absolute path to SVG file
+   * Get SVG graphic file object
+   * @param svgfile {string} Absolute path to SVG graphic
    * @return {$.Promise}
    */
   function _readSVG(svgfile) {
@@ -28,18 +28,18 @@ define(function(require, exports, module) {
 
   /**
    * @private
-   * @param width The proposed width of the SVG
-   * @param height The proposed height of the SVG
-   * @return {boolean} True if width and height are not zero, false otherwise
+   * @param width The proposed width
+   * @param height The proposed height
+   * @return {boolean} True if width and height are valid
    */
   function _checkIfValid(width, height) {
-    return !Number.isNaN(width) && !Number.isNaN(height) && (width && height) !== 0;
+    return !Number.isNaN(width) && !Number.isNaN(height) && (width && height) !== 0 && (width && height) !== "";
   }
 
   /**
-   * Attempt to extract the width and height of SVG images
-   * from the width/height,viewBox and enable-background attributes
-   * @param svgfile {string} Absolute path to SVG file
+   * Attempt to extract the size of an SVG graphic
+   * from the width/height, viewBox and enable-background attributes
+   * @param svgfile {string} Absolute path to SVG graphic
    * @return {$.Promise}
    */
   function detectSVGSize(svgfile) {
@@ -63,12 +63,12 @@ define(function(require, exports, module) {
       var backgroundWidth  = parseInt(backgroundSizes[3]),
           backgroundHeight = parseInt(backgroundSizes[4]);
 
-     // console.log(attrWidth);
-     // console.log(attrHeight);
-     // console.log(viewBoxWidth);
-     // console.log(viewBoxHeight);
-     // console.log(backgroundWidth);
-     // console.log(backgroundHeight);
+      console.log(attrWidth);
+      console.log(attrHeight);
+      console.log(viewBoxWidth);
+      console.log(viewBoxHeight);
+      console.log(backgroundWidth);
+      console.log(backgroundHeight);
 
       // Check the validity of the extracted values,
       // preferring width/height attributes, then viewBox values

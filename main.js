@@ -27,7 +27,7 @@ define(function(require, exports, module) {
       PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
       ProjectManager     = brackets.getModule("project/ProjectManager"),
       ImageFiles         = LanguageManager.getLanguage("image")._fileExtensions.concat("svg"),
-      // SvgSize            = require("src/SvgSize"),
+       SvgSize            = require("src/SvgSize"),
       Strings            = require("strings"),
       skeletonLogo       = require.toUrl("img/HTML-Skeleton.svg"),
       skeletonDialogHtml = require("text!htmlContent/mainDialog.html"),
@@ -341,7 +341,7 @@ define(function(require, exports, module) {
     shortImagePath = _createImageURL(imagePath);
 
     // The image is not a supported file type
-    if (!isSupported || isSvgImage) {
+    if (!isSupported && !isSvgImage) {
 
       // Update display for image and display extension logo
       $imgPathDisplay.css("color", "red");
@@ -373,6 +373,14 @@ define(function(require, exports, module) {
       // Display the image using the full path
       $imgPreview.attr("src", imagePath);
       $imgPreview.addClass("html-skeleton-img-container");
+
+      // Special routine for SVG graphics only
+    } else if (isSvgImage) {
+      var detectSizes = SvgSize.detectSVGSize(imagePath);
+      detectSizes.then(function(sizes) {
+        console.log(sizes);
+        _updateSizeInput(sizes[0], sizes[1]);
+      });
     }
 
     // Get the image width and height
@@ -385,20 +393,6 @@ define(function(require, exports, module) {
     });
     return;
   }
-
-
-// Rigorously extract the SVG width and heights
-//       if (isSvgImage && imageWidth === 270 && imageHeight === 240) {
-//         var detectSizes = SvgSize.detectSVGSize(imagePath);
-//         detectSizes.then(function(sizes) {
-//           console.log(sizes);
-//           if (!Number.isNaN(sizes[0]) && !Number.isNaN(sizes[1])) {
-//             $imgWidthInput.val(sizes[0]);
-//             $imgHeightInput.val(sizes[1]);
-//           }
-//         });
-//         return true;
-//      }
 
 
   /**
