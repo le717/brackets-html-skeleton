@@ -4,7 +4,7 @@
 /*
  * HTML Skeleton
  * Created 2014 Triangle717
- * <http://Triangle717.WordPress.com/>
+ * <http://le717.github.io/>
  *
  * Licensed under The MIT License
  * <http://opensource.org/licenses/MIT/>
@@ -67,7 +67,7 @@ define(function(require, exports, module) {
    * @param num Number of times text should be repeated.
    * @return {string} repeated the number of times stated.
    */
-  function _repeat(str, num) {
+  function _repeatString(str, num) {
     return (new Array(num + 1)).join(str);
   }
 
@@ -78,21 +78,13 @@ define(function(require, exports, module) {
    * @return {string} User's current indentation settings
    */
   function _getIndentSize() {
-    var newIndentUnits, indentUnitsInt,
-        tabCharPref  = PreferencesManager.get("useTabChar", PreferencesManager.CURRENT_PROJECT);
-
-    // The user is using tabs
-    if (tabCharPref) {
-      indentUnitsInt = PreferencesManager.get("tabSize");
-      newIndentUnits = _repeat("\u0009", indentUnitsInt);
-
-      // The user is using spaces
-    } else {
-      indentUnitsInt = PreferencesManager.get("spaceUnits");
-      newIndentUnits = _repeat("\u0020", indentUnitsInt);
-    }
-    return newIndentUnits;
+    // Check the current project's preference on tabs and
+    // update the indentation settings for either tabs for spaces
+    return (PreferencesManager.get("useTabChar", PreferencesManager.CURRENT_PROJECT) ?
+            _repeatString("\u0009", PreferencesManager.get("tabSize")) :
+            _repeatString("\u0020", PreferencesManager.get("spaceUnits")));
   }
+
 
   // Get user's indentation settings
   PreferencesManager.on("change", function (e, data) {
@@ -140,14 +132,14 @@ define(function(require, exports, module) {
    * @private
    * Get element choices
    */
-  function _getOptions() {
+  function _getSelectedElements() {
     var imageCodeNew,
-        imgWidth      = 0,
-        imgHeight     = 0,
+        imgWidth         = 0,
+        imgHeight        = 0,
         $imgWidthInput   = $(".html-skeleton .img-width"),
         $imgHeightInput  = $(".html-skeleton .img-height"),
-        finalElements = [],
-        optionIDs     = [
+        finalElements    = [],
+        optionIDs        = [
           "#head-body", "#extern-style-tag", "#inline-style-tag",
           "#extern-script-tag", "#inline-script-tag", "#full-skeleton"
         ];
@@ -216,14 +208,14 @@ define(function(require, exports, module) {
   /**
    * @private
    * Open the file browse dialog for the user to select an image
+   * @return {!string} File path to the selected image
    */
-  function _showImageFileDialog(e) {
-    // Only display the image if the user selects ones
+  function _showFileDialog(e) {
     FileSystem.showOpenDialog(
       false, false, Strings.FILE_DIALOG_TITLE,
       null, ImageFiles, function (closedDialog, selectedFile) {
         if (!closedDialog && selectedFile && selectedFile.length > 0) {
-          _handleImage(selectedFile[0]);
+          _displayImage(selectedFile[0]);
         }
       });
     e.preventDefault();
@@ -240,21 +232,21 @@ define(function(require, exports, module) {
         $dialog        = skeletonDialog.getElement(),
         $doneButton    = $(".dialog-button[data-button-id='ok']", $dialog);
 
-    // If the Browse button is clicked, proceed to open the browse dialog
-    $(".dialog-button[data-button-id='browse']", $dialog).on("click", function(e) {
-      _showImageFileDialog(e);
-    });
-
     // Display logo (and any user images) using Brackets' ImageViewer
     new ImageViewer.ImageView(FileSystem.getFileForPath(skeletonLogo), $(".html-skeleton-image"));
-    $(".html-skeleton-image .image-path").empty();
+    $(".html-skeleton-image .image-preview").addClass("html-skeleton-img-container");
 
     // Hide image stats
     $(".html-skeleton-image .image-tip").remove();
     $(".html-skeleton-image .image-scale").remove();
 
+    // If the Browse button is clicked, proceed to open the browse dialog
+    $(".dialog-button[data-button-id='browse']", $dialog).on("click", function(e) {
+      _showFileDialog(e);
+    });
+
     // Upon closing the dialog, run function to gather and apply choices
-    $doneButton.on("click", _getOptions);
+    $doneButton.on("click", _getSelectedElements);
   }
 
 
@@ -298,40 +290,43 @@ define(function(require, exports, module) {
    * @return {string} Appropriate shadow class name
    */
   function _getImageShadow() {
-    if ($("body").hasClass("dark")) {
-      return "html-skeleton-img-shadow-dark";
-    }
-    return "html-skeleton-img-shadow";
+    return $("body").hasClass("dark") ? "html-skeleton-img-shadow-dark" : "html-skeleton-img-shadow";
+  }
+
+
+  /**
+   * @private
+   * Update image width/height input fields
+   * @param imageWidth
+   * @param imageHeight
+   */
+  function _updateSizeInput(imageWidth, imageHeight) {
+    var $imgWidthInput  = $(".html-skeleton .img-width"),
+        $imgHeightInput = $(".html-skeleton .img-height");
+
+    $imgWidthInput.val(imageWidth);
+    $imgHeightInput.val(imageHeight);
+    return;
   }
 
 
   /**
    * @private
    * Display the user selected image
+   * @param imagePath
    */
-  function _handleImage(imagePath) {
-    var imageWidth      = 0,
-        imageHeight     = 0,
-        shortImagePath  = "",
+  function _displayImage(imagePath) {
+    var shortImagePath  = "",
         isSvgImage      = false,
-        isSupported     = brackets.platform === "mac" ? true : false,
-        $imgWidthInput  = $(".html-skeleton .img-width"),
-        $imgHeightInput = $(".html-skeleton .img-height"),
+        isSupported     = false,
         $imgCheckBox    = $(".html-skeleton #img-tag"),
         $imgPreview     = $(".html-skeleton-image .image-preview"),
         $imgErrorText   = $(".html-skeleton-image .image-error-text"),
         $imgPathDisplay = $(".html-skeleton-image .image-src");
 
-    // Go through the supported image list and check if the image is supported
-    ImageFiles.forEach(function(value, index) {
-      if (FileUtils.getFileExtension(imagePath) === value) {
-        // Yes, the image is supported
-        isSupported = true;
-
-        // Also check if it is an SVG image
-        isSvgImage = value === "svg" ? true : false;
-      }
-    });
+    // Check if the image is supported and if it is an SVG image
+    isSupported = LanguageManager.getLanguageForPath(imagePath).getId() === "image";
+    isSvgImage  = FileUtils.getFileExtension(imagePath) === "svg" ? true : false;
 
     // The Image check box was not checked before now. Since the user has opened an image,
     // let's assume the user wants to use it and check the box for them.
@@ -339,46 +334,60 @@ define(function(require, exports, module) {
       $imgCheckBox.prop("checked", true);
     }
 
-    // The image is not a supported file type
-    if (!isSupported) {
-      // Reset the width and height fields
-      $imgWidthInput.val("");
-      $imgHeightInput.val("");
+    // Quickly remove the size constraints to get an accurate image size
+    $imgPreview.removeClass("html-skeleton-img-container");
 
-      // Run process to trim the path
-      shortImagePath = _createImageURL(imagePath);
+    // Trim the file path for nice displaying
+    shortImagePath = _createImageURL(imagePath);
+
+    // The image is not a supported file type
+    if (!isSupported || isSvgImage) {
 
       // Update display for image and display extension logo
-      $imgPathDisplay.html(shortImagePath);
-      $imgErrorText.html("<br>is not supported for previewing!");
       $imgPathDisplay.css("color", "red");
       $imgPreview.removeClass(_getImageShadow());
+      $(".html-skeleton-image").css("position", "relative");
+      $imgPreview.addClass("html-skeleton-img-container");
+
+      $imgPathDisplay.html(shortImagePath);
+      $imgErrorText.html("<br>is not supported for previewing!");
       $imgPreview.attr("src", skeletonLogo);
+
+      _updateSizeInput("", "");
       return false;
 
-      // The image is a supported file type, move on
-    } else {
-      // Display the image using the full path
-      $imgPreview.attr("src", imagePath);
-
-      // Clear possible CSS applied from previewing an invalid image
-      $imgErrorText.empty();
-      $imgPathDisplay.css("color", "");
+      // The image is a supported file type but NOT an SVG
+    } else if (isSupported && !isSvgImage) {
 
       // Position and add small shadow to container
       $(".html-skeleton-image").css("position", "relative");
       $imgPreview.addClass(_getImageShadow());
 
-      // Run processes to trim and show the the file path
-      shortImagePath = _createImageURL(imagePath);
+      // Show the the file path
       $imgPathDisplay.html(shortImagePath);
 
-      // Get the image width and height
-      $imgPreview.bind("load", function() {
-        imageWidth  = $imgPreview.prop("naturalWidth");
-        imageHeight = $imgPreview.prop("naturalHeight");
+      // Clear possible CSS applied from previewing an invalid image
+      $imgErrorText.empty();
+      $imgPathDisplay.css("color", "");
 
-        // Rigorously extract the SVG width and heights
+      // Display the image using the full path
+      $imgPreview.attr("src", imagePath);
+      $imgPreview.addClass("html-skeleton-img-container");
+    }
+
+    // Get the image width and height
+    $imgPreview.one("load", function() {
+      if (isSupported && !isSvgImage) {
+        var imageWidth  = $imgPreview.prop("naturalWidth"),
+            imageHeight = $imgPreview.prop("naturalHeight");
+        _updateSizeInput(imageWidth, imageHeight);
+      }
+    });
+    return;
+  }
+
+
+// Rigorously extract the SVG width and heights
 //       if (isSvgImage && imageWidth === 270 && imageHeight === 240) {
 //         var detectSizes = SvgSize.detectSVGSize(imagePath);
 //         detectSizes.then(function(sizes) {
@@ -390,19 +399,6 @@ define(function(require, exports, module) {
 //         });
 //         return true;
 //      }
-
-        // If the image width and heights are not zero,
-        // update the size inputs with the values
-        if (imageWidth) {
-          $imgWidthInput.val(imageWidth);
-        }
-        if (imageHeight) {
-          $imgHeightInput.val(imageHeight);
-        }
-      });
-      return true;
-    }
-  }
 
 
   /**
