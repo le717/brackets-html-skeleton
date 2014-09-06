@@ -132,8 +132,8 @@ define(function (require, exports, module) {
    * Get element choices
    */
   function _getSelectedElements() {
-    var $imgWidthInput   = $(".html-skeleton .img-width"),
-        $imgHeightInput  = $(".html-skeleton .img-height"),
+    var $imgWidthInput   = $(".html-skeleton-form .img-width"),
+        $imgHeightInput  = $(".html-skeleton-form .img-height"),
         finalElements    = [],
         optionIDs        = [
           "#head-body", "#extern-style-tag", "#inline-style-tag",
@@ -172,7 +172,7 @@ define(function (require, exports, module) {
 
       // Mark the image tag for addition in document,
       // replacing the placeholder values with actual ones
-      var imageCodeFill = imageCode.replace(/src-url/, $(".html-skeleton-img .image-src").text());
+      var imageCodeFill = imageCode.replace(/src-url/, $(".html-skeleton-img .img-src").text());
       imageCodeFill     = imageCodeFill.replace(/size-x/, imgWidth);
       imageCodeFill     = imageCodeFill.replace(/size-y/, imgHeight);
       finalElements.push(imageCodeFill);
@@ -232,8 +232,8 @@ define(function (require, exports, module) {
    * @param imageHeight
    */
   function _updateSizeInput(imageWidth, imageHeight) {
-    var $imgWidthInput  = $(".html-skeleton .img-width"),
-        $imgHeightInput = $(".html-skeleton .img-height");
+    var $imgWidthInput  = $(".html-skeleton-form .img-width"),
+        $imgHeightInput = $(".html-skeleton-form .img-height");
 
     $imgWidthInput.val(imageWidth);
     $imgHeightInput.val(imageHeight);
