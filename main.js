@@ -172,7 +172,7 @@ define(function (require, exports, module) {
 
       // Mark the image tag for addition in document,
       // replacing the placeholder values with actual ones
-      var imageCodeFill = imageCode.replace(/src-url/, $(".html-skeleton-image .image-src").text());
+      var imageCodeFill = imageCode.replace(/src-url/, $(".html-skeleton-img .image-src").text());
       imageCodeFill     = imageCodeFill.replace(/size-x/, imgWidth);
       imageCodeFill     = imageCodeFill.replace(/size-y/, imgHeight);
       finalElements.push(imageCodeFill);
@@ -251,9 +251,9 @@ define(function (require, exports, module) {
         isSvgImage      = false,
         isSupported     = false,
         $imgCheckBox    = $(".html-skeleton #img-tag"),
-        $imgPreview     = $(".html-skeleton-image .image-preview"),
-        $imgErrorText   = $(".html-skeleton-image .image-error-text"),
-        $imgPathDisplay = $(".html-skeleton-image .image-src");
+        $imgPreview     = $(".html-skeleton-img .image-preview"),
+        $imgErrorText   = $(".html-skeleton-img .img-error-text"),
+        $imgPathDisplay = $(".html-skeleton-img .img-src");
 
     // Check if the image is supported and if it is an SVG image
     isSupported = LanguageManager.getLanguageForPath(imagePath).getId() === "image";
@@ -275,7 +275,7 @@ define(function (require, exports, module) {
     if (!isSupported && !isSvgImage) {
 
       // Update display for image and display extension logo
-      $(".html-skeleton-image").css("position", "relative");
+      $(".html-skeleton-img").css("position", "relative");
       $imgPreview.addClass("html-skeleton-img-container");
       $imgPathDisplay.css("color", "red");
       $imgPreview.removeClass(_getImageShadow());
@@ -295,7 +295,7 @@ define(function (require, exports, module) {
       $imgPathDisplay.css("color", "");
 
       // Position and add small shadow to container
-      $(".html-skeleton-image").css("position", "relative");
+      $(".html-skeleton-img").css("position", "relative");
       $imgPreview.addClass(_getImageShadow());
 
       // Show the file path and display the image
@@ -351,12 +351,12 @@ define(function (require, exports, module) {
         $doneButton    = $(".dialog-button[data-button-id='ok']", $dialog);
 
     // Display logo (and any user images) using Brackets' ImageViewer
-    new ImageViewer.ImageView(FileSystem.getFileForPath(skeletonLogo), $(".html-skeleton-image"));
-    $(".html-skeleton-image .image-preview").addClass("html-skeleton-img-container");
+    new ImageViewer.ImageView(FileSystem.getFileForPath(skeletonLogo), $(".html-skeleton-img"));
+    $(".html-skeleton-img .image-preview").addClass("html-skeleton-img-container");
 
     // Hide image stats
-    $(".html-skeleton-image .image-tip").remove();
-    $(".html-skeleton-image .image-scale").remove();
+    $(".html-skeleton-img .image-tip").remove();
+    $(".html-skeleton-img .image-scale").remove();
 
     // If the Browse button is clicked, proceed to open the browse dialog
     $(".dialog-button[data-button-id='browse']", $dialog).on("click", function (e) {
