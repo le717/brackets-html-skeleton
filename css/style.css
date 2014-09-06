@@ -9,7 +9,7 @@
 
 
 /* Toolbar icon */
-#html-skeleton-toolbar { background-image: url("../img/HTML-Skeleton-Toolbar.svg"); }
+#html-skeleton-toolbar { background-image: url("../img/toolbar.svg"); }
 
 /* Prevent the dialog from having a horizontal scrollbar */
 .modal-body.html-skeleton { overflow-x: hidden; }
