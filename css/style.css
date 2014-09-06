@@ -9,13 +9,15 @@
 
 
 /* Toolbar icon */
-#html-skeleton-toolbar { background-image: url("../img/HTML-Skeleton-Toolbar.svg"); }
+#html-skeleton-toolbar { background-image: url("../img/toolbar.svg"); }
 
 /* Prevent the dialog from having a horizontal scrollbar */
-.html-skeleton-modal-body { overflow-x: hidden; }
+.modal-body.html-skeleton { overflow-x: hidden; }
+
+.modal-body.html-skeleton .dialog-message { margin-top: -7px; }
 
 /* Position image container */
-.html-skeleton-image {
+.html-skeleton-img {
   top: -25px;
   right: -10px;
   float: right;
@@ -23,20 +25,21 @@
 }
 
 /* Decrease the size of the image path */
-.html-skeleton-image .image-src,
-.html-skeleton-image .image-error-text { font-size: 0.9em; }
+.html-skeleton-img .img-src,
+.html-skeleton-img .img-error-text { font-size: 0.9em; }
 
 /* Hide Bracket's image path and size display */
-.html-skeleton-image .image-header,
-.html-skeleton-image .image-path { display: none; }
+.html-skeleton-img .image-header,
+.html-skeleton-img .image-path { display: none; }
 
 /* Error text */
-.html-skeleton-image .image-error-text { color: #f00; }
+.html-skeleton-img .img-error-text { color: #f00; }
 
 /* Scale the image */
 .html-skeleton-img-container {
+  position: relative;
   width: 270px;
-  max-height: 240px;
+  height: 240px;
 }
 
 /* Slight shadow around image */
@@ -50,19 +53,25 @@
 }
 
 /* Space the check boxes apart a bit */
-.html-skeleton > input { margin-bottom: 4px; }
+.html-skeleton-form > input { margin-bottom: 4px; }
 
 /* Reduce the amount of blank space underneath the number fields */
-.html-skeleton > input[type="number"] { margin-bottom: 4px; }
+.html-skeleton-form > input[type="number"] { margin-bottom: 4px; }
 
 /* Align the browse button with the other elements */
-a[data-button-id="browse"] {
+.html-skeleton-dialog a[data-button-id="browse"] {
   margin-bottom: 4px;
   margin-left: 10px;
 }
 
 /* Do not place input labels on a new line */
-.html-skeleton > label { display: inline; }
+.html-skeleton-form > label { display: inline; }
+
+/* Enlarge the "x" between the input fields */
+.html-skeleton-form .letter-x {
+  font-weight: 900;
+  font-size: 17px;
+}
 
 /* Accommodate the "Full HTML Skeleton" description */
 #full-skeleton-description {
@@ -70,10 +79,4 @@ a[data-button-id="browse"] {
   bottom: 5px;
   display: inline-block;
   font-size: 12px;
-}
-
-/* Enlarge the "x" between the input fields */
-.html-skeleton .letter-x {
-  font-weight: 900;
-  font-size: 17px;
 }

@@ -3,14 +3,16 @@
     <h1 class="dialog-title">{{DIALOG_TITLE}}</h1>
   </div>
 
-  <div class="modal-body html-skeleton-modal-body">
+  <div class="modal-body html-skeleton">
     <p class="dialog-message">
       {{DIALOG_EXTENSION_DESCRIPTION}}
     </p>
 
     <!-- HTML Skeleton logo by http://rioforce.WordPress.com -->
-    <div class="html-skeleton-image"><span class="image-src"></span><span class="image-error-text"></span></div>
-
+    <div class="html-skeleton-img">
+      <span class="img-src"></span>
+      <span class="img-error-text"></span>
+    </div>
     <div class="html-skeleton-content">
       <h3>{{USAGE}}</h3>
       <ol>
@@ -20,7 +22,7 @@
       </ol>
 
       <h3>{{ELEMENTS}}</h3>
-      <form class="html-skeleton">
+      <form class="html-skeleton-form">
         <input type="checkbox" id="head-body" />
         <label for="head-body">{{HEAD_AND_BODY}}<br></label>
 
@@ -39,12 +41,10 @@
         <input type="checkbox" id="img-tag" />
         <label for="img-tag">{{PICTURE_IMAGE}}<br></label>
 
-        <input class="html-skeleton img-width" type="number" min="0" placeholder="{{WIDTH}}" />
-        <span class="html-skeleton letter-x"> x </span>
-        <input class="html-skeleton img-height" type="number" min="0" placeholder="{{HEIGHT}}" />
-        <a class="dialog-button btn" data-button-id="browse" href="#">{{BTN_BROWSE}}</a>
-
-        <br>
+        <input class="img-width" type="number" min="0" placeholder="{{WIDTH}}" />
+        <span class="letter-x"> x </span>
+        <input class="img-height" type="number" min="0" placeholder="{{HEIGHT}}" />
+        <a class="dialog-button btn" data-button-id="browse" href="#">{{BTN_BROWSE}}</a><br>
         <input id="full-skeleton" type="checkbox" />
 
         <label for="full-skeleton">{{FULL_SKELETON}}<br>
