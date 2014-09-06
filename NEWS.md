@@ -1,7 +1,16 @@
 # Changes #
 
 ## 1.3.0 ##
-### ? September, 2014 ###
+### ?? September, 2014 ###
+* Added Splitview compatibility
+* **_HTML Skeleton_ now requires Brackets 0.44 or newer**
+* Properly detect image path relative to document ([#14](https://github.com/le717/brackets-html-skeleton/issues/14))
+* Add image shadow for Brackets dark theme
+* Properly detect non-SVG graphic image size ([#20](https://github.com/le717/brackets-html-skeleton/issues/20))
+* More accurately extract SVG graphic size using custom extraction routine ([#15](https://github.com/le717/brackets-html-skeleton/issues/15))
+* Many bugs fixed, including displaying 270x240 in input fields when an image could not be displayed
+* Compress SVG graphics
+* Refactor, simplify, improve, and lint much of the code base
 
 ## 1.2.2 ##
 ### 8 August, 2014 ##

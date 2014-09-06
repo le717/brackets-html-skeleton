@@ -6,7 +6,7 @@ A [Brackets](http://brackets.io) extension that allows you to add various HTML e
 
 Method 1: Open the Brackets Extension Manager and search for "skeleton"
 
-Method 2: Download a `.zip` directly from GitHub using either the [latest revision](https://github.com/le717/brackets-html-skeleton/archive/master.zip) or [tagged release](https://github.com/le717/brackets-html-skeleton/releases) and drag it onto the "Drag .zip here" area in the Extension Manager (Release 42 and later)
+Method 2: Download a `.zip` directly from GitHub using either the [latest revision](https://github.com/le717/brackets-html-skeleton/archive/master.zip) or [tagged release](https://github.com/le717/brackets-html-skeleton/releases) and drag it onto the "Drag .zip here" area in the Extension Manager
 
 # Usage #
 
