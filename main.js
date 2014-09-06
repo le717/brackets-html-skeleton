@@ -185,53 +185,8 @@ define(function (require, exports, module) {
 
   /**
    * @private
-   * Open the file browse dialog for the user to select an image
-   * @return {!string} File path to the selected image
-   */
-  function _showFileDialog(e) {
-    FileSystem.showOpenDialog(
-      false, false, Strings.FILE_DIALOG_TITLE,
-      null, ImageFiles, function (closedDialog, selectedFile) {
-        if (!closedDialog && selectedFile && selectedFile.length > 0) {
-          _displayImage(selectedFile[0]);
-        }
-      }
-    );
-    e.preventDefault();
-    e.stopPropagation();
-  }
-
-
-  /**
-   * @private
-   * Display HTML Skeleton dialog box
-   */
-  function _handleSkeletonButton() {
-    var skeletonDialog = Dialogs.showModalDialogUsingTemplate(localizedDialog),
-        $dialog        = skeletonDialog.getElement(),
-        $doneButton    = $(".dialog-button[data-button-id='ok']", $dialog);
-
-    // Display logo (and any user images) using Brackets' ImageViewer
-    new ImageViewer.ImageView(FileSystem.getFileForPath(skeletonLogo), $(".html-skeleton-image"));
-    $(".html-skeleton-image .image-preview").addClass("html-skeleton-img-container");
-
-    // Hide image stats
-    $(".html-skeleton-image .image-tip").remove();
-    $(".html-skeleton-image .image-scale").remove();
-
-    // If the Browse button is clicked, proceed to open the browse dialog
-    $(".dialog-button[data-button-id='browse']", $dialog).on("click", function (e) {
-      _showFileDialog(e);
-    });
-
-    // Upon closing the dialog, run function to gather and apply choices
-    $doneButton.on("click", _getSelectedElements);
-  }
-
-
-  /**
-   * @private
-   * Create a usable, valid path the user's selected image relative to document into which it being inserted
+   * Create a usable, valid path to the user's selected image
+   * relative to document into which it being inserted
    * @param {string} imageDir The full path to a user-selected image
    * @return {string} A usable, valid path to the image
    */
@@ -241,13 +196,10 @@ define(function (require, exports, module) {
     var curFileDir  = EditorManager.getCurrentFullEditor().document.file.parentPath,
         imgFileName = FileUtils.getBaseName(imageDir);
 
-    // Make sure this is a saved document
-    if (!/_brackets_/.test(curFileDir)) {
-      // If the document and image are in the same folder,
-      // use only the image file name
-      if (curFileDir.toLowerCase() === imageDir.replace(imgFileName, "").toLowerCase()) {
-        imageDir = imgFileName;
-      }
+    // If this is a saved documentand image and document are in the same folder
+    if (!/_brackets_/.test(curFileDir) && (curFileDir.toLowerCase() === imageDir.replace(imgFileName, "").toLowerCase())) {
+      // Use only the image file name
+      imageDir = imgFileName;
     }
 
     // Try to make the path as relative as possible
@@ -363,12 +315,56 @@ define(function (require, exports, module) {
       } else if (isSvgImage) {
         var detectSizes = SvgSize.getSVGSize(imagePath);
         detectSizes.then(function (sizes) {
-          console.log(sizes);
           _updateSizeInput(sizes[0], sizes[1]);
         });
       }
     });
     return;
+  }
+
+
+  /**
+   * @private
+   * Open the file browse dialog for the user to select an image
+   */
+  function _showFileDialog(e) {
+    FileSystem.showOpenDialog(
+      false, false, Strings.FILE_DIALOG_TITLE,
+      null, ImageFiles, function (closedDialog, selectedFile) {
+        if (!closedDialog && selectedFile && selectedFile.length > 0) {
+          _displayImage(selectedFile[0]);
+        }
+      }
+    );
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+
+  /**
+   * @private
+   * Display HTML Skeleton dialog box
+   */
+  function _handleSkeletonButton() {
+    var skeletonDialog = Dialogs.showModalDialogUsingTemplate(localizedDialog),
+        $dialog        = skeletonDialog.getElement(),
+        $doneButton    = $(".dialog-button[data-button-id='ok']", $dialog);
+
+    // Display logo (and any user images) using Brackets' ImageViewer
+    new ImageViewer.ImageView(FileSystem.getFileForPath(skeletonLogo), $(".html-skeleton-image"));
+    $(".html-skeleton-image .image-preview").addClass("html-skeleton-img-container");
+
+    // Hide image stats
+    $(".html-skeleton-image .image-tip").remove();
+    $(".html-skeleton-image .image-scale").remove();
+
+    // If the Browse button is clicked, proceed to open the browse dialog
+    $(".dialog-button[data-button-id='browse']", $dialog).on("click", function (e) {
+      _showFileDialog(e);
+    });
+
+    // Upon closing the dialog, run function to gather and apply choices
+    $doneButton.on("click", _getSelectedElements);
   }
 
 
