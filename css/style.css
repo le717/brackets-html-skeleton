@@ -33,12 +33,13 @@
 .html-skeleton-img .image-path { display: none; }
 
 /* Error text */
-.html-skeleton-img .image-error-text { color: #f00; }
+.html-skeleton-img .img-error-text { color: #f00; }
 
 /* Scale the image */
 .html-skeleton-img-container {
+  position: relative;
   width: 270px;
-  max-height: 240px;
+  height: 240px;
 }
 
 /* Slight shadow around image */
