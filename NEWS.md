@@ -11,6 +11,7 @@
 * Many bugs fixed, including displaying 270x240 in input fields when an image could not be displayed
 * Compress SVG graphics
 * Refactor, simplify, improve, and lint much of the code base
+* Add meta viewport tag to "Head & Body" and "Full HTML Skeleton" snippets
 
 ## 1.2.2 ##
 ### 8 August, 2014 ##
