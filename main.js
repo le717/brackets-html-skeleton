@@ -29,11 +29,12 @@ define(function (require, exports, module) {
       SvgSize            = require("src/SvgSize"),
       Strings            = require("strings"),
       skeletonLogo       = require.toUrl("img/HTML-Skeleton.svg"),
-      skeletonDialogHtml = require("text!htmlContent/mainDialog.html"),
-      toolbarButtonCode  = "<a href='#' title='{{DIALOG_TITLE}}' id='html-skeleton-toolbar'>";
+      skeletonDialogHTML = require("text!htmlContent/mainDialog.html"),
+      toolbarButtonHTML  = require("text!htmlContent/toolbarButton.html");
 
   var indentUnits     = "",
-      localizedDialog = Mustache.render(skeletonDialogHtml, Strings);
+      localizedDialog = Mustache.render(skeletonDialogHTML, Strings),
+      localizedButton = Mustache.render(toolbarButtonHTML, Strings);
 
   var skeletonBones = [
       // Only the head and body tags + title and meta
@@ -106,7 +107,7 @@ define(function (require, exports, module) {
    * Insert the selected elements into the document
    * @param elements The elements to be inserted into the document
    */
-  function _insertAllTheCodes(elements) {
+  function _insertSelectedElements(elements) {
     // Get the document in the full editor
     var editor = EditorManager.getCurrentFullEditor();
 
@@ -180,8 +181,8 @@ define(function (require, exports, module) {
       finalElements.push(imageCodeFill);
     }
 
-    // Finally, run process to add the selected elements
-    _insertAllTheCodes(finalElements);
+    // Finally, add the selected elements to the document
+    _insertSelectedElements(finalElements);
   }
 
 
@@ -347,7 +348,7 @@ define(function (require, exports, module) {
    * @private
    * Display HTML Skeleton dialog box
    */
-  function _handleSkeletonButton() {
+  function _displaySkeletonDialog() {
     var skeletonDialog = Dialogs.showModalDialogUsingTemplate(localizedDialog),
         $dialog        = skeletonDialog.getElement(),
         $doneButton    = $(".dialog-button[data-button-id='ok']", $dialog);
@@ -380,12 +381,12 @@ define(function (require, exports, module) {
     ExtensionUtils.loadStyleSheet(module, "css/style.css");
 
     // Create a menu item in the Edit menu
-    CommandManager.register(Strings.INSERT_HTML_ELEMENTS, EXTENSION_ID, _handleSkeletonButton);
+    CommandManager.register(Strings.INSERT_HTML_ELEMENTS, EXTENSION_ID, _displaySkeletonDialog);
     var menu = Menus.getMenu(Menus.AppMenuBar.EDIT_MENU);
     menu.addMenuItem(EXTENSION_ID);
 
     // Create toolbar icon
-    $(Mustache.render(toolbarButtonCode, Strings)).appendTo("#main-toolbar > .buttons")
-                                                  .on("click", _handleSkeletonButton);
+    $(localizedButton).appendTo("#main-toolbar > .buttons")
+                      .on("click", _displaySkeletonDialog);
   });
 });

@@ -2,7 +2,7 @@
 
 ## 1.3.0 ##
 ### ?? September, 2014 ###
-* Added Splitview compatibility
+* Added Split View compatibility
 * **_HTML Skeleton_ now requires Brackets 0.44 or newer**
 * Properly detect image path relative to document ([#14](https://github.com/le717/brackets-html-skeleton/issues/14))
 * Add image shadow for Brackets dark theme
@@ -12,6 +12,7 @@
 * Compress SVG graphics
 * Refactor, simplify, improve, and lint much of the code base
 * Add meta viewport tag to "Head & Body" and "Full HTML Skeleton" snippets
+* Move toolbar button HTML into separate file
 
 ## 1.2.2 ##
 ### 8 August, 2014 ##
