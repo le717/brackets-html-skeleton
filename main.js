@@ -199,7 +199,7 @@ define(function (require, exports, module) {
         imgFileName = FileUtils.getBaseName(imageDir);
 
     // If this is a saved documentand image and document are in the same folder
-    if (!/_brackets_/.test(curFileDir) && (curFileDir.toLowerCase() === imageDir.replace(imgFileName, "").toLowerCase())) {
+    if (!/^_brackets_/.test(curFileDir) && (curFileDir.toLowerCase() === imageDir.replace(imgFileName, "").toLowerCase())) {
       // Use only the image file name
       imageDir = imgFileName;
     }

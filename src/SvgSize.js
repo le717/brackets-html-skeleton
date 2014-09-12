@@ -67,9 +67,15 @@ define(function (require, exports, module) {
 
       // Check the validity of the extracted values,
       // preferring width/height attributes, then viewBox values
-      var svgSize = _checkIfValid(attrWidth, attrHeight) ? [attrWidth, attrHeight] :
-          _checkIfValid(viewBoxWidth, viewBoxHeight) ? [viewBoxWidth, viewBoxHeight] :
-              _checkIfValid(backgroundWidth, backgroundHeight) ? [backgroundWidth, backgroundHeight] : [NaN, NaN];
+      var svgSize = [NaN, NaN];
+
+      if (_checkIfValid(attrWidth, attrHeight)){
+        svgSize = [attrWidth, attrHeight];
+      } else if (_checkIfValid(viewBoxWidth, viewBoxHeight)) {
+        svgSize = [viewBoxWidth, viewBoxHeight];
+      } else if (_checkIfValid(backgroundWidth, backgroundHeight)) {
+        svgSize = [backgroundWidth, backgroundHeight];
+      }
 
       // Remove container from DOM, resolve the promise
       $svgContainer.remove();
