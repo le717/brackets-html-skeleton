@@ -69,7 +69,7 @@ define(function (require, exports, module) {
       // preferring width/height attributes, then viewBox values
       var svgSize = [NaN, NaN];
 
-      if (_checkIfValid(attrWidth, attrHeight)){
+      if (_checkIfValid(attrWidth, attrHeight)) {
         svgSize = [attrWidth, attrHeight];
       } else if (_checkIfValid(viewBoxWidth, viewBoxHeight)) {
         svgSize = [viewBoxWidth, viewBoxHeight];

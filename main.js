@@ -90,7 +90,7 @@ define(function (require, exports, module) {
 
   // Get user's indentation settings
   PreferencesManager.on("change", function (e, data) {
-    data.ids.forEach(function (value, index) {
+    data.ids.forEach(function (value) {
       // A relevant preference was changed, update our settings
       if (value === "useTabChar" || value === "tabSize" || value === "spaceUnits") {
         // Do NOT attempt to assign `indentUnits` directly to the function.
@@ -114,7 +114,7 @@ define(function (require, exports, module) {
     if (editor) {
       // Get the elements from the list in reverse so everything is added in the proper order
       var cursor = editor.getCursorPos();
-      elements.reverse().forEach(function (value, index) {
+      elements.reverse().forEach(function (value) {
         editor.document.batchOperation(function () {
           // Do a regex search for the `indent-size` keyword
           // and replace it with the user's indent settings

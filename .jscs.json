@@ -1,0 +1,51 @@
+{
+  "maximumLineLength": {
+    "value": 125,
+    "allowComments": true,
+    "allowRegex": true
+},
+  "requireSpaceBeforeBlockStatements": true,
+  "requireParenthesesAroundIIFE": true,
+  "requireBlocksOnNewline": true,
+  "requireSpaceAfterLineComment": true,
+  "requireLineFeedAtFileEnd": true,
+  "disallowTrailingWhitespace": true,
+  "requireSpaceAfterBinaryOperators": true,
+  "requireCurlyBraces": [
+    "if",
+    "else",
+    "for",
+    "while",
+    "do",
+    "case",
+    "default"
+  ],
+
+  "requireSpaceAfterKeywords": [
+    "do",
+    "for",
+    "if",
+    "else",
+    "switch",
+    "case",
+    "try",
+    "catch",
+    "void",
+    "while",
+    "with",
+    "return",
+    "typeof",
+    "function"
+  ],
+
+  "requireSpacesInConditionalExpression": {
+    "afterTest": true,
+    "beforeConsequent": true,
+    "afterConsequent": true,
+    "beforeAlternate": true
+  },
+
+  "requireSpacesInFunction": {
+    "beforeOpeningCurlyBrace": true
+  }
+}
