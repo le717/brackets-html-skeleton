@@ -42,6 +42,7 @@ define(function (require, exports, module) {
     inStyle  : "<style></style>",
     inScript : "<script></script>",
     extStyle : "<link rel='stylesheet' href=''>",
+    viewport : "<meta name='viewport' content='width=device-width, initial-scale=1.0'>",
     extScript: "<script src=''></script>",
 
     headBody : "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='UTF-8'>\n" +
@@ -106,7 +107,7 @@ define(function (require, exports, module) {
     var $imgWidthInput   = $(".html-skeleton-form .img-width"),
         $imgHeightInput  = $(".html-skeleton-form .img-height"),
         selections       = [],
-        optionIDs        = ["#head-body", "#ext-style", "#in-style",
+        optionIDs        = ["#head-body", "#viewport", "#ext-style", "#in-style",
                             "#ext-script", "#in-script", "#full-skeleton"
                            ];
 
