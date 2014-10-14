@@ -37,30 +37,21 @@ define(function (require, exports, module) {
       localizedDialog = Mustache.render(skeletonDialogHTML, Strings),
       localizedButton = Mustache.render(toolbarButtonHTML, Strings);
 
-  var skeletonBones = [
-      // Only the head and body tags + title and meta
-      "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='UTF-8'>\n" +
+  var skeletonBones = {
+    image   : "<img src='src-url' alt='' width='size-x' height='size-y'>",
+    script  : "<script src=''></script>",
+    inStyle : "<style></style>",
+    extStyle: "<link rel='stylesheet' href=''>",
+
+    headBody: "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='UTF-8'>\n" +
         "indent-size<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n" +
         "indent-size<title></title>\n</head>\n\n<body>\nindent-size\n</body>\n</html>\n",
 
-      // External stylesheet
-      "<link rel='stylesheet' href=''>",
-
-      // Inline stylesheet
-      "<style></style>",
-
-      // External (and edited to be inline) script
-      "<script src=''></script>",
-
-      // Full HTML skeleton
-      "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='UTF-8'>\n" +
+    fullSkel: "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='UTF-8'>\n" +
         "indent-size<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n" +
         "indent-size<title></title>\nindent-size<link rel='stylesheet' href=''>\n" +
         "</head>\n\n<body>\nindent-size<script src=''></script>\n</body>\n</html>\n"
-    ];
-
-  // Image
-  var imageCode = "<img src='src-url' alt='' width='size-x' height='size-y'>";
+  };
 
 
   // Get user's indentation settings
@@ -87,6 +78,8 @@ define(function (require, exports, module) {
     if (editor) {
       // Get the elements from the list in reverse so everything is added in the proper order
       var cursor = editor.getCursorPos();
+      console.error(elements);
+
       elements.reverse().forEach(function (value) {
         editor.document.batchOperation(function () {
           // Do a regex search for the `indent-size` keyword
@@ -100,6 +93,7 @@ define(function (require, exports, module) {
         });
       });
     }
+    return;
   }
 
 
@@ -110,52 +104,56 @@ define(function (require, exports, module) {
   function _getSelectedElements() {
     var $imgWidthInput   = $(".html-skeleton-form .img-width"),
         $imgHeightInput  = $(".html-skeleton-form .img-height"),
-        finalElements    = [],
+        elements         = [],
         optionIDs        = [
-          "#head-body", "#extern-style-tag", "#inline-style-tag",
-          "#extern-script-tag", "#inline-script-tag", "#full-skeleton"
+          "#head-body", "#ext-style", "#in-style",
+          "#ext-script", "#in-script", "#full-skeleton"
       ];
 
-    // For each option that is checked, add the corresponding element
-    // to `finalElements` for addition in document
-    optionIDs.forEach(function (value, index) {
+    // For each option that is checked, keep track of the corresponding element
+    optionIDs.forEach(function (value) {
       if ($(".html-skeleton " + value).prop("checked")) {
 
+        console.error($(".html-skeleton " + value).val());
+
         // The inline script box was checked, reuse external script string
-        if (index === 4) {
-          finalElements.push(skeletonBones[index - 1].replace(/\ssrc="">/, ">"));
-
-          // Because of the script element editing above, redirect the
-          // Full HTML Skeleton option to the proper index
-        } else if (index === 5) {
-          finalElements.push(skeletonBones[index - 1]);
-
-        } else {
-          // It was another element that does not require editing/redirecting
-          finalElements.push(skeletonBones[index]);
-        }
+//        alert("HI " + $(".html-skeleton-form" + value).val());
+//        if ($(".html-skeleton " + value).val() === "in-script") {
+//          console.error("in-script");
+//          elements.push(skeletonBones.script.replace(/\ssrc="">/, ">"));
+//        } else {
+        elements.push(skeletonBones[$(".html-skeleton " + value).val()]);
+//        }
       }
     });
 
-    // The picture/image box was checked
-    if ($(".html-skeleton #img-tag").prop("checked")) {
-      var $inputWidth  = $imgWidthInput.val(),
-          $inputHeight = $imgHeightInput.val();
+    // NOTE THIS ALL WORKS
+//    // The picture/image box was checked
+//    if ($(".html-skeleton #img").prop("checked")) {
+//      var $inputWidth  = $imgWidthInput.val(),
+//          $inputHeight = $imgHeightInput.val();
+//
+//      // Get the width/height values from the input fields
+//      var imgWidth  = $inputWidth  !== "" ? $inputWidth : 0,
+//          imgHeight = $inputHeight !== "" ? $inputHeight : 0;
+//
+//      // Mark the image tag for addition in document,
+//      // replacing the placeholder values with actual ones
+//      var imgFilledIn = skeletonBones.image.replace(/src-url/, $(".html-skeleton-img .img-src").text());
+//      imgFilledIn     = imgFilledIn.replace(/size-x/, imgWidth);
+//      imgFilledIn     = imgFilledIn.replace(/size-y/, imgHeight);
+//      elements.push(imgFilledIn);
+//    }
 
-      // Get the width/height values from the input fields
-      var imgWidth  = $inputWidth  !== "" ? $inputWidth : 0,
-          imgHeight = $inputHeight !== "" ? $inputHeight : 0;
+//    // Drop out if nothing was added
+//    if (elements.length === 0) {
+//      return false;
+//    }
 
-      // Mark the image tag for addition in document,
-      // replacing the placeholder values with actual ones
-      var imageCodeFill = imageCode.replace(/src-url/, $(".html-skeleton-img .img-src").text());
-      imageCodeFill     = imageCodeFill.replace(/size-x/, imgWidth);
-      imageCodeFill     = imageCodeFill.replace(/size-y/, imgHeight);
-      finalElements.push(imageCodeFill);
-    }
-
-    // Finally, add the selected elements to the document
-    _insertSelectedElements(finalElements);
+   // Finally, add the selected elements to the document
+//    if (elements.length !== 0) {
+      _insertSelectedElements(elements);
+//    }
   }
 
 
@@ -226,7 +224,7 @@ define(function (require, exports, module) {
     var shortImagePath  = "",
         isSvgImage      = false,
         isSupported     = false,
-        $imgCheckBox    = $(".html-skeleton #img-tag"),
+        $imgCheckBox    = $(".html-skeleton-form #img"),
         $imgPreview     = $(".html-skeleton-img .image-preview"),
         $imgErrorText   = $(".html-skeleton-img .img-error-text"),
         $imgPathDisplay = $(".html-skeleton-img .img-src");
