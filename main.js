@@ -38,16 +38,17 @@ define(function (require, exports, module) {
       localizedButton = Mustache.render(toolbarButtonHTML, Strings);
 
   var skeletonBones = {
-    image   : "<img src='src-url' alt='' width='size-x' height='size-y'>",
-    script  : "<script src=''></script>",
-    inStyle : "<style></style>",
-    extStyle: "<link rel='stylesheet' href=''>",
+    image    : "<img src='src-url' alt='' width='size-x' height='size-y'>",
+    inStyle  : "<style></style>",
+    inScript : "<script></script>",
+    extStyle : "<link rel='stylesheet' href=''>",
+    extScript: "<script src=''></script>",
 
-    headBody: "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='UTF-8'>\n" +
+    headBody : "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='UTF-8'>\n" +
         "indent-size<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n" +
         "indent-size<title></title>\n</head>\n\n<body>\nindent-size\n</body>\n</html>\n",
 
-    fullSkel: "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='UTF-8'>\n" +
+    fullSkel : "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='UTF-8'>\n" +
         "indent-size<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n" +
         "indent-size<title></title>\nindent-size<link rel='stylesheet' href=''>\n" +
         "</head>\n\n<body>\nindent-size<script src=''></script>\n</body>\n</html>\n"
@@ -99,61 +100,45 @@ define(function (require, exports, module) {
 
   /**
    * @private
-   * Get element choices
+   * Get skeleton choices.
    */
   function _getSelectedElements() {
     var $imgWidthInput   = $(".html-skeleton-form .img-width"),
         $imgHeightInput  = $(".html-skeleton-form .img-height"),
-        elements         = [],
+        selections       = [],
         optionIDs        = [
           "#head-body", "#ext-style", "#in-style",
           "#ext-script", "#in-script", "#full-skeleton"
       ];
 
     // For each option that is checked, keep track of the corresponding element
-    optionIDs.forEach(function (value) {
-      if ($(".html-skeleton " + value).prop("checked")) {
-
-        console.error($(".html-skeleton " + value).val());
-
-        // The inline script box was checked, reuse external script string
-//        alert("HI " + $(".html-skeleton-form" + value).val());
-//        if ($(".html-skeleton " + value).val() === "in-script") {
-//          console.error("in-script");
-//          elements.push(skeletonBones.script.replace(/\ssrc="">/, ">"));
-//        } else {
-        elements.push(skeletonBones[$(".html-skeleton " + value).val()]);
-//        }
+    optionIDs.forEach(function (value, index) {
+//      console.log($(".html-skeleton-form " + value).val());
+      if ($(".html-skeleton-form " + value).prop("checked")) {
+        selections.push(skeletonBones[$(".html-skeleton-form " + value).val()]);
       }
     });
 
-    // NOTE THIS ALL WORKS
-//    // The picture/image box was checked
-//    if ($(".html-skeleton #img").prop("checked")) {
-//      var $inputWidth  = $imgWidthInput.val(),
-//          $inputHeight = $imgHeightInput.val();
-//
-//      // Get the width/height values from the input fields
-//      var imgWidth  = $inputWidth  !== "" ? $inputWidth : 0,
-//          imgHeight = $inputHeight !== "" ? $inputHeight : 0;
-//
-//      // Mark the image tag for addition in document,
-//      // replacing the placeholder values with actual ones
-//      var imgFilledIn = skeletonBones.image.replace(/src-url/, $(".html-skeleton-img .img-src").text());
-//      imgFilledIn     = imgFilledIn.replace(/size-x/, imgWidth);
-//      imgFilledIn     = imgFilledIn.replace(/size-y/, imgHeight);
-//      elements.push(imgFilledIn);
-//    }
+    // The picture/image box was checked
+    if ($(".html-skeleton-form #img").prop("checked")) {
+      var $inputWidth  = $imgWidthInput.val(),
+          $inputHeight = $imgHeightInput.val();
 
-//    // Drop out if nothing was added
-//    if (elements.length === 0) {
-//      return false;
-//    }
+      // Get the width/height values from the input fields
+      var imgWidth  = $inputWidth  !== "" ? $inputWidth : 0,
+          imgHeight = $inputHeight !== "" ? $inputHeight : 0;
 
-   // Finally, add the selected elements to the document
-//    if (elements.length !== 0) {
-      _insertSelectedElements(elements);
-//    }
+      // Mark the image tag for addition in document,
+      // replacing the placeholder values with actual ones
+      var imgFilledIn = skeletonBones.image;
+      imgFilledIn     = imgFilledIn.replace(/src-url/, $(".html-skeleton-img .img-src").text());
+      imgFilledIn     = imgFilledIn.replace(/size-x/, imgWidth);
+      imgFilledIn     = imgFilledIn.replace(/size-y/, imgHeight);
+      selections.push(imgFilledIn);
+    }
+
+    // Finally, add the selected elements to the document
+    _insertSelectedElements(selections);
   }
 
 
