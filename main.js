@@ -106,14 +106,12 @@ define(function (require, exports, module) {
     var $imgWidthInput   = $(".html-skeleton-form .img-width"),
         $imgHeightInput  = $(".html-skeleton-form .img-height"),
         selections       = [],
-        optionIDs        = [
-          "#head-body", "#ext-style", "#in-style",
-          "#ext-script", "#in-script", "#full-skeleton"
-      ];
+        optionIDs        = ["#head-body", "#ext-style", "#in-style",
+                            "#ext-script", "#in-script", "#full-skeleton"
+                           ];
 
     // For each option that is checked, keep track of the corresponding element
-    optionIDs.forEach(function (value, index) {
-//      console.log($(".html-skeleton-form " + value).val());
+    optionIDs.forEach(function (value) {
       if ($(".html-skeleton-form " + value).prop("checked")) {
         selections.push(skeletonBones[$(".html-skeleton-form " + value).val()]);
       }
