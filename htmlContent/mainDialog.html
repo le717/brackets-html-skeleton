@@ -23,30 +23,30 @@
 
       <h3>{{ELEMENTS}}</h3>
       <form class="html-skeleton-form">
-        <input type="checkbox" id="head-body" />
+        <input type="checkbox" id="head-body" value="headBody" />
         <label for="head-body">{{HEAD_AND_BODY}}<br></label>
 
-        <input type="checkbox" id="extern-style-tag" />
-        <label for="extern-style-tag">{{EXTERNAL_STYLESHEET}}<br></label>
+        <input type="checkbox" id="ext-style" value="extStyle" />
+        <label for="ext-style">{{EXTERNAL_STYLESHEET}}<br></label>
 
-        <input type="checkbox" id="inline-style-tag" />
-        <label for="inline-style-tag">{{INLINE_STYLESHEET}}<br></label>
+        <input type="checkbox" id="in-style" value="inStyle" />
+        <label for="in-style">{{INLINE_STYLESHEET}}<br></label>
 
-        <input type="checkbox" id="extern-script-tag" />
-        <label for="extern-script-tag">{{EXTERNAL_SCRIPT}}<br></label>
+        <input type="checkbox" id="ext-script" value="script" />
+        <label for="ext-script">{{EXTERNAL_SCRIPT}}<br></label>
 
-        <input type="checkbox" id="inline-script-tag" />
-        <label for="inline-script-tag">{{INLINE_SCRIPT}}<br></label>
+        <input type="checkbox" id="in-script" value="in-script" />
+        <label for="in-script">{{INLINE_SCRIPT}}<br></label>
 
-        <input type="checkbox" id="img-tag" />
-        <label for="img-tag">{{PICTURE_IMAGE}}<br></label>
+        <input type="checkbox" id="img" value="image" />
+        <label for="img">{{PICTURE_IMAGE}}<br></label>
 
         <input class="img-width" type="number" min="0" placeholder="{{WIDTH}}" />
         <span class="letter-x"> x </span>
         <input class="img-height" type="number" min="0" placeholder="{{HEIGHT}}" />
         <a class="dialog-button btn" data-button-id="browse" href="#">{{BTN_BROWSE}}</a><br>
-        <input id="full-skeleton" type="checkbox" />
 
+        <input id="full-skeleton" type="checkbox" value="fullSkel" />
         <label for="full-skeleton">{{FULL_SKELETON}}<br>
           <span id="full-skeleton-description">{{FULL_SKELETON_DESCRIPTION}}</span>
         </label>
