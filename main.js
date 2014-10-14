@@ -26,8 +26,9 @@ define(function (require, exports, module) {
       PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
       ProjectManager     = brackets.getModule("project/ProjectManager"),
       ImageFiles         = LanguageManager.getLanguage("image")._fileExtensions.concat("svg"),
-      SvgSize            = require("src/SvgSize"),
       Strings            = require("strings"),
+      SvgSize            = require("src/SvgSize"),
+      IndentSize         = require("src/IndentSize"),
       skeletonLogo       = require.toUrl("img/HTML-Skeleton.svg"),
       skeletonDialogHTML = require("text!htmlContent/mainDialog.html"),
       toolbarButtonHTML  = require("text!htmlContent/toolbarButton.html");
@@ -62,43 +63,15 @@ define(function (require, exports, module) {
   var imageCode = "<img src='src-url' alt='' width='size-x' height='size-y'>";
 
 
-  /**
-   * @private
-   * Polyfill from http://stackoverflow.com/a/4550005
-   * @param str Text to be repeated.
-   * @param num Number of times text should be repeated.
-   * @return {string} repeated the number of times stated.
-   */
-  function _repeatString(str, num) {
-    return (new Array(num + 1)).join(str);
-  }
-
-
-  /**
-   * @private
-   * Get the current indentation settings for use in inserted code
-   * @return {string} User's current indentation settings
-   */
-  function _getIndentSize() {
-    // Check the current project's preference on tabs and
-    // update the indentation settings for either tabs for spaces
-    return (PreferencesManager.get("useTabChar", PreferencesManager.CURRENT_PROJECT) ?
-            _repeatString("\u0009", PreferencesManager.get("tabSize")) :
-            _repeatString("\u0020", PreferencesManager.get("spaceUnits")));
-  }
-
-
   // Get user's indentation settings
-  PreferencesManager.on("change", function (e, data) {
-    data.ids.forEach(function (value) {
-      // A relevant preference was changed, update our settings
-      if (value === "useTabChar" || value === "tabSize" || value === "spaceUnits") {
-        // Do NOT attempt to assign `indentUnits` directly to the function.
-        // It will completely break otherwise.
-        var tempVar  = _getIndentSize();
-        indentUnits  = tempVar;
-      }
-    });
+  // If the user ever changes their preferences,
+  // we need to make sure we stay up-to-date
+  PreferencesManager.on("change", function () {
+
+    // Do NOT attempt to assign `indentUnits` directly to the function.
+    // It will completely break otherwise
+    var tempVar  = IndentSize.getIndentation();
+    indentUnits  = tempVar;
   });
 
 
@@ -344,10 +317,9 @@ define(function (require, exports, module) {
 
 
   /**
-   * @private
    * Display HTML Skeleton dialog box
    */
-  function _displaySkeletonDialog() {
+  function displaySkeletonDialog() {
     var skeletonDialog = Dialogs.showModalDialogUsingTemplate(localizedDialog),
         $dialog        = skeletonDialog.getElement(),
         $doneButton    = $(".dialog-button[data-button-id='ok']", $dialog);
@@ -379,13 +351,16 @@ define(function (require, exports, module) {
     var EXTENSION_ID = "le717.html-skeleton";
     ExtensionUtils.loadStyleSheet(module, "css/style.css");
 
+    // Get the user's indentation settings
+    indentUnits = IndentSize.getIndentation();
+
     // Create a menu item in the Edit menu
-    CommandManager.register(Strings.INSERT_HTML_ELEMENTS, EXTENSION_ID, _displaySkeletonDialog);
+    CommandManager.register(Strings.INSERT_HTML_ELEMENTS, EXTENSION_ID, displaySkeletonDialog);
     var menu = Menus.getMenu(Menus.AppMenuBar.EDIT_MENU);
     menu.addMenuItem(EXTENSION_ID);
 
     // Create toolbar icon
     $(localizedButton).appendTo("#main-toolbar > .buttons")
-                      .on("click", _displaySkeletonDialog);
+                      .on("click", displaySkeletonDialog);
   });
 });
