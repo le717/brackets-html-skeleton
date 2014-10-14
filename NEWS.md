@@ -1,8 +1,13 @@
 # Changes #
 
+## 1.3.5 ##
+## ?? October, 2014 ###
+* Split indentation-related code into seperate module
+* Internally store skeleton snippets in an object
+
 ## 1.3.0 ##
 ### 12 September, 2014 ###
-* Added Split View compatibility
+* Add Split View compatibility
 * **_HTML Skeleton_ now requires Brackets 0.44 or newer**
 * Properly detect image path relative to document ([#14](https://github.com/le717/brackets-html-skeleton/issues/14))
 * Add image shadow for Brackets dark theme
