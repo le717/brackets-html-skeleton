@@ -1,16 +1,12 @@
 {
-  "maximumLineLength": {
-    "value": 125,
-    "allowComments": true,
-    "allowRegex": true
-},
-  "requireSpaceBeforeBlockStatements": true,
-  "requireParenthesesAroundIIFE": true,
   "requireBlocksOnNewline": true,
-  "requireSpaceAfterLineComment": true,
   "requireLineFeedAtFileEnd": true,
   "disallowTrailingWhitespace": true,
+  "requireParenthesesAroundIIFE": true,
+  "requireSpaceAfterLineComment": true,
   "requireSpaceAfterBinaryOperators": true,
+  "requireSpaceBeforeBlockStatements": true,
+
   "requireCurlyBraces": [
     "if",
     "else",
@@ -47,5 +43,11 @@
 
   "requireSpacesInFunction": {
     "beforeOpeningCurlyBrace": true
+  },
+
+  "maximumLineLength": {
+    "value": 125,
+    "allowComments":  true,
+    "allowRegex": true
   }
 }
