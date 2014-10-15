@@ -3,10 +3,10 @@
   "maxlen"     : 125,
   "jquery"     : true,
   "node"       : true,
-  "quotmark"   : "double",
   "strict"     : true,
   "undef"      : true,
   "unused"     : true,
+  "quotmark"   : "double",
   "globals": {
     "define"   : true,
     "Mustache" : true,

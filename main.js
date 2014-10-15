@@ -80,7 +80,6 @@ define(function (require, exports, module) {
     if (editor) {
       // Get the elements from the list in reverse so everything is added in the proper order
       var cursor = editor.getCursorPos();
-      console.error(elements);
 
       elements.reverse().forEach(function (value) {
         editor.document.batchOperation(function () {
