@@ -1,9 +1,12 @@
 # Changes #
 
-## 1.3.5 ##
+## 1.3.3 ##
 ## ?? October, 2014 ###
 * Split indentation-related code into seperate module
 * Internally store skeleton snippets in an object
+* Add viewport `<meta>` tag option
+* Enlarge dialog height by `20px`
+* Prevent horizontal scrollbar
 
 ## 1.3.0 ##
 ### 12 September, 2014 ###

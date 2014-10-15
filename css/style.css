@@ -11,9 +11,13 @@
 /* Toolbar icon */
 #html-skeleton-toolbar { background-image: url("../img/toolbar.svg"); }
 
-/* Prevent the dialog from having a horizontal scrollbar */
-.modal-body.html-skeleton { overflow-x: hidden; }
+/* Prevent scrollbars, slightly enlarge dialog */
+.modal-body.html-skeleton {
+  overflow: hidden;
+  max-height: 420px;
+}
 
+/* Move the information text up */
 .modal-body.html-skeleton .dialog-message { margin-top: -7px; }
 
 /* Position image container */
