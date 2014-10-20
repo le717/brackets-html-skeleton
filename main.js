@@ -1,5 +1,5 @@
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 2, maxerr: 50 */
-/*global define, brackets, Mustache, $ */
+/*global define, brackets, Mustache */
 
 /*
  * HTML Skeleton
@@ -30,8 +30,8 @@ define(function (require, exports, module) {
       SvgSize            = require("src/SvgSize"),
       IndentSize         = require("src/IndentSize"),
       skeletonLogo       = require.toUrl("img/HTML-Skeleton.svg"),
-      skeletonDialogHTML = require("text!htmlContent/mainDialog.html"),
-      toolbarButtonHTML  = require("text!htmlContent/toolbarButton.html");
+      toolbarButtonHTML  = require("text!htmlContent/toolbarButton.html"),
+      skeletonDialogHTML = require("text!htmlContent/mainDialog.html");
 
   var indentUnits     = "",
       localizedDialog = Mustache.render(skeletonDialogHTML, Strings),
@@ -63,8 +63,8 @@ define(function (require, exports, module) {
 
     // Do NOT attempt to assign `indentUnits` directly to the function.
     // It will completely break otherwise
-    var tempVar  = IndentSize.getIndentation();
-    indentUnits  = tempVar;
+    var tempVar = IndentSize.getIndentation();
+    indentUnits = tempVar;
   });
 
 
@@ -103,33 +103,33 @@ define(function (require, exports, module) {
    * Get skeleton choices.
    */
   function _getSelectedElements() {
-    var $imgWidthInput   = $(".html-skeleton-form .img-width"),
-        $imgHeightInput  = $(".html-skeleton-form .img-height"),
-        selections       = [],
-        optionIDs        = ["#head-body", "#viewport", "#ext-style", "#in-style",
-                            "#ext-script", "#in-script", "#full-skeleton"
-                           ];
+    var imgWidthInput  = document.querySelector(".html-skeleton-form .img-width"),
+        imgHeightInput = document.querySelector(".html-skeleton-form .img-height"),
+        selections     = [],
+        optionIDs      = ["#head-body", "#viewport", "#ext-style", "#in-style",
+                          "#ext-script", "#in-script", "#full-skeleton"
+                         ];
 
     // For each option that is checked, keep track of the corresponding element
     optionIDs.forEach(function (value) {
-      if ($(".html-skeleton-form " + value).prop("checked")) {
-        selections.push(skeletonBones[$(".html-skeleton-form " + value).val()]);
+      if (document.querySelector(".html-skeleton-form " + value).checked) {
+        selections.push(skeletonBones[document.querySelector(".html-skeleton-form " + value).value]);
       }
     });
 
     // The picture/image box was checked
-    if ($(".html-skeleton-form #img").prop("checked")) {
-      var $inputWidth  = $imgWidthInput.val(),
-          $inputHeight = $imgHeightInput.val();
+    if (document.querySelector(".html-skeleton-form #img").checked) {
 
       // Get the width/height values from the input fields
-      var imgWidth  = $inputWidth  !== "" ? $inputWidth : 0,
-          imgHeight = $inputHeight !== "" ? $inputHeight : 0;
+      var imgWidth  = imgWidthInput.value,
+          imgHeight = imgHeightInput.value;
+      imgWidth  = imgWidth  !== "" ? imgWidth : 0;
+      imgHeight = imgHeight !== "" ? imgHeight : 0;
 
       // Mark the image tag for addition in document,
       // replacing the placeholder values with actual ones
       var imgFilledIn = skeletonBones.image;
-      imgFilledIn     = imgFilledIn.replace(/src-url/, $(".html-skeleton-img .img-src").text());
+      imgFilledIn     = imgFilledIn.replace(/src-url/, document.querySelector(".html-skeleton-img .img-src").textContent);
       imgFilledIn     = imgFilledIn.replace(/size-x/, imgWidth);
       imgFilledIn     = imgFilledIn.replace(/size-y/, imgHeight);
       selections.push(imgFilledIn);
@@ -174,42 +174,41 @@ define(function (require, exports, module) {
    * @private
    * Check if the dark theme is enabled and return
    * the appropriate class name for a slight shadow
-   * on the image preview
+   * on the image preview.
    * @return {string} Appropriate shadow class name
    */
   function _getImageShadow() {
-    return $("body").hasClass("dark") ? "html-skeleton-img-shadow-dark" : "html-skeleton-img-shadow";
+    return document.querySelector("body").classList.contains("dark") ?
+      "html-skeleton-img-shadow-dark" : "html-skeleton-img-shadow";
   }
 
 
   /**
    * @private
-   * Update image width/height input fields
-   * @param imageWidth
-   * @param imageHeight
+   * Update image width/height input fields.
+   * @param imageWidth {string} The image width.
+   * @param imageHeight {string} The image height.
+   * @return {boolean} true.
    */
-  function _updateSizeInput(imageWidth, imageHeight) {
-    var $imgWidthInput  = $(".html-skeleton-form .img-width"),
-        $imgHeightInput = $(".html-skeleton-form .img-height");
-
-    $imgWidthInput.val(imageWidth);
-    $imgHeightInput.val(imageHeight);
-    return;
+  function _updateSizeInput(imgWidth, imgHeight) {
+    document.querySelector(".html-skeleton-form .img-width").value = imgWidth;
+    document.querySelector(".html-skeleton-form .img-height").value = imgHeight;
+    return true;
   }
 
 
   /**
    * @private
-   * Display the user selected image
-   * @param imagePath
+   * Display the user selected image.
+   * @param imagePath {string} Absolute path to image file.
    */
   function _displayImage(imagePath) {
     var shortImagePath  = "",
         isSvgImage      = false,
         isSupported     = false,
-        $imgCheckBox    = $(".html-skeleton-form #img"),
+        imgCheckBox     = document.querySelector(".html-skeleton-form #img"),
         $imgPreview     = $(".html-skeleton-img .image-preview"),
-        $imgErrorText   = $(".html-skeleton-img .img-error-text"),
+        imgErrorText   = document.querySelector(".html-skeleton-img .img-error-text"),
         $imgPathDisplay = $(".html-skeleton-img .img-src");
 
     // Check if the image is supported and if it is an SVG image
@@ -218,8 +217,8 @@ define(function (require, exports, module) {
 
     // The Image check box was not checked before now. Since the user has opened an image,
     // let's assume the user wants to use it and check the box for them.
-    if (!$imgCheckBox.prop("checked")) {
-      $imgCheckBox.prop("checked", true);
+    if (!imgCheckBox.checked) {
+      imgCheckBox.checked = true;
     }
 
     // Quickly remove the size constraints to get an accurate image size
@@ -238,7 +237,7 @@ define(function (require, exports, module) {
       $imgPreview.removeClass(_getImageShadow());
 
       $imgPathDisplay.html(shortImagePath);
-      $imgErrorText.html("<br>is not supported for previewing!");
+      imgErrorText.innerHTML = "<br>is not supported for previewing!";
       $imgPreview.attr("src", skeletonLogo);
 
       _updateSizeInput("", "");
@@ -248,7 +247,7 @@ define(function (require, exports, module) {
     } else if (isSupported || isSvgImage) {
 
        // Clear possible CSS applied from previewing an unsupported image
-      $imgErrorText.empty();
+      imgErrorText.innerHTML = "";
       $imgPathDisplay.css("color", "");
 
       // Position and add small shadow to container
@@ -264,9 +263,9 @@ define(function (require, exports, module) {
     // Get the image width and height
     $imgPreview.one("load", function () {
       if (isSupported && !isSvgImage) {
-        var imageWidth  = $imgPreview.prop("naturalWidth"),
-            imageHeight = $imgPreview.prop("naturalHeight");
-        _updateSizeInput(imageWidth, imageHeight);
+        var imgWidth  = $imgPreview.prop("naturalWidth"),
+            imgHeight = $imgPreview.prop("naturalHeight");
+        _updateSizeInput(imgWidth, imgHeight);
 
         // Special routine for SVG graphics only
       } else if (isSvgImage) {
@@ -307,11 +306,13 @@ define(function (require, exports, module) {
 
     // Display logo (and any user images) using Brackets' ImageViewer
     new ImageViewer.ImageView(FileSystem.getFileForPath(skeletonLogo), $(".html-skeleton-img"));
-    $(".html-skeleton-img .image-preview").addClass("html-skeleton-img-container");
+    document.querySelector(".html-skeleton-img .image-preview").classList.add("html-skeleton-img-container");
 
     // Hide image stats
-    $(".html-skeleton-img .image-tip").remove();
-    $(".html-skeleton-img .image-scale").remove();
+    var imageTip   = document.querySelector(".html-skeleton-img .image-tip"),
+        imageScale = document.querySelector(".html-skeleton-img .image-scale");
+    imageTip.parentNode.removeChild(imageTip);
+    imageScale.parentNode.removeChild(imageScale);
 
     // If the Browse button is clicked, proceed to open the browse dialog
     $(".dialog-button[data-button-id='browse']", $dialog).on("click", function (e) {

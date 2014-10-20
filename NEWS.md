@@ -7,6 +7,7 @@
 * Add viewport `<meta>` tag option
 * Enlarge dialog height by `20px`
 * Prevent horizontal scrollbar
+* Remove some usage of jQuery
 
 ## 1.3.0 ##
 ### 12 September, 2014 ###
