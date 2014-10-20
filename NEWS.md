@@ -1,6 +1,6 @@
 # Changes #
 
-## 1.3.3 ##
+## 1.3.4 ##
 ## 20 October, 2014 ###
 * Split indentation-related code into separate module
 * Internally store skeleton snippets in an object
