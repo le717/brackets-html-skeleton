@@ -1,8 +1,8 @@
 # Changes #
 
 ## 1.3.3 ##
-## ?? October, 2014 ###
-* Split indentation-related code into seperate module
+## 20 October, 2014 ###
+* Split indentation-related code into separate module
 * Internally store skeleton snippets in an object
 * Add viewport `<meta>` tag option
 * Enlarge dialog height by `20px`
