@@ -38,7 +38,7 @@ define(function (require, exports, module) {
       localizedButton = Mustache.render(toolbarButtonHTML, Strings);
 
   var skeletonBones = {
-    image    : "<img src='src-url' alt='' width='size-x' height='size-y'>",
+    image    : "<img alt='' width='size-x' height='size-y' src='src-url'>",
     inStyle  : "<style></style>",
     inScript : "<script></script>",
     extStyle : "<link rel='stylesheet' href=''>",
