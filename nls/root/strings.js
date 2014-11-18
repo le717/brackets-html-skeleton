@@ -37,7 +37,7 @@ define({
   "SELECT_ELEMENTS"              : "Select the elements you desire.",
   "CLICK_DONE"                   : "Click Done and the HTML elements will be added to your document!",
   "ELEMENTS"                     : "Elements",
-  "HEAD_AND_BODY"                : "Head and Body with <title> and <meta>",
+  "SMALL_SKELETON"               : "Head and Body with <title> and <meta>",
   "VIEWPORT"                     : "Viewport",
   "EXTERNAL_STYLESHEET"          : "External Stylesheet",
   "INLINE_STYLESHEET"            : "Inline Stylesheet",

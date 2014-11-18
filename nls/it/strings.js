@@ -37,7 +37,7 @@ define({
     "SELECT_ELEMENTS"              : "Selezionare gli elementi che desiderate.",
     "CLICK_DONE"                   : "Click su Fatto e l'elemento HTML sarà aggiunto al documento!",
     "ELEMENTS"                     : "Elementi",
-    "HEAD_AND_BODY"                : "Head e Body con <title> e <meta>",
+    "SMALL_SKELETON"               : "Head e Body con <title> e <meta>",
     "EXTERNAL_STYLESHEET"          : "Foglio di stile CSS esterno",
     "INLINE_STYLESHEET"            : "Foglio di stile CSS interno",
     "EXTERNAL_SCRIPT"              : "Script esterno",
