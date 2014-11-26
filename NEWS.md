@@ -1,7 +1,13 @@
 # Changes #
 
+## 1.3.5 ##
+### 26 November, 2014 ###
+* Change location of image `src` attribute
+* Removed outdated mention of Split View compatibility
+* Rename "Head and Body" selection
+
 ## 1.3.4 ##
-## 20 October, 2014 ###
+### 20 October, 2014 ###
 * Split indentation-related code into separate module
 * Internally store skeleton snippets in an object
 * Add viewport `<meta>` tag option
