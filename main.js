@@ -45,7 +45,7 @@ define(function (require, exports, module) {
     viewport : "<meta name='viewport' content='width=device-width, initial-scale=1.0'>",
     extScript: "<script src=''></script>",
 
-    headBody : "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='UTF-8'>\n" +
+    basiSkel : "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='UTF-8'>\n" +
         "indent-size<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n" +
         "indent-size<title></title>\n</head>\n\n<body>\nindent-size\n</body>\n</html>\n",
 
@@ -106,8 +106,8 @@ define(function (require, exports, module) {
     var imgWidthInput  = document.querySelector(".html-skeleton-form .img-width"),
         imgHeightInput = document.querySelector(".html-skeleton-form .img-height"),
         selections     = [],
-        optionIDs      = ["#head-body", "#viewport", "#ext-style", "#in-style",
-                          "#ext-script", "#in-script", "#full-skeleton"
+        optionIDs      = ["#basic-skeleton", "#viewport", "#ext-style",
+                          "#in-style", "#ext-script", "#in-script", "#full-skeleton"
                          ];
 
     // For each option that is checked, keep track of the corresponding element

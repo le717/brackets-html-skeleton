@@ -36,7 +36,7 @@ define({
     "SELECT_ELEMENTS"              : "Wählen Sie die benötigten Elemente aus.",
     "CLICK_DONE"                   : "Klicken Sie auf 'Fertig' und die HTML-Elemente werden in Ihr Dokument eingefügt.",
     "ELEMENTS"                     : "Elemente",
-    "SMALL_SKELETON"               : "Head- und Bodytag mit <title> und <meta>",
+    "BASIC_SKELETON"               : "Head- und Bodytag mit <title> und <meta>",
     "EXTERNAL_STYLESHEET"          : "externes Stylesheet",
     "INLINE_STYLESHEET"            : "Inline-Stylesheet",
     "EXTERNAL_SCRIPT"              : "externes Script",
