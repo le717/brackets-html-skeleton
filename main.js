@@ -1,5 +1,5 @@
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 2, maxerr: 50 */
-/*global define, brackets, Mustache */
+/*global define, brackets, Mustache, $ */
 
 /*
  * HTML Skeleton
@@ -25,6 +25,7 @@ define(function (require, exports, module) {
       Menus              = brackets.getModule("command/Menus"),
       PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
       ProjectManager     = brackets.getModule("project/ProjectManager"),
+
       ImageFiles         = LanguageManager.getLanguage("image")._fileExtensions.concat("svg"),
       Strings            = require("strings"),
       SvgSize            = require("src/SvgSize"),
@@ -284,10 +285,10 @@ define(function (require, exports, module) {
    */
   function _showFileDialog(e) {
     FileSystem.showOpenDialog(
-      false, false, Strings.FILE_DIALOG_TITLE,
-      null, ImageFiles, function (closedDialog, selectedFile) {
-        if (!closedDialog && selectedFile && selectedFile.length > 0) {
-          _displayImage(selectedFile[0]);
+      true, false, Strings.FILE_DIALOG_TITLE,
+      null, ImageFiles, function (cancel, selected) {
+        if (!cancel && selected && selected.length > 0) {
+          _displayImage(selected[0]);
         }
       }
     );
@@ -342,7 +343,6 @@ define(function (require, exports, module) {
     menu.addMenuItem(EXTENSION_ID);
 
     // Create toolbar icon
-    $(localizedButton).appendTo("#main-toolbar > .buttons")
-                      .on("click", displaySkeletonDialog);
+    $(localizedButton).appendTo("#main-toolbar > .buttons").on("click", displaySkeletonDialog);
   });
 });
