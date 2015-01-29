@@ -11,17 +11,17 @@
  */
 
 
- define(function (require, exports, module) {
+define(function (require, exports, module) {
   "use strict";
-   var PreferencesManager = brackets.getModule("preferences/PreferencesManager");
+  var PreferencesManager = brackets.getModule("preferences/PreferencesManager");
 
-   // Store the indentation values,
-   // initializing them as 2 space indentation
-   var indentation = {
-     char: "\u0020",
-     size: 2,
-     isTab: false
-   };
+  // Store the indentation values,
+  // initializing them as 2 space indentation
+  var indentation = {
+    char: "\u0020",
+    size: 2,
+    isTab: false
+  };
 
 
   /**
@@ -65,30 +65,29 @@
   }
 
 
-   /**
+  /**
     * Get the user's indentation level size depending on if they use spaces or tabs.
     * @return {string} Indentation level size.
     */
-   function getIndentSize() {
-     indentation.size = indentation.isTab ? PreferencesManager.get("tabSize") : PreferencesManager.get("spaceUnits");
-     return indentation.size;
-   }
+  function getIndentSize() {
+    indentation.size = indentation.isTab ? PreferencesManager.get("tabSize") : PreferencesManager.get("spaceUnits");
+    return indentation.size;
+  }
 
 
   // A relevant preference was changed, update our settings
   PreferencesManager.on("change", function (e, data) {
-    data.ids.forEach(function (value) {
-      if (value === "useTabChar") {
-        getIndentType();
-      } else if (value === "tabSize" || value === "spaceUnits") {
-        getIndentSize();
-      }
-    });
+    if (data.ids.indexOf("useTabChar") > -1) {
+      getIndentType();
+    }
+
+    if (data.ids.indexOf("tabSize") > -1 || data.ids.indexOf("spaceUnits") > -1) {
+      getIndentSize();
+    }
   });
 
 
-   exports.indentation     = indentation;
-   exports.getIndentType   = getIndentType;
-   exports.getIndentSize   = getIndentSize;
-   exports.getIndentation  = getIndentation;
- });
+  exports.getIndentType   = getIndentType;
+  exports.getIndentSize   = getIndentSize;
+  exports.getIndentation  = getIndentation;
+});
