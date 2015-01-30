@@ -198,35 +198,45 @@ define(function (require, exports, module) {
   }
 
 
+  function _processImage(image) {
+    var  QimgCheckBox = document.querySelector(".html-skeleton-form #img");
+
+    // The Image check box was not checked before now. Since the user has opened an image,
+    // let's assume the user wants to use it and check the box for them.
+    if (!QimgCheckBox.checked) {
+      QimgCheckBox.checked = true;
+    }
+
+    // If only one image was selected, display it
+    if (image.length === 1) {
+      _displayImage(image[0]);
+
+      // TODO Multiple images were selected
+    } else {
+
+    }
+  }
+
+
   /**
    * @private
    * Display the user selected image.
    * @param imagePath {string} Absolute path to image file.
    */
   function _displayImage(imagePath) {
-    var shortImagePath  = "",
-        isSvgImage      = false,
-        isSupported     = false,
-        imgCheckBox     = document.querySelector(".html-skeleton-form #img"),
-        $imgPreview     = $(".html-skeleton-img .image-preview"),
-        imgErrorText   = document.querySelector(".html-skeleton-img .img-error-text"),
-        $imgPathDisplay = $(".html-skeleton-img .img-src");
+    var shortPath    = _createImageURL(imagePath),
+        isSvgImage   = false,
+        isSupported  = false,
+        $imgPreview  = $(".html-skeleton-img .image-preview"),
+        QerrorText   = document.querySelector(".html-skeleton-img .img-error-text"),
+        QpathDisplay = document.querySelector(".html-skeleton-img .img-src");
 
     // Check if the image is supported and if it is an SVG image
     isSupported = LanguageManager.getLanguageForPath(imagePath).getId() === "image";
     isSvgImage  = FileUtils.getFileExtension(imagePath) === "svg" ? true : false;
 
-    // The Image check box was not checked before now. Since the user has opened an image,
-    // let's assume the user wants to use it and check the box for them.
-    if (!imgCheckBox.checked) {
-      imgCheckBox.checked = true;
-    }
-
     // Quickly remove the size constraints to get an accurate image size
     $imgPreview.removeClass("html-skeleton-img-container");
-
-    // Trim the file path for nice displaying
-    shortImagePath = _createImageURL(imagePath);
 
     // The image is an unsupported file type
     if (!isSupported && !isSvgImage) {
@@ -234,11 +244,11 @@ define(function (require, exports, module) {
       // Update display for image and display extension logo
       $(".html-skeleton-img").css("position", "relative");
       $imgPreview.addClass("html-skeleton-img-container");
-      $imgPathDisplay.css("color", "red");
+      QpathDisplay.style.color = "red";
       $imgPreview.removeClass(_getImageShadow());
 
-      $imgPathDisplay.html(shortImagePath);
-      imgErrorText.innerHTML = "<br>is not supported for previewing!";
+      QpathDisplay.innerHTML = shortPath;
+      QerrorText.innerHTML = "<br>is not supported for previewing!";
       $imgPreview.attr("src", skeletonLogo);
 
       _updateSizeInput("", "");
@@ -248,15 +258,15 @@ define(function (require, exports, module) {
     } else if (isSupported || isSvgImage) {
 
        // Clear possible CSS applied from previewing an unsupported image
-      imgErrorText.innerHTML = "";
-      $imgPathDisplay.css("color", "");
+      QerrorText.innerHTML = "";
+      QpathDisplay.style.color = "";
 
       // Position and add small shadow to container
       $(".html-skeleton-img").css("position", "relative");
       $imgPreview.addClass(_getImageShadow());
 
       // Show the file path and display the image
-      $imgPathDisplay.html(shortImagePath);
+      QpathDisplay.innerHTML = shortPath;
       $imgPreview.attr("src", imagePath);
       $imgPreview.addClass("html-skeleton-img-container");
     }
@@ -288,7 +298,7 @@ define(function (require, exports, module) {
       true, false, Strings.FILE_DIALOG_TITLE,
       null, ImageFiles, function (cancel, selected) {
         if (!cancel && selected && selected.length > 0) {
-          _displayImage(selected[0]);
+          _processImage(selected);
         }
       }
     );
