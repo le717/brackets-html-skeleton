@@ -105,12 +105,10 @@ define(function(require, exports, module) {
    * Get skeleton choices.
    */
   function _getSelectedElements() {
-    var imgWidthInput  = document.querySelector(".html-skeleton-form .img-width"),
-        imgHeightInput = document.querySelector(".html-skeleton-form .img-height"),
-        selections     = [],
-        optionIDs      = ["#basic-skeleton", "#viewport", "#ext-style",
-                          "#in-style", "#ext-script", "#in-script", "#full-skeleton"
-                         ];
+    var selections = [],
+        optionIDs  = ["#basic-skeleton", "#viewport", "#ext-style",
+                      "#in-style", "#ext-script", "#in-script", "#full-skeleton"
+                     ];
 
     // For each option that is checked, keep track of the corresponding element
     optionIDs.forEach(function(value) {
@@ -159,6 +157,7 @@ define(function(require, exports, module) {
     image = ProjectManager.makeProjectRelativeIfPossible(image);
 
     // If the path is longer than 50 characters, split it up for better displaying
+    // TODO Not required if image path will not be displayed
     if (image.length > 50) {
       image = image.substring(0, 51) + "<br>" + image.substring(51, image.length);
     }
