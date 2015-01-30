@@ -39,6 +39,7 @@ define(function(require, exports, module) {
       localizedDialog = Mustache.render(skeletonDialogHTML, Strings),
       localizedButton = Mustache.render(toolbarButtonHTML, Strings);
 
+  // HTML snippets roster
   var skeletonBones = {
     image    : "<img alt='' width='size-x' height='size-y' src='src-url'>",
     inStyle  : "<style></style>",
@@ -72,8 +73,9 @@ define(function(require, exports, module) {
 
   /**
    * @private
-   * Insert the selected elements into the document
-   * @param elements The elements to be inserted into the document
+   * Insert the selected elements into the document.
+   * @param elements The elements to be inserted into the document.
+   * @returns {Boolean} Always true.
    */
   function _insertSelectedElements(elements) {
     // Get the document in the full editor
@@ -96,7 +98,7 @@ define(function(require, exports, module) {
         });
       });
     }
-    return;
+    return true;
   }
 
 
@@ -137,9 +139,9 @@ define(function(require, exports, module) {
   /**
    * @private
    * Create a usable, valid path to the user's selected image
-   * relative to document into which it being inserted
-   * @param {string} imageDir The full path to a user-selected image
-   * @return {string} A usable, valid path to the image
+   * relative to document into which it being inserted.
+   * @param {string} image The full path to a user-selected image.
+   * @return {string} A usable, valid path to the image.
    */
   function _createImageURL(image) {
     // Get the directory to the file the image is being inserted into
@@ -290,24 +292,23 @@ define(function(require, exports, module) {
 
   /**
    * @private
-   * Open the file browse dialog for the user to select an image
+   * Open the file browse dialog for the user to select an image.
+   * @param {Object} e DOM event.
    */
   function _showFileDialog(e) {
-    FileSystem.showOpenDialog(
-      true, false, Strings.FILE_DIALOG_TITLE,
-      null, ImageFiles, function(cancel, selected) {
-        if (!cancel && selected && selected.length > 0) {
-          _processImage(selected);
-        }
+    FileSystem.showOpenDialog(true, false, Strings.FILE_DIALOG_TITLE,
+                              null, ImageFiles, function(cancel, selected) {
+      if (!cancel && selected && selected.length > 0) {
+        _processImage(selected);
       }
-    );
+    });
     e.preventDefault();
     e.stopPropagation();
   }
 
 
   /**
-   * Display HTML Skeleton dialog box
+   * Display HTML Skeleton dialog box.
    */
   function displaySkeletonDialog() {
     var skeletonDialog = Dialogs.showModalDialogUsingTemplate(localizedDialog),
@@ -319,10 +320,10 @@ define(function(require, exports, module) {
     document.querySelector(".html-skeleton-img .image-preview").classList.add("html-skeleton-img-container");
 
     // Hide image stats
-    var imageTip   = document.querySelector(".html-skeleton-img .image-tip"),
-        imageScale = document.querySelector(".html-skeleton-img .image-scale");
-    imageTip.parentNode.removeChild(imageTip);
-    imageScale.parentNode.removeChild(imageScale);
+    var QimageTip   = document.querySelector(".html-skeleton-img .image-tip"),
+        QimageScale = document.querySelector(".html-skeleton-img .image-scale");
+    QimageTip.parentNode.removeChild(QimageTip);
+    QimageScale.parentNode.removeChild(QimageScale);
 
     // If the Browse button is clicked, proceed to open the browse dialog
     $(".dialog-button[data-button-id='browse']", $dialog).on("click", function(e) {
@@ -336,7 +337,7 @@ define(function(require, exports, module) {
 
   /**
    * @private
-   * Load the extension after Brackets itself has finished loading
+   * Load the extension after Brackets itself has finished loading.
    */
   AppInit.appReady(function() {
     // Define the extension ID and CSS
