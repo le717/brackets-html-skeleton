@@ -148,26 +148,26 @@ define(function (require, exports, module) {
    * @param {string} imageDir The full path to a user-selected image
    * @return {string} A usable, valid path to the image
    */
-  function _createImageURL(imageDir) {
+  function _createImageURL(image) {
     // Get the directory to the file the image is being inserted into
     // and just the file name of the image
-    var curFileDir  = EditorManager.getCurrentFullEditor().document.file.parentPath,
-        imgFileName = FileUtils.getBaseName(imageDir);
+    var curDir  = EditorManager.getCurrentFullEditor().document.file.parentPath,
+        fileName = FileUtils.getBaseName(image);
 
     // If this is a saved documentand image and document are in the same folder
-    if (!/^_brackets_/.test(curFileDir) && (curFileDir.toLowerCase() === imageDir.replace(imgFileName, "").toLowerCase())) {
+    if (!/^_brackets_/.test(curDir) && (curDir.toLowerCase() === image.replace(fileName, "").toLowerCase())) {
       // Use only the image file name
-      imageDir = imgFileName;
+      image = fileName;
     }
 
     // Try to make the path as relative as possible
-    imageDir = ProjectManager.makeProjectRelativeIfPossible(imageDir);
+    image = ProjectManager.makeProjectRelativeIfPossible(image);
 
     // If the path is longer than 50 characters, split it up for better displaying
-    if (imageDir.length > 50) {
-      imageDir = imageDir.substring(0, 51) + "<br>" + imageDir.substring(51, imageDir.length);
+    if (image.length > 50) {
+      image = image.substring(0, 51) + "<br>" + image.substring(51, image.length);
     }
-    return imageDir;
+    return image;
   }
 
 
