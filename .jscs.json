@@ -30,8 +30,7 @@
     "while",
     "with",
     "return",
-    "typeof",
-    "function"
+    "typeof"
   ],
 
   "requireSpacesInConditionalExpression": {

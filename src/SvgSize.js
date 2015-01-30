@@ -11,7 +11,7 @@
  */
 
 
-define(function (require, exports, module) {
+define(function(require, exports, module) {
   "use strict";
   var FileSystem = brackets.getModule("filesystem/FileSystem"),
       FileUtils  = brackets.getModule("file/FileUtils");
@@ -47,7 +47,7 @@ define(function (require, exports, module) {
   function getSVGSize(svgfile) {
     var result = new $.Deferred();
 
-    _readSVG(svgfile).then(function (content) {
+    _readSVG(svgfile).then(function(content) {
       // Add the SVG to the DOM
       var $svgContainer    = $("<div class='html-skeleton-svg'/>").css("display", "none").html(content),
           $svgElement      = $svgContainer.find("svg");

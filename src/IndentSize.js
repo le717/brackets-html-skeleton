@@ -11,7 +11,7 @@
  */
 
 
-define(function (require, exports, module) {
+define(function(require, exports, module) {
   "use strict";
   var PreferencesManager = brackets.getModule("preferences/PreferencesManager");
 
@@ -76,7 +76,7 @@ define(function (require, exports, module) {
 
 
   // A relevant preference was changed, update our settings
-  PreferencesManager.on("change", function (e, data) {
+  PreferencesManager.on("change", function(e, data) {
     if (data.ids.indexOf("useTabChar") > -1) {
       getIndentType();
     }
