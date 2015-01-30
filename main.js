@@ -11,7 +11,7 @@
  */
 
 
-define(function (require, exports, module) {
+define(function(require, exports, module) {
   "use strict";
   var AppInit            = brackets.getModule("utils/AppInit"),
       CommandManager     = brackets.getModule("command/CommandManager"),
@@ -60,7 +60,7 @@ define(function (require, exports, module) {
   // Get user's indentation settings
   // If the user ever changes their preferences,
   // we need to make sure we stay up-to-date
-  PreferencesManager.on("change", function () {
+  PreferencesManager.on("change", function() {
 
     // Do NOT attempt to assign `indentUnits` directly to the function.
     // It will completely break otherwise
@@ -82,8 +82,8 @@ define(function (require, exports, module) {
       // Get the elements from the list in reverse so everything is added in the proper order
       var cursor = editor.getCursorPos();
 
-      elements.reverse().forEach(function (value) {
-        editor.document.batchOperation(function () {
+      elements.reverse().forEach(function(value) {
+        editor.document.batchOperation(function() {
           // Do a regex search for the `indent-size` keyword
           // and replace it with the user's indent settings
           // Also replace all single quotes with double quotes
@@ -112,7 +112,7 @@ define(function (require, exports, module) {
                          ];
 
     // For each option that is checked, keep track of the corresponding element
-    optionIDs.forEach(function (value) {
+    optionIDs.forEach(function(value) {
       if (document.querySelector(".html-skeleton-form " + value).checked) {
         selections.push(skeletonBones[document.querySelector(".html-skeleton-form " + value).value]);
       }
@@ -272,7 +272,7 @@ define(function (require, exports, module) {
     }
 
     // Get the image width and height
-    $imgPreview.one("load", function () {
+    $imgPreview.one("load", function() {
       if (isSupported && !isSvgImage) {
         var imgWidth  = $imgPreview.prop("naturalWidth"),
             imgHeight = $imgPreview.prop("naturalHeight");
@@ -280,7 +280,7 @@ define(function (require, exports, module) {
 
         // Special routine for SVG graphics only
       } else if (isSvgImage) {
-        SvgSize.getSVGSize(imagePath).then(function (sizes) {
+        SvgSize.getSVGSize(imagePath).then(function(sizes) {
           _updateSizeInput(sizes[0], sizes[1]);
         });
       }
@@ -296,7 +296,7 @@ define(function (require, exports, module) {
   function _showFileDialog(e) {
     FileSystem.showOpenDialog(
       true, false, Strings.FILE_DIALOG_TITLE,
-      null, ImageFiles, function (cancel, selected) {
+      null, ImageFiles, function(cancel, selected) {
         if (!cancel && selected && selected.length > 0) {
           _processImage(selected);
         }
@@ -326,7 +326,7 @@ define(function (require, exports, module) {
     imageScale.parentNode.removeChild(imageScale);
 
     // If the Browse button is clicked, proceed to open the browse dialog
-    $(".dialog-button[data-button-id='browse']", $dialog).on("click", function (e) {
+    $(".dialog-button[data-button-id='browse']", $dialog).on("click", function(e) {
       _showFileDialog(e);
     });
 
