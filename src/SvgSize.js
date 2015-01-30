@@ -1,9 +1,9 @@
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 2, maxerr: 50 */
-/*global define, brackets, $ */
+/*global $, define, brackets */
 
 /*
  * HTML Skeleton
- * Created 2014 Triangle717
+ * Created 2014-2015 Triangle717
  * <http://le717.github.io/>
  *
  * Licensed under The MIT License
