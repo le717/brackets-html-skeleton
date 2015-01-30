@@ -121,20 +121,14 @@ define(function(require, exports, module) {
 
     // The picture/image box was checked
     if (document.querySelector(".html-skeleton-form #img").checked) {
-
-      // Get the width/height values from the input fields
-      var imgWidth  = imgWidthInput.value,
-          imgHeight = imgHeightInput.value;
-      imgWidth  = imgWidth  !== "" ? imgWidth : 0;
-      imgHeight = imgHeight !== "" ? imgHeight : 0;
-
-      // Mark the image tag for addition in document,
-      // replacing the placeholder values with actual ones
-      var imgFilledIn = skeletonBones.image;
-      imgFilledIn     = imgFilledIn.replace(/src-url/, document.querySelector(".html-skeleton-img .img-src").textContent);
-      imgFilledIn     = imgFilledIn.replace(/size-x/, imgWidth);
-      imgFilledIn     = imgFilledIn.replace(/size-y/, imgHeight);
-      selections.push(imgFilledIn);
+      // Replace placeholder values with actual ones
+      finalImages.forEach(function(v) {
+        var imgComplete = skeletonBones.image;
+        imgComplete     = imgComplete.replace(/src-url/, v.path);
+        imgComplete     = imgComplete.replace(/size-x/, v.width);
+        imgComplete     = imgComplete.replace(/size-y/, v.height);
+        selections.push(imgComplete);
+      });
     }
 
     // Finally, add the selected elements to the document
@@ -195,6 +189,11 @@ define(function(require, exports, module) {
       QimgCheckBox.checked = true;
     }
 
+    // Clear the array if it was previously populated
+    if (finalImages.length > 0) {
+      finalImages = [];
+    }
+
     // If only one image was selected, display it
     if (images.length === 1) {
       _displayImage(images[0]);
@@ -206,9 +205,14 @@ define(function(require, exports, module) {
 
     images.forEach(function(value) {
       var details = {
-        path: _createImageURL(value)
+        path: _createImageURL(value),
+        width: 0,
+        height: 0
       };
 
+      // TODO TEMP HACK
+      details.width = 20;
+      details.height = 20;
       finalImages.push(details);
     });
   }
@@ -229,7 +233,7 @@ define(function(require, exports, module) {
 
     // Check if the image is supported and if it is an SVG image
     isSupported = LanguageManager.getLanguageForPath(imagePath).getId() === "image";
-    isSvgImage  = FileUtils.getFileExtension(imagePath) === "svg" ? true : false;
+    isSvgImage  = FileUtils.getFileExtension(imagePath) === "svg";
 
     // Quickly remove the size constraints to get an accurate image size
     $imgPreview.removeClass("html-skeleton-img-container");
