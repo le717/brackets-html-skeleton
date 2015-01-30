@@ -13,8 +13,8 @@
 
 /* Prevent scrollbars, slightly enlarge dialog */
 .modal-body.html-skeleton {
-  overflow: hidden;
   max-height: 420px;
+  overflow: hidden;
 }
 
 /* Move the information text up */
@@ -24,8 +24,8 @@
 .html-skeleton-img {
   top: -25px;
   right: -10px;
-  float: right;
   left: 5px;
+  float: right;
 }
 
 /* Decrease the size of the image path */
@@ -48,7 +48,7 @@
 
 /* Slight shadow around image */
 .html-skeleton-img-shadow { box-shadow: 0 0 3px #000; }
-.html-skeleton-img-shadow-dark { box-shadow: 0 0 2px 1px #fff; }
+.dark .html-skeleton-img-shadow { box-shadow: 0 0 2px 1px #fff; }
 
 /* Shift the dialog content (excluding the image) up */
 .html-skeleton-content {

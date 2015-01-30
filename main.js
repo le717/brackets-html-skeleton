@@ -35,6 +35,7 @@ define(function(require, exports, module) {
       skeletonDialogHTML = require("text!htmlContent/mainDialog.html");
 
   var indentUnits     = "",
+      finalImages     = [],
       localizedDialog = Mustache.render(skeletonDialogHTML, Strings),
       localizedButton = Mustache.render(toolbarButtonHTML, Strings);
 
@@ -173,19 +174,6 @@ define(function(require, exports, module) {
 
   /**
    * @private
-   * Check if the dark theme is enabled and return
-   * the appropriate class name for a slight shadow
-   * on the image preview.
-   * @return {string} Appropriate shadow class name
-   */
-  function _getImageShadow() {
-    return document.querySelector("body").classList.contains("dark") ?
-      "html-skeleton-img-shadow-dark" : "html-skeleton-img-shadow";
-  }
-
-
-  /**
-   * @private
    * Update image width/height input fields.
    * @param imageWidth {string} The image width.
    * @param imageHeight {string} The image height.
@@ -198,8 +186,8 @@ define(function(require, exports, module) {
   }
 
 
-  function _processImage(image) {
-    var  QimgCheckBox = document.querySelector(".html-skeleton-form #img");
+  function _processImage(images) {
+    var QimgCheckBox = document.querySelector(".html-skeleton-form #img");
 
     // The Image check box was not checked before now. Since the user has opened an image,
     // let's assume the user wants to use it and check the box for them.
@@ -208,13 +196,21 @@ define(function(require, exports, module) {
     }
 
     // If only one image was selected, display it
-    if (image.length === 1) {
-      _displayImage(image[0]);
+    if (images.length === 1) {
+      _displayImage(images[0]);
 
       // TODO Multiple images were selected
     } else {
 
     }
+
+    images.forEach(function(value) {
+      var details = {
+        path: _createImageURL(value)
+      };
+
+      finalImages.push(details);
+    });
   }
 
 
@@ -245,7 +241,7 @@ define(function(require, exports, module) {
       $(".html-skeleton-img").css("position", "relative");
       $imgPreview.addClass("html-skeleton-img-container");
       QpathDisplay.style.color = "red";
-      $imgPreview.removeClass(_getImageShadow());
+      $imgPreview.removeClass("html-skeleton-img-shadow");
 
       QpathDisplay.innerHTML = shortPath;
       QerrorText.innerHTML = "<br>is not supported for previewing!";
@@ -263,7 +259,7 @@ define(function(require, exports, module) {
 
       // Position and add small shadow to container
       $(".html-skeleton-img").css("position", "relative");
-      $imgPreview.addClass(_getImageShadow());
+      $imgPreview.addClass("html-skeleton-img-shadow");
 
       // Show the file path and display the image
       QpathDisplay.innerHTML = shortPath;
@@ -339,7 +335,7 @@ define(function(require, exports, module) {
    * @private
    * Load the extension after Brackets itself has finished loading
    */
-  AppInit.appReady(function () {
+  AppInit.appReady(function() {
     // Define the extension ID and CSS
     var EXTENSION_ID = "le717.html-skeleton";
     ExtensionUtils.loadStyleSheet(module, "css/style.css");
