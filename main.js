@@ -184,6 +184,43 @@ define(function(require, exports, module) {
   }
 
 
+  function _getImageSize(images) {
+    var storage = [];
+    images.forEach(function(path) {
+      var details = {
+        path   : _createImageURL(path),
+        width  : 0,
+        height : 0,
+        absPath: path
+      };
+
+      // Determine if the image is an SVG
+      var isSvgImage    = FileUtils.getFileExtension(path) === "svg",
+          $imgContainer = $("<img class='html-skeleton-img-size'/>").css("display", "none").prop("src", path);
+
+      // Special extraction routine for SVG graphics
+      if (isSvgImage) {
+        SvgSize.getSVGSize(path).then(function(sizes) {
+          details.width  = sizes[0];
+          details.height = sizes[1];
+        });
+
+        // Get the width and height for bitmapped images
+      } else {
+        $imgContainer.one("load", function() {
+          details.width  = $imgContainer.prop("naturalWidth");
+          details.height = $imgContainer.prop("naturalHeight");
+        });
+      }
+
+      // Store the image objects
+      storage.push(details);
+    });
+
+    return storage;
+  }
+
+
   function _processImage(images) {
     var QimgCheckBox = document.querySelector(".html-skeleton-form #img");
 
@@ -207,18 +244,8 @@ define(function(require, exports, module) {
 
     }
 
-    images.forEach(function(value) {
-      var details = {
-        path: _createImageURL(value),
-        width: 0,
-        height: 0
-      };
-
-      // TODO TEMP HACK
-      details.width = 20;
-      details.height = 20;
-      finalImages.push(details);
-    });
+    // Get the size of each image
+    finalImages = _getImageSize(images);
   }
 
 
