@@ -150,7 +150,7 @@ define(function(require, exports, module) {
 
     // Get the directory to the file the image is being inserted into
     // and just the file name of the image
-    var curDir  = EditorManager.getCurrentFullEditor().document.file.parentPath,
+    var curDir   = EditorManager.getCurrentFullEditor().document.file.parentPath,
         fileName = FileUtils.getBaseName(image);
 
     // If this is a saved documentand image and document are in the same folder
@@ -194,7 +194,7 @@ define(function(require, exports, module) {
         relPath: _createImageURL(path)
       };
 
-      // TODO The width/height is detected as 0 (the default)
+      // TODO The width/height is almost always detected as 0 (the default)
 
       // Special extraction routine for SVG graphics
       if (isSvgImage) {
@@ -252,7 +252,6 @@ define(function(require, exports, module) {
    * @return {boolean} true.
    */
   function _updateSizeInput(imageObj) {
-    // console.log(imageObj);
     document.querySelector(".html-skeleton-form .img-width").value = imageObj.width;
     document.querySelector(".html-skeleton-form .img-height").value = imageObj.height;
     return true;
