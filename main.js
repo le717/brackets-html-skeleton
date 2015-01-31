@@ -120,6 +120,23 @@ define(function(require, exports, module) {
 
     // The picture/image box was checked
     if (document.querySelector(".html-skeleton-form #img").checked) {
+      var widthInput  = document.querySelector(".html-skeleton-form .img-width").value,
+          heightInput = document.querySelector(".html-skeleton-form .img-height").value;
+
+      // Only one image was selected
+      if (finalImages.length === 1) {
+        var singleImage = finalImages[0];
+
+        // Use input field values if they are different than extracted
+        if (widthInput !== singleImage.width) {
+          singleImage.width = widthInput;
+        }
+
+        if (heightInput !== singleImage.height) {
+          singleImage.height = heightInput;
+        }
+      }
+
       // Replace placeholder values with actual ones
       finalImages.forEach(function(v) {
         var imgComplete = skeletonBones.image;
@@ -239,6 +256,8 @@ define(function(require, exports, module) {
     } else {
 
     }
+
+    return true;
   }
 
 
