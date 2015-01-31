@@ -184,9 +184,17 @@ define(function(require, exports, module) {
   }
 
 
+  /**
+   * Get the image size and relative path.
+   * @param {Array.<string>} images Array containing absolute paths to an image.
+   * @returns {Array} Populated with individual objects containing necessary image information.
+   */
   function _getImageSize(images) {
-    var storage = [];
+    var storage       = [],
+        $imgContainer = $("<img class='html-skeleton-img-size'/>").css("display", "none");
+
     images.forEach(function(path) {
+      // Create an image details object
       var details = {
         path   : _createImageURL(path),
         width  : 0,
@@ -195,8 +203,8 @@ define(function(require, exports, module) {
       };
 
       // Determine if the image is an SVG
-      var isSvgImage    = FileUtils.getFileExtension(path) === "svg",
-          $imgContainer = $("<img class='html-skeleton-img-size'/>").css("display", "none").prop("src", path);
+      var isSvgImage = FileUtils.getFileExtension(path) === "svg";
+      $imgContainer.prop("src", path);
 
       // Special extraction routine for SVG graphics
       if (isSvgImage) {
@@ -212,11 +220,9 @@ define(function(require, exports, module) {
           details.height = $imgContainer.prop("naturalHeight");
         });
       }
-
-      // Store the image objects
       storage.push(details);
     });
-
+    $imgContainer.remove();
     return storage;
   }
 
