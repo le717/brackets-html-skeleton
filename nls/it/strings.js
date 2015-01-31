@@ -36,6 +36,6 @@ define({
     "FULL_SKELETON_DESCRIPTION"    : "Comprende tutti gli elementi sopra indicati, salvo foglio di stile interno, script interno, e immagine",
     "BTN_CANCEL"                   : "Cancella",
     "BTN_DONE"                     : "Fatto",
-    "BTN_BROWSE"                   : "Sfoglia\u2026",
+    "BTN_BROWSE"                   : "Sfoglia\u2026"
 });
 /* Last translated for 53ba9106af6ec36af1400f95417498a05f6e277a */

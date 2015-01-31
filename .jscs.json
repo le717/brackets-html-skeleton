@@ -1,4 +1,5 @@
 {
+  "disallowTrailingComma": true,
   "requireBlocksOnNewline": true,
   "requireLineFeedAtFileEnd": true,
   "disallowTrailingWhitespace": true,

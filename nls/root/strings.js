@@ -37,5 +37,5 @@ define({
   "FULL_SKELETON_DESCRIPTION"    : "Includes all elements above except inline stylesheet, inline script, and image",
   "BTN_CANCEL"                   : "Cancel",
   "BTN_DONE"                     : "Done",
-  "BTN_BROWSE"                   : "Browse\u2026",
+  "BTN_BROWSE"                   : "Browse\u2026"
 });

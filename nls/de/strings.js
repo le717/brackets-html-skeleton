@@ -34,7 +34,7 @@ define({
     "FULL_SKELETON"                : "Komplettes HTML Grundgerüst",
     "FULL_SKELETON_DESCRIPTION"    : "Enthält alle obigen Elemente, außer Inline-Stylesheet, Inline-Script und Grafik/Bild",
     "BTN_CANCEL"                   : "Abbrechen",
-    "BTN_DONE"                     : "Fertig",
+    "BTN_DONE"                     : "Fertig"
 });
 
 /* Last translated for d04d101774e59251f89e36f83a261e988b4e39b8 */

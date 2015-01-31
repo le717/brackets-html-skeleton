@@ -1,12 +1,11 @@
 {
   "indent"     : 2,
-  "maxlen"     : 125,
   "browser"    : true,
   "jquery"     : true,
   "node"       : true,
   "strict"     : true,
   "undef"      : true,
-  "unused"     : true,
+  "unused"     : false,
   "quotmark"   : "double",
   "globals": {
     "define"   : true,
