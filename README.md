@@ -1,4 +1,4 @@
-# HTML Skeleton #
+# HTML Skeleton [![Build Status](https://travis-ci.org/le717/brackets-html-skeleton.svg)](https://travis-ci.org/le717/brackets-html-skeleton) #
 
 A [Brackets](http://brackets.io) extension that allows you to insert a variety of HTML elements into your document with ease.
 
