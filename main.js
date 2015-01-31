@@ -49,13 +49,13 @@ define(function(require, exports, module) {
     extScript: "<script src=''></script>",
 
     basiSkel : "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='UTF-8'>\n" +
-        "indent-size<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n" +
-        "indent-size<title></title>\n</head>\n\n<body>\nindent-size\n</body>\n</html>\n",
+    "indent-size<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n" +
+    "indent-size<title></title>\n</head>\n\n<body>\nindent-size\n</body>\n</html>\n",
 
     fullSkel : "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='UTF-8'>\n" +
-        "indent-size<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n" +
-        "indent-size<title></title>\nindent-size<link rel='stylesheet' href=''>\n" +
-        "</head>\n\n<body>\nindent-size<script src=''></script>\n</body>\n</html>\n"
+    "indent-size<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n" +
+    "indent-size<title></title>\nindent-size<link rel='stylesheet' href=''>\n" +
+    "</head>\n\n<body>\nindent-size<script src=''></script>\n</body>\n</html>\n"
   };
 
 
@@ -90,8 +90,7 @@ define(function(require, exports, module) {
           // Do a regex search for the `indent-size` keyword
           // and replace it with the user's indent settings
           // Also replace all single quotes with double quotes
-          value = value.replace(/indent-size/g, indentUnits)
-                       .replace(/'/g, "\"");
+          value = value.replace(/indent-size/g, indentUnits).replace(/'/g, "\"");
 
           // Insert the selected elements at the current cursor position
           editor.document.replaceRange(value, cursor);
@@ -141,9 +140,14 @@ define(function(require, exports, module) {
    * Create a usable, valid path to the user's selected image
    * relative to document into which it being inserted.
    * @param {string} image The full path to a user-selected image.
+   * @param {Boolean} [uiDisplay=false] If true, perform additional changes suitable for UI display.
    * @return {string} A usable, valid path to the image.
    */
-  function _createImageURL(image) {
+  function _createImageURL(image, uiDisplay) {
+    if (uiDisplay === undefined) {
+      uiDisplay = false;
+    }
+
     // Get the directory to the file the image is being inserted into
     // and just the file name of the image
     var curDir  = EditorManager.getCurrentFullEditor().document.file.parentPath,
@@ -159,8 +163,7 @@ define(function(require, exports, module) {
     image = ProjectManager.makeProjectRelativeIfPossible(image);
 
     // If the path is longer than 50 characters, split it up for better displaying
-    // TODO Not required if image path will not be displayed
-    if (image.length > 50) {
+    if (uiDisplay && image.length > 50) {
       image = image.substring(0, 51) + "<br>" + image.substring(51, image.length);
     }
     return image;
@@ -225,16 +228,12 @@ define(function(require, exports, module) {
    * @param imagePath {string} Absolute path to image file.
    */
   function _displayImage(imagePath) {
-    var shortPath    = _createImageURL(imagePath),
-        isSvgImage   = false,
-        isSupported  = false,
+    var shortPath    = _createImageURL(imagePath, true),
+        isSvgImage   = FileUtils.getFileExtension(imagePath) === "svg",
+        isSupported  = LanguageManager.getLanguageForPath(imagePath).getId() === "image",
         $imgPreview  = $(".html-skeleton-img .image-preview"),
         QerrorText   = document.querySelector(".html-skeleton-img .img-error-text"),
         QpathDisplay = document.querySelector(".html-skeleton-img .img-src");
-
-    // Check if the image is supported and if it is an SVG image
-    isSupported = LanguageManager.getLanguageForPath(imagePath).getId() === "image";
-    isSvgImage  = FileUtils.getFileExtension(imagePath) === "svg";
 
     // Quickly remove the size constraints to get an accurate image size
     $imgPreview.removeClass("html-skeleton-img-container");
@@ -258,7 +257,7 @@ define(function(require, exports, module) {
       // The image is a supported file type
     } else if (isSupported || isSvgImage) {
 
-       // Clear possible CSS applied from previewing an unsupported image
+      // Clear possible CSS applied from previewing an unsupported image
       QerrorText.innerHTML = "";
       QpathDisplay.style.color = "";
 
