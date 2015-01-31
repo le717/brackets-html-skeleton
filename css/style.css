@@ -48,7 +48,6 @@
 
 /* Slight shadow around image */
 .html-skeleton-img-shadow { box-shadow: 0 0 3px #000; }
-.dark .html-skeleton-img-shadow { box-shadow: 0 0 2px 1px #fff; }
 
 /* Shift the dialog content (excluding the image) up */
 .html-skeleton-content {
@@ -56,13 +55,9 @@
   bottom: 20px;
 }
 
-/* Space the check boxes apart a bit */
-.html-skeleton-form > input { margin-bottom: 4px; }
-
-/* Reduce the amount of blank space underneath the number fields */
+.html-skeleton-form > input { margin-bottom: 2px; }
 .html-skeleton-form > input[type="number"] { margin-bottom: 4px; }
 
-/* Align the browse button with the other elements */
 .html-skeleton-dialog a[data-button-id="browse"] {
   margin-bottom: 4px;
   margin-left: 10px;
@@ -71,10 +66,10 @@
 /* Do not place input labels on a new line */
 .html-skeleton-form > label { display: inline; }
 
-/* Enlarge the "x" between the input fields */
-.html-skeleton-form .letter-x {
+.html-skeleton-form #letter-x {
   font-weight: 900;
-  font-size: 17px;
+  font-size: 1.4em;
+  padding: 0 0.2em;
 }
 
 /* Accommodate the "Full HTML Skeleton" description */

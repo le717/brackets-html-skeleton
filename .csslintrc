@@ -1,5 +1,6 @@
 {
   "adjoining-classes": false,
   "ids": false,
-  "known-properties": false
+  "known-properties": false,
+  "order-alphabetical": false
 }

@@ -181,13 +181,9 @@ define(function(require, exports, module) {
         $imgContainer = $("<img class='html-skeleton-img-size'/>").css("display", "none");
 
     images.forEach(function(path) {
-      // Determine if the image is an SVG
-      var isSvgImage = FileUtils.getFileExtension(path) === "svg";
-      $imgContainer.prop("src", path);
-
       // Create an image details object
       var details = {
-        isSvg  : isSvgImage,
+        isSvg  : FileUtils.getFileExtension(path) === "svg",
         width  : 0,
         height : 0,
         absPath: path,
@@ -197,7 +193,7 @@ define(function(require, exports, module) {
       // TODO The width/height is almost always detected as 0 (the default)
 
       // Special extraction routine for SVG graphics
-      if (isSvgImage) {
+      if (details.isSvg) {
         SvgSize.getSVGSize(path).then(function(sizes) {
           details.width  = sizes[0];
           details.height = sizes[1];
@@ -205,6 +201,7 @@ define(function(require, exports, module) {
 
         // Get the width and height for bitmapped images
       } else {
+        $imgContainer.prop("src", path);
         $imgContainer.one("load", function() {
           details.width  = $imgContainer.prop("naturalWidth");
           details.height = $imgContainer.prop("naturalHeight");
