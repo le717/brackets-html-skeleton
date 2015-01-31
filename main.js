@@ -256,7 +256,6 @@ define(function(require, exports, module) {
    */
   function _displayImage(imagePath) {
     var shortPath    = _createImageURL(imagePath, true),
-        isSvgImage   = FileUtils.getFileExtension(imagePath) === "svg",
         isSupported  = LanguageManager.getLanguageForPath(imagePath).getId() === "image",
         $imgPreview  = $(".html-skeleton-img .image-preview"),
         QerrorText   = document.querySelector(".html-skeleton-img .img-error-text"),
@@ -266,7 +265,7 @@ define(function(require, exports, module) {
     $imgPreview.removeClass("html-skeleton-img-container");
 
     // The image is an unsupported file type
-    if (!isSupported && !isSvgImage) {
+    if (!isSupported) {
 
       // Update display for image and display extension logo
       $(".html-skeleton-img").css("position", "relative");
@@ -282,7 +281,7 @@ define(function(require, exports, module) {
       return false;
 
       // The image is a supported file type
-    } else if (isSupported || isSvgImage) {
+    } else if (isSupported) {
 
       // Clear possible CSS applied from previewing an unsupported image
       QerrorText.innerHTML = "";
@@ -300,16 +299,10 @@ define(function(require, exports, module) {
 
     // Get the image width and height
     $imgPreview.one("load", function() {
-      if (isSupported && !isSvgImage) {
+      if (isSupported) {
         var imgWidth  = $imgPreview.prop("naturalWidth"),
             imgHeight = $imgPreview.prop("naturalHeight");
         _updateSizeInput(imgWidth, imgHeight);
-
-        // Special routine for SVG graphics only
-      } else if (isSvgImage) {
-        SvgSize.getSVGSize(imagePath).then(function(sizes) {
-          _updateSizeInput(sizes[0], sizes[1]);
-        });
       }
     });
     return;
