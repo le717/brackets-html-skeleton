@@ -123,7 +123,7 @@ define(function(require, exports, module) {
       // Replace placeholder values with actual ones
       finalImages.forEach(function(v) {
         var imgComplete = skeletonBones.image;
-        imgComplete     = imgComplete.replace(/src-url/, v.path);
+        imgComplete     = imgComplete.replace(/src-url/, v.relPath);
         imgComplete     = imgComplete.replace(/size-x/, v.width);
         imgComplete     = imgComplete.replace(/size-y/, v.height);
         selections.push(imgComplete);
@@ -185,6 +185,7 @@ define(function(require, exports, module) {
 
 
   /**
+   * @private
    * Get the image size and relative path.
    * @param {Array.<string>} images Array containing absolute paths to an image.
    * @returns {Array} Populated with individual objects containing necessary image information.
@@ -194,17 +195,18 @@ define(function(require, exports, module) {
         $imgContainer = $("<img class='html-skeleton-img-size'/>").css("display", "none");
 
     images.forEach(function(path) {
-      // Create an image details object
-      var details = {
-        path   : _createImageURL(path),
-        width  : 0,
-        height : 0,
-        absPath: path
-      };
-
       // Determine if the image is an SVG
       var isSvgImage = FileUtils.getFileExtension(path) === "svg";
       $imgContainer.prop("src", path);
+
+      // Create an image details object
+      var details = {
+        isSvg  : isSvgImage,
+        width  : 0,
+        height : 0,
+        absPath: path,
+        relPath: _createImageURL(path)
+      };
 
       // Special extraction routine for SVG graphics
       if (isSvgImage) {
@@ -272,7 +274,6 @@ define(function(require, exports, module) {
 
     // The image is an unsupported file type
     if (!isSupported) {
-
       // Update display for image and display extension logo
       $(".html-skeleton-img").css("position", "relative");
       $imgPreview.addClass("html-skeleton-img-container");
@@ -288,7 +289,6 @@ define(function(require, exports, module) {
 
       // The image is a supported file type
     } else if (isSupported) {
-
       // Clear possible CSS applied from previewing an unsupported image
       QerrorText.innerHTML = "";
       QpathDisplay.style.color = "";
