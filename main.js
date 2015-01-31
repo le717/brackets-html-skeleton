@@ -172,20 +172,6 @@ define(function(require, exports, module) {
 
   /**
    * @private
-   * Update image width/height input fields.
-   * @param imageWidth {string} The image width.
-   * @param imageHeight {string} The image height.
-   * @return {boolean} true.
-   */
-  function _updateSizeInput(imgWidth, imgHeight) {
-    document.querySelector(".html-skeleton-form .img-width").value = imgWidth;
-    document.querySelector(".html-skeleton-form .img-height").value = imgHeight;
-    return true;
-  }
-
-
-  /**
-   * @private
    * Get the image size and relative path.
    * @param {Array.<string>} images Array containing absolute paths to an image.
    * @returns {Array} Populated with individual objects containing necessary image information.
@@ -207,6 +193,8 @@ define(function(require, exports, module) {
         absPath: path,
         relPath: _createImageURL(path)
       };
+
+      // TODO The width/height is detected as 0 (the default)
 
       // Special extraction routine for SVG graphics
       if (isSvgImage) {
@@ -243,17 +231,31 @@ define(function(require, exports, module) {
       finalImages = [];
     }
 
-    // If only one image was selected, display it
-    if (images.length === 1) {
-      _displayImage(images[0]);
+    // Get the size of each image
+    finalImages = _getImageSize(images);
 
-      // TODO Multiple images were selected
+    // If only one image was selected, display it
+    if (finalImages.length === 1) {
+      _displayImage(finalImages[0]);
+
+      // TODO "Multiple images were selected" display
     } else {
 
     }
+  }
 
-    // Get the size of each image
-    finalImages = _getImageSize(images);
+
+  /**
+   * @private
+   * Update image width/height input fields.
+   * @param imageObj {object} Image details object.
+   * @return {boolean} true.
+   */
+  function _updateSizeInput(imageObj) {
+    // console.log(imageObj);
+    document.querySelector(".html-skeleton-form .img-width").value = imageObj.width;
+    document.querySelector(".html-skeleton-form .img-height").value = imageObj.height;
+    return true;
   }
 
 
@@ -262,55 +264,37 @@ define(function(require, exports, module) {
    * Display the user selected image.
    * @param imagePath {string} Absolute path to image file.
    */
-  function _displayImage(imagePath) {
-    var shortPath    = _createImageURL(imagePath, true),
-        isSupported  = LanguageManager.getLanguageForPath(imagePath).getId() === "image",
+  function _displayImage(imageObj) {
+    var shortPath    = _createImageURL(imageObj.absPath, true),
+        isSupported  = LanguageManager.getLanguageForPath(imageObj.absPath).getId() === "image" || imageObj.isSvg,
         $imgPreview  = $(".html-skeleton-img .image-preview"),
         QerrorText   = document.querySelector(".html-skeleton-img .img-error-text"),
         QpathDisplay = document.querySelector(".html-skeleton-img .img-src");
 
-    // Quickly remove the size constraints to get an accurate image size
-    $imgPreview.removeClass("html-skeleton-img-container");
+    // Appy the standard positioning
+    $(".html-skeleton-img").css("position", "relative");
+    $imgPreview.addClass("html-skeleton-img-container");
+
+    // Update display
+    QpathDisplay.innerHTML = shortPath;
+    _updateSizeInput(imageObj);
 
     // The image is an unsupported file type
     if (!isSupported) {
-      // Update display for image and display extension logo
-      $(".html-skeleton-img").css("position", "relative");
-      $imgPreview.addClass("html-skeleton-img-container");
       QpathDisplay.style.color = "red";
       $imgPreview.removeClass("html-skeleton-img-shadow");
-
-      QpathDisplay.innerHTML = shortPath;
       QerrorText.innerHTML = "<br>is not supported for previewing!";
       $imgPreview.attr("src", skeletonLogo);
 
-      _updateSizeInput("", "");
-      return false;
-
       // The image is a supported file type
     } else if (isSupported) {
-      // Clear possible CSS applied from previewing an unsupported image
+      // Clear possible CSS from unsupported image
       QerrorText.innerHTML = "";
       QpathDisplay.style.color = "";
 
-      // Position and add small shadow to container
-      $(".html-skeleton-img").css("position", "relative");
       $imgPreview.addClass("html-skeleton-img-shadow");
-
-      // Show the file path and display the image
-      QpathDisplay.innerHTML = shortPath;
-      $imgPreview.attr("src", imagePath);
-      $imgPreview.addClass("html-skeleton-img-container");
+      $imgPreview.attr("src", imageObj.absPath);
     }
-
-    // Get the image width and height
-    $imgPreview.one("load", function() {
-      if (isSupported) {
-        var imgWidth  = $imgPreview.prop("naturalWidth"),
-            imgHeight = $imgPreview.prop("naturalHeight");
-        _updateSizeInput(imgWidth, imgHeight);
-      }
-    });
     return;
   }
 

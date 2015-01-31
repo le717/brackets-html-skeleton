@@ -11,6 +11,7 @@
   "globals": {
     "define"   : true,
     "Mustache" : true,
-    "brackets" : true
+    "brackets" : true,
+    "console"  : false
   }
 }
