@@ -37,8 +37,7 @@
     "grunt-contrib-csslint": "^0.3.1",
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-htmlhint": "^0.4.1",
-    "jsonlint": "^1.6.2",
-    "jscs": "^1.10.0",
+    "grunt-jscs": "^1.2.0",
     "matchdep": "^0.3.0"
   }
 }

@@ -1,0 +1,14 @@
+{
+  "attr-lowercase": true,
+  "attr-value-double-quotes": true,
+  "attr-value-not-empty": true,
+  "attr-no-duplication": true,
+  "tagname-lowercase": true,
+  "tag-pair": true,
+  "tag-self-close": false,
+  "spec-char-escape": true,
+  "id-class-value": "dash",
+  "id-unique": true,
+  "src-not-empty": true,
+  "space-tab-mixed-disabled": true
+}
