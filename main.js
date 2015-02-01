@@ -206,7 +206,7 @@ define(function(require, exports, module) {
         relPath: _createImageURL(path)
       };
 
-      // TODO The width/height is almost always detected as 0 (the default)
+      // TODO The width/height is detected but will not be exposed to the needed scope
 
       // Special extraction routine for SVG graphics
       if (details.isSvg) {
@@ -215,9 +215,10 @@ define(function(require, exports, module) {
           details.height = sizes[1];
         });
 
-        // Get the width and height for bitmapped images
+        // Get the width and height for bitmap images
       } else {
-        $("<img class='html-skeleton-img-size' src='" + path + "'/>").trigger("load").one("load", function() {
+        var $container = $("<img class='html-skeleton-img-size' src='" + path + "'/>");
+        $container.trigger("load").one("load", function(e) {
           var $this = $(this);
           details.width  = $this.prop("naturalWidth");
           details.height = $this.prop("naturalHeight");
