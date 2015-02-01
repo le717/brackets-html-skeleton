@@ -33,7 +33,7 @@ define(function(require, exports, module) {
    * @return {boolean} true if width and height are valid
    */
   function _checkIfValid(width, height) {
-    return !Number.isNaN(width) && !Number.isNaN(height) && (width && height) !== 0 && (width && height) !== "";
+    return !Number.isNaN(width) && !Number.isNaN(height) && (width && height) !== "";
   }
 
   /**
@@ -66,7 +66,7 @@ define(function(require, exports, module) {
           backgroundHeight = parseInt(backgroundSizes[4], 10);
 
       // Check the validity of the extracted values
-      var svgSize = [NaN, NaN];
+      var svgSize = [0, 0];
 
       // Width/height attributes
       if (_checkIfValid(attrWidth, attrHeight)) {
