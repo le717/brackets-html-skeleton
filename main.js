@@ -194,8 +194,7 @@ define(function(require, exports, module) {
    * @returns {Array} Populated with individual objects containing necessary image information.
    */
   function _getImageSize(images) {
-    var storage       = [],
-        $imgContainer = $("<img class='html-skeleton-img-size'/>").css("display", "none");
+    var storage = [];
 
     images.forEach(function(path) {
       // Create an image details object
@@ -218,15 +217,14 @@ define(function(require, exports, module) {
 
         // Get the width and height for bitmapped images
       } else {
-        $imgContainer.prop("src", path);
-        $imgContainer.one("load", function() {
-          details.width  = $imgContainer.prop("naturalWidth");
-          details.height = $imgContainer.prop("naturalHeight");
+        $("<img class='html-skeleton-img-size' src='" + path + "'/>").trigger("load").one("load", function() {
+          var $this = $(this);
+          details.width  = $this.prop("naturalWidth");
+          details.height = $this.prop("naturalHeight");
         });
       }
       storage.push(details);
     });
-    $imgContainer.remove();
     return storage;
   }
 
