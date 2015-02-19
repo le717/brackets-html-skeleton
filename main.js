@@ -157,7 +157,7 @@ define(function(require, exports, module) {
    * Create a usable, valid path to the user's selected image
    * relative to document into which it being inserted.
    * @param {string} image The full path to a user-selected image.
-   * @param {Boolean} [uiDisplay=false] If true, perform additional changes suitable for UI display.
+   * @param {boolean} [uiDisplay=false] If true, perform additional changes suitable for UI display.
    * @return {string} A usable, valid path to the image.
    */
   function _createImageURL(image, uiDisplay) {
@@ -170,16 +170,16 @@ define(function(require, exports, module) {
     var curDir   = EditorManager.getCurrentFullEditor().document.file.parentPath,
         fileName = FileUtils.getBaseName(image);
 
-    // If this is a saved documentand image and document are in the same folder
+    // If this is a saved document and image and document are in the same folder
     if (!/^_brackets_/.test(curDir) && (curDir.toLowerCase() === image.replace(fileName, "").toLowerCase())) {
       // Use only the image file name
       image = fileName;
     }
 
-    // Try to make the path as relative as possible
+    // Try to make the path relative
     image = ProjectManager.makeProjectRelativeIfPossible(image);
 
-    // If the path is longer than 50 characters, split it up for better displaying
+    // If desired, if the path is longer than 50 characters split it up for better displaying
     if (uiDisplay && image.length > 50) {
       image = image.substring(0, 51) + "<br>" + image.substring(51, image.length);
     }
