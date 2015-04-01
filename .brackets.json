@@ -1,5 +1,13 @@
 {
     "spaceUnits": 2,
     "useTabChar": false,
-    "linting.enabled": true
+    "linting.enabled": true,
+    "linting.prefer": [
+        "HTMLHint",
+        "CSSLint",
+        "JSHint",
+        "JSCS",
+        "JSONLint"
+    ],
+    "linting.usePreferredOnly": true
 }

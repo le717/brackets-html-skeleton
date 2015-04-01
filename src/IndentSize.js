@@ -11,7 +11,7 @@
  */
 
 
-define(function(require, exports, module) {
+define(function (require, exports, module) {
   "use strict";
   var PreferencesManager = brackets.getModule("preferences/PreferencesManager");
 
@@ -22,7 +22,6 @@ define(function(require, exports, module) {
     size: 2,
     isTab: false
   };
-
 
   /**
    * @private
@@ -35,7 +34,6 @@ define(function(require, exports, module) {
     return new Array(num + 1).join(str);
   }
 
-
   /**
    * Create a complete indentation level by repeating
    * the user's desired character by their chosen size.
@@ -44,7 +42,6 @@ define(function(require, exports, module) {
   function getIndentation() {
     return _repeatString(indentation.char, indentation.size);
   }
-
 
   /**
    * Get the current indentation settings for use in inserted code
@@ -64,7 +61,6 @@ define(function(require, exports, module) {
     return indentation.char;
   }
 
-
   /**
    * Get the user's indentation level size depending on if they use spaces or tabs.
    * @return {String} Indentation level size.
@@ -74,9 +70,8 @@ define(function(require, exports, module) {
     return indentation.size;
   }
 
-
   // A relevant preference was changed, update our settings
-  PreferencesManager.on("change", function(e, data) {
+  PreferencesManager.on("change", function (e, data) {
     if (data.ids.indexOf("useTabChar") > -1) {
       getIndentType();
     }
@@ -85,7 +80,6 @@ define(function(require, exports, module) {
       getIndentSize();
     }
   });
-
 
   exports.getIndentType   = getIndentType;
   exports.getIndentSize   = getIndentSize;
