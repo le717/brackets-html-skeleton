@@ -19,8 +19,8 @@ define(function(require, exports, module) {
   /**
    * @private
    * Get SVG graphic file object.
-   * @param svgFile {string} Absolute path to SVG graphic.
-   * @return {jQuery.Promise} Promise that contains a File object.
+   * @param {String} svgFile Absolute path to SVG graphic.
+   * @return {$.Promise} Promise that contains a File object.
    */
   function _readSVG(svgFile) {
     return FileUtils.readAsText(FileSystem.getFileForPath(svgFile));
@@ -28,9 +28,9 @@ define(function(require, exports, module) {
 
   /**
    * @private
-   * @param {number} Width the proposed width.
-   * @param {number} Height the proposed height.
-   * @return {boolean} True if width and height are valid.
+   * @param {Number} width The proposed width.
+   * @param {Number} height The proposed height.
+   * @return {Boolean} True if width and height are valid.
    */
   function _checkIfValid(width, height) {
     return !Number.isNaN(width) && !Number.isNaN(height) && (width && height) !== "";
@@ -39,10 +39,10 @@ define(function(require, exports, module) {
   /**
    * Attempt to extract the size of an SVG graphic
    * from the width/height, viewBox and enable-background attributes.
-   * @param svgFile {string} absolute path to SVG graphic.
-   * @return {jQuery.Promise} promise that resolves to a
-   * two-index array containing the respective width and height or NaN
-   * if the size could not be extracted.
+   * @param {String} svgFile Absolute path to SVG graphic.
+   * @return {$.Promise} Promise that resolves to a
+   *                             two-index array containing the respective width and height or NaN
+   *                             if the size could not be extracted.
    */
   function getSVGSize(svgFile) {
     var result = new $.Deferred();

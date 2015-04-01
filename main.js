@@ -15,6 +15,7 @@ define(function(require, exports, module) {
   "use strict";
   var AppInit            = brackets.getModule("utils/AppInit"),
       CommandManager     = brackets.getModule("command/CommandManager"),
+      DocumentManager    = brackets.getModule("document/DocumentManager"),
       Dialogs            = brackets.getModule("widgets/Dialogs"),
       EditorManager      = brackets.getModule("editor/EditorManager"),
       ExtensionUtils     = brackets.getModule("utils/ExtensionUtils"),
@@ -26,7 +27,7 @@ define(function(require, exports, module) {
       PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
       ProjectManager     = brackets.getModule("project/ProjectManager"),
 
-      ImageFiles         = LanguageManager.getLanguage("image")._fileExtensions.concat("svg"),
+      ImageFiles         = LanguageManager.getLanguage("image")._fileExtensions.push("svg"),
       Strings            = require("strings"),
       SvgSize            = require("src/SvgSize"),
       IndentSize         = require("src/IndentSize"),
@@ -63,7 +64,6 @@ define(function(require, exports, module) {
   // If the user ever changes their preferences,
   // we need to make sure we stay up-to-date
   PreferencesManager.on("change", function() {
-
     // Do NOT attempt to assign `indentUnits` directly to the function.
     // It will completely break otherwise
     var tempVar = IndentSize.getIndentation();
@@ -171,7 +171,8 @@ define(function(require, exports, module) {
         fileName = FileUtils.getBaseName(image);
 
     // If this is a saved document and image and document are in the same folder
-    if (!/^_brackets_/.test(curDir) && (curDir.toLowerCase() === image.replace(fileName, "").toLowerCase())) {
+    if (!DocumentManager.getCurrentDocument().isUntitled() &&
+        curDir.toLowerCase() === image.replace(fileName, "").toLowerCase()) {
       // Use only the image file name
       image = fileName;
     }
@@ -218,7 +219,7 @@ define(function(require, exports, module) {
         // Get the width and height for bitmap images
       } else {
         var $container = $("<img class='html-skeleton-img-size' src='" + path + "'/>");
-        $container.trigger("load").one("load", function(e) {
+        $container.trigger("load").one("load", function() {
           var $this = $(this);
           details.width  = $this.prop("naturalWidth");
           details.height = $this.prop("naturalHeight");

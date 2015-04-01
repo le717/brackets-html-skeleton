@@ -5,7 +5,7 @@
   "node"       : true,
   "strict"     : true,
   "undef"      : true,
-  "unused"     : false,
+  "unused"     : true,
   "quotmark"   : "double",
   "globals": {
     "define"   : true,

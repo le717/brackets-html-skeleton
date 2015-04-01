@@ -26,20 +26,20 @@ define(function(require, exports, module) {
 
   /**
    * @private
-   * Polyfill from http://stackoverflow.com/a/4550005
-   * @param str Text to be repeated.
-   * @param num Number of times text should be repeated.
-   * @return {string} repeated the number of times stated.
+   * Helper from http://stackoverflow.com/a/4550005
+   * @param {String} str Text to be repeated.
+   * @param {Number} num Number of times text repeated should occur.
+   * @returns {String}
    */
   function _repeatString(str, num) {
-    return (new Array(num + 1)).join(str);
+    return new Array(num + 1).join(str);
   }
 
 
   /**
    * Create a complete indentation level by repeating
    * the user's desired character by their chosen size.
-   * @return {string} Complete indentation level.
+   * @return {String} Complete indentation level.
    */
   function getIndentation() {
     return _repeatString(indentation.char, indentation.size);
@@ -48,7 +48,7 @@ define(function(require, exports, module) {
 
   /**
    * Get the current indentation settings for use in inserted code
-   * @return {string} User's current indentation settings
+   * @return {String} User's current indentation settings
    */
   function getIndentType() {
     // \u0009 is a tab, \u0020 is a space
@@ -66,9 +66,9 @@ define(function(require, exports, module) {
 
 
   /**
-    * Get the user's indentation level size depending on if they use spaces or tabs.
-    * @return {string} Indentation level size.
-    */
+   * Get the user's indentation level size depending on if they use spaces or tabs.
+   * @return {String} Indentation level size.
+   */
   function getIndentSize() {
     indentation.size = indentation.isTab ? PreferencesManager.get("tabSize") : PreferencesManager.get("spaceUnits");
     return indentation.size;
