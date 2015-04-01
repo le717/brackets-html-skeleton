@@ -1,9 +1,9 @@
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 2, maxerr: 50 */
-/*global define, brackets, Mustache */
+/*global $, define, brackets, Mustache */
 
 /*
  * HTML Skeleton
- * Created 2014 Triangle717
+ * Created 2014-2015 Triangle717
  * <http://le717.github.io/>
  *
  * Licensed under The MIT License
@@ -15,6 +15,7 @@ define(function (require, exports, module) {
   "use strict";
   var AppInit            = brackets.getModule("utils/AppInit"),
       CommandManager     = brackets.getModule("command/CommandManager"),
+      DocumentManager    = brackets.getModule("document/DocumentManager"),
       Dialogs            = brackets.getModule("widgets/Dialogs"),
       EditorManager      = brackets.getModule("editor/EditorManager"),
       ExtensionUtils     = brackets.getModule("utils/ExtensionUtils"),
@@ -25,7 +26,8 @@ define(function (require, exports, module) {
       Menus              = brackets.getModule("command/Menus"),
       PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
       ProjectManager     = brackets.getModule("project/ProjectManager"),
-      ImageFiles         = LanguageManager.getLanguage("image")._fileExtensions.concat("svg"),
+
+      ImageFiles         = LanguageManager.getLanguage("image")._fileExtensions.push("svg"),
       Strings            = require("strings"),
       SvgSize            = require("src/SvgSize"),
       IndentSize         = require("src/IndentSize"),
@@ -37,6 +39,7 @@ define(function (require, exports, module) {
       localizedDialog = Mustache.render(skeletonDialogHTML, Strings),
       localizedButton = Mustache.render(toolbarButtonHTML, Strings);
 
+  // HTML snippets roster
   var skeletonBones = {
     image    : "<img alt='' width='size-x' height='size-y' src='src-url'>",
     inStyle  : "<style></style>",
@@ -46,13 +49,13 @@ define(function (require, exports, module) {
     extScript: "<script src=''></script>",
 
     basiSkel : "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='UTF-8'>\n" +
-        "indent-size<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n" +
-        "indent-size<title></title>\n</head>\n\n<body>\nindent-size\n</body>\n</html>\n",
+    "indent-size<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n" +
+    "indent-size<title></title>\n</head>\n\n<body>\nindent-size\n</body>\n</html>\n",
 
     fullSkel : "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='UTF-8'>\n" +
-        "indent-size<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n" +
-        "indent-size<title></title>\nindent-size<link rel='stylesheet' href=''>\n" +
-        "</head>\n\n<body>\nindent-size<script src=''></script>\n</body>\n</html>\n"
+    "indent-size<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n" +
+    "indent-size<title></title>\nindent-size<link rel='stylesheet' href=''>\n" +
+    "</head>\n\n<body>\nindent-size<script src=''></script>\n</body>\n</html>\n"
   };
 
 
@@ -60,18 +63,17 @@ define(function (require, exports, module) {
   // If the user ever changes their preferences,
   // we need to make sure we stay up-to-date
   PreferencesManager.on("change", function () {
-
     // Do NOT attempt to assign `indentUnits` directly to the function.
     // It will completely break otherwise
     var tempVar = IndentSize.getIndentation();
     indentUnits = tempVar;
   });
 
-
   /**
    * @private
-   * Insert the selected elements into the document
-   * @param elements The elements to be inserted into the document
+   * Insert the selected elements into the document.
+   * @param elements The elements to be inserted into the document.
+   * @returns {Boolean} Always true.
    */
   function _insertSelectedElements(elements) {
     // Get the document in the full editor
@@ -86,17 +88,15 @@ define(function (require, exports, module) {
           // Do a regex search for the `indent-size` keyword
           // and replace it with the user's indent settings
           // Also replace all single quotes with double quotes
-          value = value.replace(/indent-size/g, indentUnits)
-                       .replace(/'/g, "\"");
+          value = value.replace(/indent-size/g, indentUnits).replace(/'/g, "\"");
 
           // Insert the selected elements at the current cursor position
           editor.document.replaceRange(value, cursor);
         });
       });
     }
-    return;
+    return true;
   }
-
 
   /**
    * @private
@@ -139,56 +139,47 @@ define(function (require, exports, module) {
     _insertSelectedElements(selections);
   }
 
-
   /**
    * @private
    * Create a usable, valid path to the user's selected image
-   * relative to document into which it being inserted
-   * @param {string} imageDir The full path to a user-selected image
-   * @return {string} A usable, valid path to the image
+   * relative to document into which it being inserted.
+   * @param {String} image The full path to a user-selected image.
+   * @param {Boolean} [uiDisplay=false] If true, perform additional changes suitable for UI display.
+   * @return {String} A usable, valid path to the image.
    */
-  function _createImageURL(imageDir) {
+  function _createImageURL(image, uiDisplay) {
+    if (uiDisplay === undefined) {
+      uiDisplay = false;
+    }
+
     // Get the directory to the file the image is being inserted into
     // and just the file name of the image
-    var curFileDir  = EditorManager.getCurrentFullEditor().document.file.parentPath,
-        imgFileName = FileUtils.getBaseName(imageDir);
+    var curDir   = EditorManager.getCurrentFullEditor().document.file.parentPath,
+        fileName = FileUtils.getBaseName(image);
 
-    // If this is a saved documentand image and document are in the same folder
-    if (!/^_brackets_/.test(curFileDir) && (curFileDir.toLowerCase() === imageDir.replace(imgFileName, "").toLowerCase())) {
+    // If this is a saved document and image and document are in the same folder
+    if (!DocumentManager.getCurrentDocument().isUntitled() &&
+        curDir.toLowerCase() === image.replace(fileName, "").toLowerCase()) {
       // Use only the image file name
-      imageDir = imgFileName;
+      image = fileName;
     }
 
-    // Try to make the path as relative as possible
-    imageDir = ProjectManager.makeProjectRelativeIfPossible(imageDir);
+    // Try to make the path relative
+    image = ProjectManager.makeProjectRelativeIfPossible(image);
 
-    // If the path is longer than 50 characters, split it up for better displaying
-    if (imageDir.length > 50) {
-      imageDir = imageDir.substring(0, 51) + "<br>" + imageDir.substring(51, imageDir.length);
+    // If desired, if the path is longer than 50 characters split it up for better displaying
+    if (uiDisplay && image.length > 50) {
+      image = image.substring(0, 51) + "<br>" + image.substring(51, image.length);
     }
-    return imageDir;
+    return image;
   }
-
-
-  /**
-   * @private
-   * Check if the dark theme is enabled and return
-   * the appropriate class name for a slight shadow
-   * on the image preview.
-   * @return {string} Appropriate shadow class name
-   */
-  function _getImageShadow() {
-    return document.querySelector("body").classList.contains("dark") ?
-      "html-skeleton-img-shadow-dark" : "html-skeleton-img-shadow";
-  }
-
 
   /**
    * @private
    * Update image width/height input fields.
-   * @param imageWidth {string} The image width.
-   * @param imageHeight {string} The image height.
-   * @return {boolean} true.
+   * @param imageWidth {String} The image width.
+   * @param imageHeight {String} The image height.
+   * @return {Boolean} true.
    */
   function _updateSizeInput(imgWidth, imgHeight) {
     document.querySelector(".html-skeleton-form .img-width").value = imgWidth;
@@ -200,7 +191,7 @@ define(function (require, exports, module) {
   /**
    * @private
    * Display the user selected image.
-   * @param imagePath {string} Absolute path to image file.
+   * @param imagePath {String} Absolute path to image file.
    */
   function _displayImage(imagePath) {
     var shortImagePath  = "",
@@ -225,7 +216,7 @@ define(function (require, exports, module) {
     $imgPreview.removeClass("html-skeleton-img-container");
 
     // Trim the file path for nice displaying
-    shortImagePath = _createImageURL(imagePath);
+    shortImagePath = _createImageURL(imagePath, true);
 
     // The image is an unsupported file type
     if (!isSupported && !isSvgImage) {
@@ -234,7 +225,7 @@ define(function (require, exports, module) {
       $(".html-skeleton-img").css("position", "relative");
       $imgPreview.addClass("html-skeleton-img-container");
       $imgPathDisplay.css("color", "red");
-      $imgPreview.removeClass(_getImageShadow());
+      $imgPreview.removeClass("html-skeleton-img-shadow");
 
       $imgPathDisplay.html(shortImagePath);
       imgErrorText.innerHTML = "<br>is not supported for previewing!";
@@ -252,7 +243,7 @@ define(function (require, exports, module) {
 
       // Position and add small shadow to container
       $(".html-skeleton-img").css("position", "relative");
-      $imgPreview.addClass(_getImageShadow());
+      $imgPreview.addClass("html-skeleton-img-shadow");
 
       // Show the file path and display the image
       $imgPathDisplay.html(shortImagePath);

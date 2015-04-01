@@ -46,9 +46,7 @@
   height: 240px;
 }
 
-/* Slight shadow around image */
 .html-skeleton-img-shadow { box-shadow: 0 0 3px #000; }
-.html-skeleton-img-shadow-dark { box-shadow: 0 0 2px 1px #fff; }
 
 /* Shift the dialog content (excluding the image) up */
 .html-skeleton-content {
