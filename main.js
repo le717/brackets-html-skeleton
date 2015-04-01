@@ -270,17 +270,16 @@ define(function (require, exports, module) {
 
   /**
    * @private
-   * Open the file browse dialog for the user to select an image
+   * Open the file browse dialog for the user to select an image.
+   * @param {Object} e DOM event.
    */
   function _showFileDialog(e) {
-    FileSystem.showOpenDialog(
-      false, false, Strings.FILE_DIALOG_TITLE,
-      "", ImageFiles, function (closedDialog, selectedFile) {
-        if (!closedDialog && selectedFile && selectedFile.length > 0) {
-          _displayImage(selectedFile[0]);
-        }
+    FileSystem.showOpenDialog(false, false, Strings.FILE_DIALOG_TITLE,
+                              "", ImageFiles, function (cancel, selected) {
+      if (!cancel && selected && selected.length > 0) {
+        _displayImage(selected[0]);
       }
-    );
+    });
     e.preventDefault();
     e.stopPropagation();
   }
