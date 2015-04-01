@@ -46,7 +46,7 @@
   },
 
   "maximumLineLength": {
-    "value": 125,
+    "value": 145,
     "allowComments":  true,
     "allowRegex": true
   }

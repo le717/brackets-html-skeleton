@@ -1,4 +1,4 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
   "use strict";
   grunt.initConfig({
     pkg: grunt.file.readJSON("package.json"),
@@ -51,7 +51,7 @@ module.exports = function(grunt) {
 
   require("matchdep").filterDev("grunt-*").forEach(grunt.loadNpmTasks);
 
-  grunt.registerTask("default", "List of commands", function() {
+  grunt.registerTask("default", "List of commands", function () {
     grunt.log.writeln("");
     grunt.log.writeln("Run 'grunt lint' to lint the source files");
   });
