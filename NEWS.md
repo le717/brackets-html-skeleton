@@ -1,5 +1,10 @@
 # Changes #
 
+## 1.4.0 ##
+### 1 April, 2015 ###
+* Rewrite SVG graphic size detection to use regexs instead of jQuery ([#30](https://github.com/le717/brackets-html-skeleton/issues/30))
+* Backport some changes from unfinished [#29](https://github.com/le717/brackets-html-skeleton/issues/29) ([#30](https://github.com/le717/brackets-html-skeleton/issues/30))
+
 ## 1.3.5 ##
 ### 26 November, 2014 ###
 * Change location of image `src` attribute
