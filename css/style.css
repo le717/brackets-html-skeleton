@@ -1,6 +1,6 @@
 /*
  * HTML Skeleton
- * Created 2014 Triangle717
+ * Created 2014-2015 Triangle717
  * <http://le717.github.io/>
  *
  * Licensed under The MIT License
@@ -8,24 +8,21 @@
  */
 
 
-/* Toolbar icon */
 #html-skeleton-toolbar { background-image: url("../img/toolbar.svg"); }
 
 /* Prevent scrollbars, slightly enlarge dialog */
 .modal-body.html-skeleton {
-  overflow: hidden;
   max-height: 420px;
+  overflow: hidden;
 }
 
-/* Move the information text up */
-.modal-body.html-skeleton .dialog-message { margin-top: -7px; }
+.modal-body.html-skeleton .dialog-message { margin-top: -0.6em; }
 
-/* Position image container */
 .html-skeleton-img {
   top: -25px;
   right: -10px;
-  float: right;
   left: 5px;
+  float: right;
 }
 
 /* Decrease the size of the image path */
@@ -36,7 +33,6 @@
 .html-skeleton-img .image-header,
 .html-skeleton-img .image-path { display: none; }
 
-/* Error text */
 .html-skeleton-img .img-error-text { color: #f00; }
 
 /* Scale the image */
@@ -46,41 +42,29 @@
   height: 240px;
 }
 
-/* Slight shadow around image */
 .html-skeleton-img-shadow { box-shadow: 0 0 3px #000; }
-.html-skeleton-img-shadow-dark { box-shadow: 0 0 2px 1px #fff; }
 
 /* Shift the dialog content (excluding the image) up */
 .html-skeleton-content {
-  position: relative;
-  bottom: 20px;
+    position: relative;
+    bottom: 20px;
 }
 
-/* Space the check boxes apart a bit */
-.html-skeleton-form > input { margin-bottom: 4px; }
+.html-skeleton-form label { margin-bottom: 0.18em; }
+.html-skeleton-form  input[type="number"] { margin-bottom: 0.25em; }
 
-/* Reduce the amount of blank space underneath the number fields */
-.html-skeleton-form > input[type="number"] { margin-bottom: 4px; }
-
-/* Align the browse button with the other elements */
 .html-skeleton-dialog a[data-button-id="browse"] {
-  margin-bottom: 4px;
-  margin-left: 10px;
+  margin-bottom: 0.25em;
+  margin-left: 0.75em;
 }
 
-/* Do not place input labels on a new line */
-.html-skeleton-form > label { display: inline; }
-
-/* Enlarge the "x" between the input fields */
-.html-skeleton-form .letter-x {
+.html-skeleton-form #letter-x {
   font-weight: 900;
-  font-size: 17px;
+  font-size: 1.4em;
+  padding: 0 0.2em;
 }
 
-/* Accommodate the "Full HTML Skeleton" description */
 #full-skeleton-description {
   position: relative;
-  bottom: 5px;
-  display: inline-block;
-  font-size: 12px;
+  bottom: 0.4em;
 }

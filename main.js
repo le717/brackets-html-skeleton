@@ -1,9 +1,9 @@
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 2, maxerr: 50 */
-/*global define, brackets, Mustache */
+/*global $, define, brackets, Mustache */
 
 /*
  * HTML Skeleton
- * Created 2014 Triangle717
+ * Created 2014-2015 Triangle717
  * <http://le717.github.io/>
  *
  * Licensed under The MIT License
@@ -11,10 +11,11 @@
  */
 
 
-define(function (require, exports, module) {
+define(function(require, exports, module) {
   "use strict";
   var AppInit            = brackets.getModule("utils/AppInit"),
       CommandManager     = brackets.getModule("command/CommandManager"),
+      DocumentManager    = brackets.getModule("document/DocumentManager"),
       Dialogs            = brackets.getModule("widgets/Dialogs"),
       EditorManager      = brackets.getModule("editor/EditorManager"),
       ExtensionUtils     = brackets.getModule("utils/ExtensionUtils"),
@@ -25,7 +26,8 @@ define(function (require, exports, module) {
       Menus              = brackets.getModule("command/Menus"),
       PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
       ProjectManager     = brackets.getModule("project/ProjectManager"),
-      ImageFiles         = LanguageManager.getLanguage("image")._fileExtensions.concat("svg"),
+
+      ImageFiles         = LanguageManager.getLanguage("image")._fileExtensions.push("svg"),
       Strings            = require("strings"),
       SvgSize            = require("src/SvgSize"),
       IndentSize         = require("src/IndentSize"),
@@ -34,9 +36,11 @@ define(function (require, exports, module) {
       skeletonDialogHTML = require("text!htmlContent/mainDialog.html");
 
   var indentUnits     = "",
+      finalImages     = [],
       localizedDialog = Mustache.render(skeletonDialogHTML, Strings),
       localizedButton = Mustache.render(toolbarButtonHTML, Strings);
 
+  // HTML snippets roster
   var skeletonBones = {
     image    : "<img alt='' width='size-x' height='size-y' src='src-url'>",
     inStyle  : "<style></style>",
@@ -46,21 +50,20 @@ define(function (require, exports, module) {
     extScript: "<script src=''></script>",
 
     basiSkel : "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='UTF-8'>\n" +
-        "indent-size<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n" +
-        "indent-size<title></title>\n</head>\n\n<body>\nindent-size\n</body>\n</html>\n",
+    "indent-size<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n" +
+    "indent-size<title></title>\n</head>\n\n<body>\nindent-size\n</body>\n</html>\n",
 
     fullSkel : "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='UTF-8'>\n" +
-        "indent-size<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n" +
-        "indent-size<title></title>\nindent-size<link rel='stylesheet' href=''>\n" +
-        "</head>\n\n<body>\nindent-size<script src=''></script>\n</body>\n</html>\n"
+    "indent-size<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n" +
+    "indent-size<title></title>\nindent-size<link rel='stylesheet' href=''>\n" +
+    "</head>\n\n<body>\nindent-size<script src=''></script>\n</body>\n</html>\n"
   };
 
 
   // Get user's indentation settings
   // If the user ever changes their preferences,
   // we need to make sure we stay up-to-date
-  PreferencesManager.on("change", function () {
-
+  PreferencesManager.on("change", function() {
     // Do NOT attempt to assign `indentUnits` directly to the function.
     // It will completely break otherwise
     var tempVar = IndentSize.getIndentation();
@@ -70,8 +73,9 @@ define(function (require, exports, module) {
 
   /**
    * @private
-   * Insert the selected elements into the document
-   * @param elements The elements to be inserted into the document
+   * Insert the selected elements into the document.
+   * @param elements The elements to be inserted into the document.
+   * @returns {Boolean} Always true.
    */
   function _insertSelectedElements(elements) {
     // Get the document in the full editor
@@ -81,20 +85,19 @@ define(function (require, exports, module) {
       // Get the elements from the list in reverse so everything is added in the proper order
       var cursor = editor.getCursorPos();
 
-      elements.reverse().forEach(function (value) {
-        editor.document.batchOperation(function () {
+      elements.reverse().forEach(function(value) {
+        editor.document.batchOperation(function() {
           // Do a regex search for the `indent-size` keyword
           // and replace it with the user's indent settings
           // Also replace all single quotes with double quotes
-          value = value.replace(/indent-size/g, indentUnits)
-                       .replace(/'/g, "\"");
+          value = value.replace(/indent-size/g, indentUnits).replace(/'/g, "\"");
 
           // Insert the selected elements at the current cursor position
           editor.document.replaceRange(value, cursor);
         });
       });
     }
-    return;
+    return true;
   }
 
 
@@ -103,15 +106,13 @@ define(function (require, exports, module) {
    * Get skeleton choices.
    */
   function _getSelectedElements() {
-    var imgWidthInput  = document.querySelector(".html-skeleton-form .img-width"),
-        imgHeightInput = document.querySelector(".html-skeleton-form .img-height"),
-        selections     = [],
-        optionIDs      = ["#basic-skeleton", "#viewport", "#ext-style",
-                          "#in-style", "#ext-script", "#in-script", "#full-skeleton"
-                         ];
+    var selections = [],
+        optionIDs  = ["#basic-skeleton", "#viewport", "#ext-style",
+                      "#in-style", "#ext-script", "#in-script", "#full-skeleton"
+                     ];
 
     // For each option that is checked, keep track of the corresponding element
-    optionIDs.forEach(function (value) {
+    optionIDs.forEach(function(value) {
       if (document.querySelector(".html-skeleton-form " + value).checked) {
         selections.push(skeletonBones[document.querySelector(".html-skeleton-form " + value).value]);
       }
@@ -119,20 +120,31 @@ define(function (require, exports, module) {
 
     // The picture/image box was checked
     if (document.querySelector(".html-skeleton-form #img").checked) {
+      var widthInput  = document.querySelector(".html-skeleton-form .img-width").value,
+          heightInput = document.querySelector(".html-skeleton-form .img-height").value;
 
-      // Get the width/height values from the input fields
-      var imgWidth  = imgWidthInput.value,
-          imgHeight = imgHeightInput.value;
-      imgWidth  = imgWidth  !== "" ? imgWidth : 0;
-      imgHeight = imgHeight !== "" ? imgHeight : 0;
+      // Only one image was selected
+      if (finalImages.length === 1) {
+        var singleImage = finalImages[0];
 
-      // Mark the image tag for addition in document,
-      // replacing the placeholder values with actual ones
-      var imgFilledIn = skeletonBones.image;
-      imgFilledIn     = imgFilledIn.replace(/src-url/, document.querySelector(".html-skeleton-img .img-src").textContent);
-      imgFilledIn     = imgFilledIn.replace(/size-x/, imgWidth);
-      imgFilledIn     = imgFilledIn.replace(/size-y/, imgHeight);
-      selections.push(imgFilledIn);
+        // Use input field values if they are different than extracted
+        if (widthInput !== singleImage.width) {
+          singleImage.width = widthInput;
+        }
+
+        if (heightInput !== singleImage.height) {
+          singleImage.height = heightInput;
+        }
+      }
+
+      // Replace placeholder values with actual ones
+      finalImages.forEach(function(v) {
+        var imgComplete = skeletonBones.image;
+        imgComplete     = imgComplete.replace(/src-url/, v.relPath);
+        imgComplete     = imgComplete.replace(/size-x/, v.width);
+        imgComplete     = imgComplete.replace(/size-y/, v.height);
+        selections.push(imgComplete);
+      });
     }
 
     // Finally, add the selected elements to the document
@@ -143,56 +155,121 @@ define(function (require, exports, module) {
   /**
    * @private
    * Create a usable, valid path to the user's selected image
-   * relative to document into which it being inserted
-   * @param {string} imageDir The full path to a user-selected image
-   * @return {string} A usable, valid path to the image
+   * relative to document into which it being inserted.
+   * @param {string} image The full path to a user-selected image.
+   * @param {boolean} [uiDisplay=false] If true, perform additional changes suitable for UI display.
+   * @return {string} A usable, valid path to the image.
    */
-  function _createImageURL(imageDir) {
+  function _createImageURL(image, uiDisplay) {
+    if (uiDisplay === undefined) {
+      uiDisplay = false;
+    }
+
     // Get the directory to the file the image is being inserted into
     // and just the file name of the image
-    var curFileDir  = EditorManager.getCurrentFullEditor().document.file.parentPath,
-        imgFileName = FileUtils.getBaseName(imageDir);
+    var curDir   = EditorManager.getCurrentFullEditor().document.file.parentPath,
+        fileName = FileUtils.getBaseName(image);
 
-    // If this is a saved documentand image and document are in the same folder
-    if (!/^_brackets_/.test(curFileDir) && (curFileDir.toLowerCase() === imageDir.replace(imgFileName, "").toLowerCase())) {
+    // If this is a saved document and image and document are in the same folder
+    if (!DocumentManager.getCurrentDocument().isUntitled() &&
+        curDir.toLowerCase() === image.replace(fileName, "").toLowerCase()) {
       // Use only the image file name
-      imageDir = imgFileName;
+      image = fileName;
     }
 
-    // Try to make the path as relative as possible
-    imageDir = ProjectManager.makeProjectRelativeIfPossible(imageDir);
+    // Try to make the path relative
+    image = ProjectManager.makeProjectRelativeIfPossible(image);
 
-    // If the path is longer than 50 characters, split it up for better displaying
-    if (imageDir.length > 50) {
-      imageDir = imageDir.substring(0, 51) + "<br>" + imageDir.substring(51, imageDir.length);
+    // If desired, if the path is longer than 50 characters split it up for better displaying
+    if (uiDisplay && image.length > 50) {
+      image = image.substring(0, 51) + "<br>" + image.substring(51, image.length);
     }
-    return imageDir;
+    return image;
   }
 
 
   /**
    * @private
-   * Check if the dark theme is enabled and return
-   * the appropriate class name for a slight shadow
-   * on the image preview.
-   * @return {string} Appropriate shadow class name
+   * Get the image size and relative path.
+   * @param {Array.<string>} images Array containing absolute paths to an image.
+   * @returns {Array} Populated with individual objects containing necessary image information.
    */
-  function _getImageShadow() {
-    return document.querySelector("body").classList.contains("dark") ?
-      "html-skeleton-img-shadow-dark" : "html-skeleton-img-shadow";
+  function _getImageSize(images) {
+    var storage = [];
+
+    images.forEach(function(path) {
+      // Create an image details object
+      var details = {
+        isSvg  : FileUtils.getFileExtension(path) === "svg",
+        width  : 0,
+        height : 0,
+        absPath: path,
+        relPath: _createImageURL(path)
+      };
+
+      // TODO The width/height is detected but will not be exposed to the needed scope
+
+      // Special extraction routine for SVG graphics
+      if (details.isSvg) {
+        SvgSize.getSVGSize(path).then(function(sizes) {
+          details.width  = sizes[0];
+          details.height = sizes[1];
+        });
+
+        // Get the width and height for bitmap images
+      } else {
+        var $container = $("<img class='html-skeleton-img-size' src='" + path + "'/>");
+        $container.trigger("load").one("load", function() {
+          var $this = $(this);
+          details.width  = $this.prop("naturalWidth");
+          details.height = $this.prop("naturalHeight");
+        });
+      }
+      storage.push(details);
+    });
+    return storage;
+  }
+
+
+  function _processImage(images) {
+    var QimgCheckBox = document.querySelector(".html-skeleton-form #img");
+
+    // The Image check box was not checked before now. Since the user has opened an image,
+    // let's assume the user wants to use it and check the box for them.
+    if (!QimgCheckBox.checked) {
+      QimgCheckBox.checked = true;
+    }
+
+    // Clear the array if it was previously populated
+    if (finalImages.length > 0) {
+      finalImages = [];
+    }
+
+    // Get the size of each image
+    finalImages = _getImageSize(images);
+
+    // If only one image was selected, display it
+    if (finalImages.length === 1) {
+      _displayImage(finalImages[0]);
+
+      // TODO "Multiple images were selected" display
+    } else {
+
+    }
+
+    return true;
   }
 
 
   /**
    * @private
    * Update image width/height input fields.
-   * @param imageWidth {string} The image width.
-   * @param imageHeight {string} The image height.
+   * @param imageObj {object} Image details object.
    * @return {boolean} true.
    */
-  function _updateSizeInput(imgWidth, imgHeight) {
-    document.querySelector(".html-skeleton-form .img-width").value = imgWidth;
-    document.querySelector(".html-skeleton-form .img-height").value = imgHeight;
+  function _updateSizeInput(imageObj) {
+    document.querySelector(".html-skeleton-form .img-width").value = imageObj.width;
+    document.querySelector(".html-skeleton-form .img-height").value = imageObj.height;
     return true;
   }
 
@@ -202,102 +279,60 @@ define(function (require, exports, module) {
    * Display the user selected image.
    * @param imagePath {string} Absolute path to image file.
    */
-  function _displayImage(imagePath) {
-    var shortImagePath  = "",
-        isSvgImage      = false,
-        isSupported     = false,
-        imgCheckBox     = document.querySelector(".html-skeleton-form #img"),
-        $imgPreview     = $(".html-skeleton-img .image-preview"),
-        imgErrorText   = document.querySelector(".html-skeleton-img .img-error-text"),
-        $imgPathDisplay = $(".html-skeleton-img .img-src");
+  function _displayImage(imageObj) {
+    var shortPath    = _createImageURL(imageObj.absPath, true),
+        isSupported  = LanguageManager.getLanguageForPath(imageObj.absPath).getId() === "image" || imageObj.isSvg,
+        $imgPreview  = $(".html-skeleton-img .image-preview"),
+        QerrorText   = document.querySelector(".html-skeleton-img .img-error-text"),
+        QpathDisplay = document.querySelector(".html-skeleton-img .img-src");
 
-    // Check if the image is supported and if it is an SVG image
-    isSupported = LanguageManager.getLanguageForPath(imagePath).getId() === "image";
-    isSvgImage  = FileUtils.getFileExtension(imagePath) === "svg" ? true : false;
+    // Appy the standard positioning
+    $(".html-skeleton-img").css("position", "relative");
+    $imgPreview.addClass("html-skeleton-img-container");
 
-    // The Image check box was not checked before now. Since the user has opened an image,
-    // let's assume the user wants to use it and check the box for them.
-    if (!imgCheckBox.checked) {
-      imgCheckBox.checked = true;
-    }
-
-    // Quickly remove the size constraints to get an accurate image size
-    $imgPreview.removeClass("html-skeleton-img-container");
-
-    // Trim the file path for nice displaying
-    shortImagePath = _createImageURL(imagePath);
+    // Update display
+    QpathDisplay.innerHTML = shortPath;
+    _updateSizeInput(imageObj);
 
     // The image is an unsupported file type
-    if (!isSupported && !isSvgImage) {
-
-      // Update display for image and display extension logo
-      $(".html-skeleton-img").css("position", "relative");
-      $imgPreview.addClass("html-skeleton-img-container");
-      $imgPathDisplay.css("color", "red");
-      $imgPreview.removeClass(_getImageShadow());
-
-      $imgPathDisplay.html(shortImagePath);
-      imgErrorText.innerHTML = "<br>is not supported for previewing!";
+    if (!isSupported) {
+      QpathDisplay.style.color = "red";
+      $imgPreview.removeClass("html-skeleton-img-shadow");
+      QerrorText.innerHTML = "<br>is not supported for previewing!";
       $imgPreview.attr("src", skeletonLogo);
 
-      _updateSizeInput("", "");
-      return false;
-
       // The image is a supported file type
-    } else if (isSupported || isSvgImage) {
+    } else if (isSupported) {
+      // Clear possible CSS from unsupported image
+      QerrorText.innerHTML = "";
+      QpathDisplay.style.color = "";
 
-       // Clear possible CSS applied from previewing an unsupported image
-      imgErrorText.innerHTML = "";
-      $imgPathDisplay.css("color", "");
-
-      // Position and add small shadow to container
-      $(".html-skeleton-img").css("position", "relative");
-      $imgPreview.addClass(_getImageShadow());
-
-      // Show the file path and display the image
-      $imgPathDisplay.html(shortImagePath);
-      $imgPreview.attr("src", imagePath);
-      $imgPreview.addClass("html-skeleton-img-container");
+      $imgPreview.addClass("html-skeleton-img-shadow");
+      $imgPreview.attr("src", imageObj.absPath);
     }
-
-    // Get the image width and height
-    $imgPreview.one("load", function () {
-      if (isSupported && !isSvgImage) {
-        var imgWidth  = $imgPreview.prop("naturalWidth"),
-            imgHeight = $imgPreview.prop("naturalHeight");
-        _updateSizeInput(imgWidth, imgHeight);
-
-        // Special routine for SVG graphics only
-      } else if (isSvgImage) {
-        SvgSize.getSVGSize(imagePath).then(function (sizes) {
-          _updateSizeInput(sizes[0], sizes[1]);
-        });
-      }
-    });
     return;
   }
 
 
   /**
    * @private
-   * Open the file browse dialog for the user to select an image
+   * Open the file browse dialog for the user to select an image.
+   * @param {Object} e DOM event.
    */
   function _showFileDialog(e) {
-    FileSystem.showOpenDialog(
-      false, false, Strings.FILE_DIALOG_TITLE,
-      null, ImageFiles, function (closedDialog, selectedFile) {
-        if (!closedDialog && selectedFile && selectedFile.length > 0) {
-          _displayImage(selectedFile[0]);
-        }
+    FileSystem.showOpenDialog(true, false, Strings.FILE_DIALOG_TITLE,
+                              null, ImageFiles, function(cancel, selected) {
+      if (!cancel && selected && selected.length > 0) {
+        _processImage(selected);
       }
-    );
+    });
     e.preventDefault();
     e.stopPropagation();
   }
 
 
   /**
-   * Display HTML Skeleton dialog box
+   * Display HTML Skeleton dialog box.
    */
   function displaySkeletonDialog() {
     var skeletonDialog = Dialogs.showModalDialogUsingTemplate(localizedDialog),
@@ -309,13 +344,13 @@ define(function (require, exports, module) {
     document.querySelector(".html-skeleton-img .image-preview").classList.add("html-skeleton-img-container");
 
     // Hide image stats
-    var imageTip   = document.querySelector(".html-skeleton-img .image-tip"),
-        imageScale = document.querySelector(".html-skeleton-img .image-scale");
-    imageTip.parentNode.removeChild(imageTip);
-    imageScale.parentNode.removeChild(imageScale);
+    var QimageTip   = document.querySelector(".html-skeleton-img .image-tip"),
+        QimageScale = document.querySelector(".html-skeleton-img .image-scale");
+    QimageTip.parentNode.removeChild(QimageTip);
+    QimageScale.parentNode.removeChild(QimageScale);
 
     // If the Browse button is clicked, proceed to open the browse dialog
-    $(".dialog-button[data-button-id='browse']", $dialog).on("click", function (e) {
+    $(".dialog-button[data-button-id='browse']", $dialog).on("click", function(e) {
       _showFileDialog(e);
     });
 
@@ -326,9 +361,9 @@ define(function (require, exports, module) {
 
   /**
    * @private
-   * Load the extension after Brackets itself has finished loading
+   * Load the extension after Brackets itself has finished loading.
    */
-  AppInit.appReady(function () {
+  AppInit.appReady(function() {
     // Define the extension ID and CSS
     var EXTENSION_ID = "le717.html-skeleton";
     ExtensionUtils.loadStyleSheet(module, "css/style.css");
@@ -342,7 +377,6 @@ define(function (require, exports, module) {
     menu.addMenuItem(EXTENSION_ID);
 
     // Create toolbar icon
-    $(localizedButton).appendTo("#main-toolbar > .buttons")
-                      .on("click", displaySkeletonDialog);
+    $(localizedButton).appendTo("#main-toolbar > .buttons").on("click", displaySkeletonDialog);
   });
 });

@@ -1,9 +1,9 @@
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 2, maxerr: 50 */
-/*global define, brackets, $ */
+/*global $, define, brackets */
 
 /*
  * HTML Skeleton
- * Created 2014 Triangle717
+ * Created 2014-2015 Triangle717
  * <http://le717.github.io/>
  *
  * Licensed under The MIT License
@@ -11,43 +11,43 @@
  */
 
 
-define(function (require, exports, module) {
+define(function(require, exports, module) {
   "use strict";
   var FileSystem = brackets.getModule("filesystem/FileSystem"),
       FileUtils  = brackets.getModule("file/FileUtils");
 
   /**
    * @private
-   * Get SVG graphic file object
-   * @param svgfile {string} absolute path to SVG graphic
-   * @return {jQuery.Promise} promise that contains a File object
+   * Get SVG graphic file object.
+   * @param {String} svgFile Absolute path to SVG graphic.
+   * @return {$.Promise} Promise that contains a File object.
    */
-  function _readSVG(svgfile) {
-    return FileUtils.readAsText(FileSystem.getFileForPath(svgfile));
+  function _readSVG(svgFile) {
+    return FileUtils.readAsText(FileSystem.getFileForPath(svgFile));
   }
 
   /**
    * @private
-   * @param width the proposed width
-   * @param height the proposed height
-   * @return {boolean} true if width and height are valid
+   * @param {Number} width The proposed width.
+   * @param {Number} height The proposed height.
+   * @return {Boolean} True if width and height are valid.
    */
   function _checkIfValid(width, height) {
-    return !Number.isNaN(width) && !Number.isNaN(height) && (width && height) !== 0 && (width && height) !== "";
+    return !Number.isNaN(width) && !Number.isNaN(height) && (width && height) !== "";
   }
 
   /**
    * Attempt to extract the size of an SVG graphic
-   * from the width/height, viewBox and enable-background attributes
-   * @param svgfile {string} absolute path to SVG graphic
-   * @return {jQuery.Promise} promise that resolves to a
-   * two-index array containing the respective width and height or NaN
-   * if the size could not be extracted
+   * from the width/height, viewBox and enable-background attributes.
+   * @param {String} svgFile Absolute path to SVG graphic.
+   * @return {$.Promise} Promise that resolves to a
+   *                             two-index array containing the respective width and height or NaN
+   *                             if the size could not be extracted.
    */
-  function getSVGSize(svgfile) {
+  function getSVGSize(svgFile) {
     var result = new $.Deferred();
 
-    _readSVG(svgfile).then(function (content) {
+    _readSVG(svgFile).then(function(content) {
       // Add the SVG to the DOM
       var $svgContainer    = $("<div class='html-skeleton-svg'/>").css("display", "none").html(content),
           $svgElement      = $svgContainer.find("svg");
@@ -65,14 +65,18 @@ define(function (require, exports, module) {
       var backgroundWidth  = parseInt(backgroundSizes[3], 10),
           backgroundHeight = parseInt(backgroundSizes[4], 10);
 
-      // Check the validity of the extracted values,
-      // preferring width/height attributes, then viewBox values
-      var svgSize = [NaN, NaN];
+      // Check the validity of the extracted values
+      var svgSize = [0, 0];
 
+      // Width/height attributes
       if (_checkIfValid(attrWidth, attrHeight)) {
         svgSize = [attrWidth, attrHeight];
+
+        // viewBox values
       } else if (_checkIfValid(viewBoxWidth, viewBoxHeight)) {
         svgSize = [viewBoxWidth, viewBoxHeight];
+
+        // `enable-background` attribute
       } else if (_checkIfValid(backgroundWidth, backgroundHeight)) {
         svgSize = [backgroundWidth, backgroundHeight];
       }

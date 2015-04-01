@@ -20,7 +20,7 @@ module.exports = function(grunt) {
           csslintrc: ".csslintrc",
           "import": 2
         },
-        src: "css/*.css",
+        src: "css/*.css"
       }
     },
 
@@ -30,7 +30,7 @@ module.exports = function(grunt) {
           jshintrc: ".jshintrc"
         },
         src: ["<%= jsFiles %>", "<%= i18nJsFiles %>"]
-      },
+      }
     },
 
     jscs: {

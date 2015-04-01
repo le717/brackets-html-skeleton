@@ -4,15 +4,13 @@
   </div>
 
   <div class="modal-body html-skeleton">
-    <p class="dialog-message">
-      {{DIALOG_EXTENSION_DESCRIPTION}}
-    </p>
+    <p class="dialog-message">{{DIALOG_EXTENSION_DESCRIPTION}}</p>
 
-    <!-- HTML Skeleton logo by http://rioforce.WordPress.com -->
     <div class="html-skeleton-img">
       <span class="img-src"></span>
       <span class="img-error-text"></span>
     </div>
+
     <div class="html-skeleton-content">
       <h3>{{USAGE}}</h3>
       <ol>
@@ -23,36 +21,21 @@
 
       <h3>{{ELEMENTS}}</h3>
       <form class="html-skeleton-form">
-        <input type="checkbox" id="basic-skeleton" value="basiSkel" />
-        <label for="basic-skeleton">{{BASIC_SKELETON}}<br></label>
+        <label><input type="checkbox" id="basic-skeleton" value="basiSkel">{{BASIC_SKELETON}}</label>
+        <label><input type="checkbox" id="viewport" value="viewport">{{VIEWPORT}}</label>
+        <label><input type="checkbox" id="ext-style" value="extStyle">{{EXTERNAL_STYLESHEET}}</label>
+        <label><input type="checkbox" id="in-style" value="inStyle">{{INLINE_STYLESHEET}}</label>
+        <label><input type="checkbox" id="ext-script" value="extScript">{{EXTERNAL_SCRIPT}}</label>
+        <label><input type="checkbox" id="in-script" value="inScript">{{INLINE_SCRIPT}}</label>
+        <label><input type="checkbox" id="img" value="image">{{PICTURE_IMAGE}}</label>
 
-        <input type="checkbox" id="viewport" value="viewport" />
-        <label for="viewport">{{VIEWPORT}}<br></label>
+        <input class="img-width" type="number" min="0" placeholder="{{WIDTH}}">
+        <span id="letter-x">x</span>
+        <input class="img-height" type="number" min="0" placeholder="{{HEIGHT}}">
+        <a class="dialog-button btn" data-button-id="browse" href="#">{{BTN_BROWSE}}</a>
 
-        <input type="checkbox" id="ext-style" value="extStyle" />
-        <label for="ext-style">{{EXTERNAL_STYLESHEET}}<br></label>
-
-        <input type="checkbox" id="in-style" value="inStyle" />
-        <label for="in-style">{{INLINE_STYLESHEET}}<br></label>
-
-        <input type="checkbox" id="ext-script" value="extScript" />
-        <label for="ext-script">{{EXTERNAL_SCRIPT}}<br></label>
-
-        <input type="checkbox" id="in-script" value="inScript" />
-        <label for="in-script">{{INLINE_SCRIPT}}<br></label>
-
-        <input type="checkbox" id="img" value="image" />
-        <label for="img">{{PICTURE_IMAGE}}<br></label>
-
-        <input class="img-width" type="number" min="0" placeholder="{{WIDTH}}" />
-        <span class="letter-x"> x </span>
-        <input class="img-height" type="number" min="0" placeholder="{{HEIGHT}}" />
-        <a class="dialog-button btn" data-button-id="browse" href="#">{{BTN_BROWSE}}</a><br>
-
-        <input id="full-skeleton" type="checkbox" value="fullSkel" />
-        <label for="full-skeleton">{{FULL_SKELETON}}<br>
-          <span id="full-skeleton-description">{{FULL_SKELETON_DESCRIPTION}}</span>
-        </label>
+        <label><input id="full-skeleton" type="checkbox" value="fullSkel">{{FULL_SKELETON}}</label>
+        <span id="full-skeleton-description">{{FULL_SKELETON_DESCRIPTION}}</span>
       </form>
     </div>
   </div>
