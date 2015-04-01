@@ -11,7 +11,7 @@
  */
 
 
-define(function (require, exports, module) {
+define(function (require, exports) {
   "use strict";
   var FileSystem = brackets.getModule("filesystem/FileSystem"),
       FileUtils  = brackets.getModule("file/FileUtils");

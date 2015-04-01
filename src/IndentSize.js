@@ -11,7 +11,7 @@
  */
 
 
-define(function (require, exports, module) {
+define(function (require, exports) {
   "use strict";
   var PreferencesManager = brackets.getModule("preferences/PreferencesManager");
 

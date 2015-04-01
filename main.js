@@ -27,7 +27,7 @@ define(function (require, exports, module) {
       PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
       ProjectManager     = brackets.getModule("project/ProjectManager"),
 
-      ImageFiles         = LanguageManager.getLanguage("image")._fileExtensions.push("svg"),
+      ImageFiles         = LanguageManager.getLanguage("image")._fileExtensions.concat("svg"),
       Strings            = require("strings"),
       SvgSize            = require("src/SvgSize"),
       IndentSize         = require("src/IndentSize"),
@@ -268,7 +268,6 @@ define(function (require, exports, module) {
     return;
   }
 
-
   /**
    * @private
    * Open the file browse dialog for the user to select an image
@@ -276,7 +275,7 @@ define(function (require, exports, module) {
   function _showFileDialog(e) {
     FileSystem.showOpenDialog(
       false, false, Strings.FILE_DIALOG_TITLE,
-      null, ImageFiles, function (closedDialog, selectedFile) {
+      "", ImageFiles, function (closedDialog, selectedFile) {
         if (!closedDialog && selectedFile && selectedFile.length > 0) {
           _displayImage(selectedFile[0]);
         }
@@ -285,7 +284,6 @@ define(function (require, exports, module) {
     e.preventDefault();
     e.stopPropagation();
   }
-
 
   /**
    * Display HTML Skeleton dialog box
