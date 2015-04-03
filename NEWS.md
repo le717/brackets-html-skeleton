@@ -1,5 +1,11 @@
 # Changes #
 
+## 1.4.1 ##
+### 3 April 2015 ###
+* Make `SvgSize.get()` return an object instead of array
+* Relax SVG graphic size detection regexes
+* Trim stray whitespace from extracted SVG size
+
 ## 1.4.0 ##
 ### 1 April, 2015 ###
 * Rewrite SVG graphic size detection to use regexs instead of jQuery ([#30](https://github.com/le717/brackets-html-skeleton/issues/30))

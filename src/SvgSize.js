@@ -44,7 +44,7 @@ define(function (require, exports) {
    *                     containing the respective width and height
    *                     or NaN if any size could not be extracted.
    */
-  function getSVGSize(svgFile) {
+  function get(svgFile) {
     var result = new $.Deferred();
 
     _readSVGFile(svgFile).then(function (content) {
@@ -113,5 +113,5 @@ define(function (require, exports) {
     return result.promise();
   }
 
-  exports.getSVGSize = getSVGSize;
+  exports.get = get;
 });

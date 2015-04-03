@@ -260,7 +260,7 @@ define(function (require, exports, module) {
 
         // Special routine for SVG graphics only
       } else if (isSvgImage) {
-        SvgSize.getSVGSize(imagePath).then(function (sizes) {
+        SvgSize.get(imagePath).then(function (sizes) {
           _updateSizeInput(sizes.width, sizes.height);
         });
       }
