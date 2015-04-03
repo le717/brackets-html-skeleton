@@ -261,7 +261,7 @@ define(function (require, exports, module) {
         // Special routine for SVG graphics only
       } else if (isSvgImage) {
         SvgSize.getSVGSize(imagePath).then(function (sizes) {
-          _updateSizeInput(sizes[0], sizes[1]);
+          _updateSizeInput(sizes.width, sizes.height);
         });
       }
     });

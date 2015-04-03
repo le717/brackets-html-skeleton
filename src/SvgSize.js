@@ -40,9 +40,9 @@ define(function (require, exports) {
    * Attempt to extract the size of an SVG graphic
    * from the width/height, viewBox and enable-background attributes.
    * @param {String} svgFile Absolute path to SVG graphic.
-   * @return {$.Promise} Promise that resolves to a two-index array
+   * @return {$.Promise} Promise that resolves to an object
    *                     containing the respective width and height
-   *                     or NaN if the size could not be extracted.
+   *                     or NaN if any size could not be extracted.
    */
   function getSVGSize(svgfile) {
     var result = new $.Deferred();
@@ -79,15 +79,25 @@ define(function (require, exports) {
       }
 
       // Check the validity of the extracted values,
-      // preferring width/height, viewBox, and finally enable-background
-      var svgSize = [NaN, NaN];
+      var svgSize = {
+        width: NaN,
+        height: NaN
+      };
 
+      // Width/height
       if (_isValid(results.width, results.height)) {
-        svgSize = [results.width, results.height];
+        svgSize.width = results.width;
+        svgSize.height = results.height;
+
+        // viewBox
       } else if (_isValid(results.viewBoxWidth, results.viewBoxHeight)) {
-        svgSize = [results.viewBoxWidth, results.viewBoxHeight];
+        svgSize.width = results.viewBoxWidth;
+        svgSize.height = results.viewBoxHeight;
+
+        // enable-background
       } else if (_isValid(results.enableBackgroundWidth, results.enableBackgroundHeight)) {
-        svgSize = [results.enableBackgroundWidth, results.enableBackgroundHeight];
+        svgSize.width = results.enableBackgroundWidth;
+        svgSize.height = results.enableBackgroundHeight;
       }
 
       // Resolve the promise
