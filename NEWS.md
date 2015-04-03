@@ -1,7 +1,12 @@
 # Changes #
 
+## 1.4.2 ##
+### ? April, 2015 ###
+* Add simple unit tests for `src/SvgSize` module
+* Fix regression in extracting values from SVG `enable-background` attribute
+
 ## 1.4.1 ##
-### 3 April 2015 ###
+### 3 April, 2015 ###
 * Make `SvgSize.get()` return an object instead of array
 * Relax SVG graphic size detection regexes
 * Trim stray whitespace from extracted SVG size

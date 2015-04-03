@@ -3,7 +3,8 @@ module.exports = function (grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON("package.json"),
     jsFiles: ["*.js", "src/*.js"],
-    i18nJsFiles: ["nls/*.js", "nls/**/*.js"],
+    jsFilesi18n: ["strings.js", "nls/*.js", "nls/**/*.js"],
+    jsFilesTests: ["unittests.js"],
 
     htmlhint: {
       html: {
@@ -25,27 +26,36 @@ module.exports = function (grunt) {
     },
 
     jshint: {
+      options: {
+        jshintrc: ".jshintrc"
+      },
       src: {
-        options: {
-          jshintrc: ".jshintrc"
-        },
-        src: ["<%= jsFiles %>", "<%= i18nJsFiles %>"]
+        src: "<%= jsFiles %>"
+      },
+      i18n: {
+        src: "<%= jsFilesi18n %>"
+      },
+      test: {
+        src: "<%= jsFilesTests %>"
       },
     },
 
     jscs: {
-      main: {
+      options: {
+        config: ".jscs.json"
+      },
+      src: {
         src: "<%= jsFiles %>"
       },
       i18n: {
-        src: "<%= i18nJsFiles %>",
+        src: "<%= jsFilesi18n %>",
         options: {
           maximumLineLength: null
         }
       },
-      options: {
-        config: ".jscs.json"
-      }
+      test: {
+        src: "<%= jsFilesTests %>"
+      },
     }
   });
 
