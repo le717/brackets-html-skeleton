@@ -49,10 +49,10 @@ define(function (require, exports) {
 
     _readSVGFile(svgFile).then(function (content) {
       // Regexs to extract the details
-      var widthRegex            = /[^-]width=['"](.+?)['"]/i,
-          heightRegex           = /[^-]height=['"](.+?)['"]/i,
-          viewBoxRegex          = /viewBox=['"](.+?)['"]/i,
-          enableBackgroundRegex = /enable-background=['"](.+?)['"]/i;
+      var widthRegex            = /\s*[^-]xwidth\s*=\s*['"](.+?)['"]/i,
+          heightRegex           = /\s*[^-]height\s*=\s*['"](.+?)['"]/i,
+          viewBoxRegex          = /\s*viewBox\s*=\s*['"](.+?)['"]/i,
+          enableBackgroundRegex = /\s*enable-background\s*=\s*['"](.+?)['"]/i;
 
       // Check the SVG for the needed attributes
       var results = {
