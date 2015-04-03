@@ -33,7 +33,7 @@ define(function (require, exports) {
    * @return {Boolean} True if width and height are valid.
    */
   function _isValid(width, height) {
-    return !Number.isNaN(width) && !Number.isNaN(height) && (width && height) !== null;
+    return width !== null && height !== null;
   }
 
   /**
@@ -49,7 +49,7 @@ define(function (require, exports) {
 
     _readSVGFile(svgFile).then(function (content) {
       // Regexs to extract the details
-      var widthRegex            = /\s*[^-]xwidth\s*=\s*['"](.+?)['"]/i,
+      var widthRegex            = /\s*[^-]width\s*=\s*['"](.+?)['"]/i,
           heightRegex           = /\s*[^-]height\s*=\s*['"](.+?)['"]/i,
           viewBoxRegex          = /\s*viewBox\s*=\s*['"](.+?)['"]/i,
           enableBackgroundRegex = /\s*enable-background\s*=\s*['"](.+?)['"]/i;
@@ -76,6 +76,13 @@ define(function (require, exports) {
         results.enableBackgroundWidth = individualEB[3];
         results.enableBackgroundHeight = individualEB[4];
         delete results.enableBackground;
+      }
+
+      // Trim out any captured stray whitespace
+      for (var prop in results) {
+        if (results.hasOwnProperty(prop)) {
+          results[prop] = results[prop] !== null ? results[prop].trim() : results[prop];
+        }
       }
 
       // Check the validity of the extracted values,
