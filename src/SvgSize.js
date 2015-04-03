@@ -22,8 +22,8 @@ define(function (require, exports) {
    * @param {String} svgFile Absolute path to SVG graphic.
    * @return {$.Promise} Promise that contains a File object.
    */
-  function _readSVGFile(svgfile) {
-    return FileUtils.readAsText(FileSystem.getFileForPath(svgfile));
+  function _readSVGFile(svgFile) {
+    return FileUtils.readAsText(FileSystem.getFileForPath(svgFile));
   }
 
   /**
@@ -44,10 +44,10 @@ define(function (require, exports) {
    *                     containing the respective width and height
    *                     or NaN if any size could not be extracted.
    */
-  function getSVGSize(svgfile) {
+  function getSVGSize(svgFile) {
     var result = new $.Deferred();
 
-    _readSVGFile(svgfile).then(function (content) {
+    _readSVGFile(svgFile).then(function (content) {
       // Regexs to extract the details
       var widthRegex            = /[^-]width=['"](.+?)['"]/i,
           heightRegex           = /[^-]height=['"](.+?)['"]/i,
