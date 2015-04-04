@@ -29,6 +29,10 @@ define(function (require, exports, module) {
           SvgAllProps    = testPath + "toolbar-all-props.svg",
           SvgWidthHeight = testPath + "toolbar-width-height.svg";
 
+      var SvgWhiteSpace  = testPath + "toolbar-whitespace.svg",
+          SvgStrokeWidth = testPath + "toolbar-stroke-width.svg",
+          SvgLineHeight  = testPath + "toolbar-line-height.svg";
+
 
       function confirmDimensions(file, expectedSizes) {
         var complete  = false,
@@ -50,20 +54,32 @@ define(function (require, exports, module) {
         });
       }
 
-      it("should extract the width and height values from an SVG", function () {
+      it("should extract the width and height values", function () {
         confirmDimensions(SvgWidthHeight, {width: "24", height: "24"});
       });
 
-      it("should extract the viewBox values from an SVG", function () {
+      it("should extract the viewBox values", function () {
         confirmDimensions(SvgViewBox, {width: "24", height: "24"});
       });
 
-      it("should extract the enable-background values from an SVG", function () {
+      it("should extract the enable-background values", function () {
         confirmDimensions(SvgEBack, {width: "24", height: "24"});
       });
 
-      it("should extract the width and height values from an SVG containing all supported properties", function () {
+      it("should extract the width and height values when containing all supported properties", function () {
         confirmDimensions(SvgAllProps, {width: "24", height: "24"});
+      });
+
+      it("should extract the width and height values without copious amounts of whitespace", function () {
+        confirmDimensions(SvgWhiteSpace, {width: "50", height: "50"});
+      });
+
+      it("should extract NOT extract the stroke-width value", function () {
+        confirmDimensions(SvgStrokeWidth, {width: "100", height: "100"});
+      });
+
+      it("should extract NOT extract the line-height value", function () {
+        confirmDimensions(SvgLineHeight, {width: "100", height: "100"});
       });
 
     });

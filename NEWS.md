@@ -1,8 +1,8 @@
 # Changes #
 
 ## 1.4.2 ##
-### ? April, 2015 ###
-* Add simple unit tests for `src/SvgSize` module
+### 3 April, 2015 ###
+* Add simple unit tests for `src/SvgSize` module (not included in distributed release)
 * Fix regression in extracting values from SVG `enable-background` attribute
 
 ## 1.4.1 ##
