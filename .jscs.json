@@ -46,8 +46,9 @@
   },
 
   "maximumLineLength": {
-    "value": 145,
-    "allowComments":  true,
-    "allowRegex": true
+    "value": 125,
+    "allowRegex": true,
+    "allowComments": true,
+    "allowUrlComments":  true
   }
 }

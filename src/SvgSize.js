@@ -33,7 +33,7 @@ define(function (require, exports) {
    * @return {Boolean} True if width and height are valid.
    */
   function _isValid(width, height) {
-    return width !== null && height !== null;
+    return width && height;
   }
 
   /**
@@ -59,7 +59,7 @@ define(function (require, exports) {
         width: widthRegex.test(content) ? content.match(widthRegex)[1] : null,
         height: heightRegex.test(content) ? content.match(heightRegex)[1] : null,
         viewBox: viewBoxRegex.test(content) ? content.match(viewBoxRegex)[1] : null,
-        enableBackground: enableBackgroundRegex.test(content) ? content.match(enableBackgroundRegex)[1] : null
+        enableBG: enableBackgroundRegex.test(content) ? content.match(enableBackgroundRegex)[1] : null
       };
 
       // The viewBox values are present, extract them
@@ -71,11 +71,11 @@ define(function (require, exports) {
       }
 
       // The enable-background values are present, extract them
-      if (results.enableBackground) {
-        var individualEB = results.enableBackground.split(" ");
-        results.enableBackgroundWidth = individualEB[3];
-        results.enableBackgroundHeight = individualEB[4];
-        delete results.enableBackground;
+      if (results.enableBG) {
+        var individualEB = results.enableBG.split(" ");
+        results.enableBGWidth = individualEB[3];
+        results.enableBGHeight = individualEB[4];
+        delete results.enableBG;
       }
 
       // Trim out any captured stray whitespace
@@ -102,9 +102,9 @@ define(function (require, exports) {
         svgSize.height = results.viewBoxHeight;
 
         // enable-background
-      } else if (_isValid(results.enableBackgroundWidth, results.enableBackgroundHeight)) {
-        svgSize.width = results.enableBackgroundWidth;
-        svgSize.height = results.enableBackgroundHeight;
+      } else if (_isValid(results.enableBGWidth, results.enableBGHeight)) {
+        svgSize.width = results.enableBGWidth;
+        svgSize.height = results.enableBGHeight;
       }
 
       // Resolve the promise

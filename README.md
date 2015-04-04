@@ -1,6 +1,6 @@
 # HTML Skeleton [![Build Status](https://travis-ci.org/le717/brackets-html-skeleton.svg)](https://travis-ci.org/le717/brackets-html-skeleton) #
 
-> A [Brackets](http://brackets.io) extension that allows you to insert a variety of HTML elements into your document with ease.
+> A [Brackets](http://brackets.io) extension that allows you to easily insert a variety of HTML elements into your document.
 
 # Installation #
 Method 1: Open the Brackets Extension Manager and search for "skeleton"
@@ -19,7 +19,7 @@ Method 2: Download a `.zip` directly from GitHub using either the [latest revisi
 See [NEWS.md](NEWS.md) for all changes.
 
 # License #
-[MIT License](LICENSE.md)
+[MIT License](LICENSE)
 
 Created 2014-2015 [Triangle717](http://le717.github.io)
 
