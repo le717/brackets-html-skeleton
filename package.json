@@ -20,7 +20,8 @@
   "i18n": [
     "en",
     "de",
-    "it"
+    "it",
+    "tr"
   ],
 
   "main": "main.js",
