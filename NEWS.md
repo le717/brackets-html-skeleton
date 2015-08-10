@@ -1,5 +1,10 @@
 # Changes #
 
+## 1.4.3 ##
+### 10 August, 2015 ###
+* Added Italian translation ([#33](https://github.com/le717/brackets-html-skeleton/pull/33)), submitted by [@canaltinova](https://github.com/canaltinova)
+* Change `charset` value to `utf-8`, matching spec
+
 ## 1.4.2 ##
 ### 3 April, 2015 ###
 * Add simple unit tests for `src/SvgSize` module (not included in distributed release)

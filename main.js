@@ -48,11 +48,11 @@ define(function (require, exports, module) {
     viewport : "<meta name='viewport' content='width=device-width, initial-scale=1.0'>",
     extScript: "<script src=''></script>",
 
-    basiSkel : "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='UTF-8'>\n" +
+    basiSkel : "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='utf-8'>\n" +
     "indent-size<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n" +
     "indent-size<title></title>\n</head>\n\n<body>\nindent-size\n</body>\n</html>\n",
 
-    fullSkel : "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='UTF-8'>\n" +
+    fullSkel : "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='utf-8'>\n" +
     "indent-size<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n" +
     "indent-size<title></title>\nindent-size<link rel='stylesheet' href=''>\n" +
     "</head>\n\n<body>\nindent-size<script src=''></script>\n</body>\n</html>\n"
