@@ -55,7 +55,7 @@ define(function (require, exports, module) {
     fullSkel : "<!DOCTYPE html>\n<html lang=''>\n<head>\nindent-size<meta charset='utf-8'>\n" +
     "indent-size<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n" +
     "indent-size<title></title>\nindent-size<link rel='stylesheet' href=''>\n" +
-    "</head>\n\n<body>\nindent-size<script src=''></script>\n</body>\n</html>\n"
+    "</head>\n<body>\n\nindent-size<script src=''></script>\n</body>\n</html>\n"
   };
 
 
